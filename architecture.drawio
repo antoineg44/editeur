@@ -1,0 +1,65 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="S6-VMbV0izJ4QbpASFpD">
+    <mxGraphModel dx="2175" dy="830" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-17" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;strokeColor=default;dashed=1;" value="Page de Vérif" vertex="1">
+          <mxGeometry height="220" width="220" x="-210" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-4" edge="1" parent="1" source="DFVj2NId2g2iXbj-KoM4-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="DFVj2NId2g2iXbj-KoM4-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="Fichier musicxml" vertex="1">
+          <mxGeometry height="60" width="120" x="170" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="Paroles" vertex="1">
+          <mxGeometry height="60" width="120" x="360" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-3" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Afficher" vertex="1">
+          <mxGeometry height="80" width="120" x="280" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="Références&lt;div&gt;(Auteur, compositeur, tonalité par défaut, nombre de voix)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="550" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-9" edge="1" parent="1" source="DFVj2NId2g2iXbj-KoM4-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="DFVj2NId2g2iXbj-KoM4-8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="880" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-11" edge="1" parent="1" source="DFVj2NId2g2iXbj-KoM4-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="DFVj2NId2g2iXbj-KoM4-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-7" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Interface" vertex="1">
+          <mxGeometry height="80" width="120" x="820" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-8" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Boutons modifications" vertex="1">
+          <mxGeometry height="80" width="120" x="690" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-10" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Menu du haut (Fichier / Edition / Affichage / Aide)" vertex="1">
+          <mxGeometry height="80" width="120" x="700" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-12" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Sélection des éléments (pour gérer les effets des appuies bouton)" vertex="1">
+          <mxGeometry height="80" width="120" x="140" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-13" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Curseur" vertex="1">
+          <mxGeometry height="80" width="120" x="380" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-14" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;" value="Vérification du fichiier (nom des accords cohérent / données inutilisées)" vertex="1">
+          <mxGeometry height="80" width="150" x="-160" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-16" edge="1" parent="1" source="DFVj2NId2g2iXbj-KoM4-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;" target="DFVj2NId2g2iXbj-KoM4-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DFVj2NId2g2iXbj-KoM4-15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="Fichier avec configuration de l&#39;interface (nom, lien vers icone, nom de la fonction, effet recherché)" vertex="1">
+          <mxGeometry height="60" width="180" x="710" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="n1UyVKCY-UBkA7GBOXKv-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="Fichier interface id des notes" vertex="1">
+          <mxGeometry height="60" width="120" x="250" y="340" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
