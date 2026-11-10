@@ -1,21 +1,11 @@
 Architecture d'un éditeur de partitions basé sur OSMD
 
-Pour ton projet, je recommande une architecture javascript + OSMD + modèle musical indépendant.
-
-L'idée est de profiter d'OSMD pour toute la partie complexe de gravure musicale, tout en développant toi-même les fonctionnalités d'édition graphique.
-
-Je partirais sur une architecture modulaire, suffisamment évolutive pour aller progressivement vers un éditeur comparable à MuseScore.
-1. Architecture générale
-
-Voici l'architecture que je propose :
-text
-
 ┌──────────────────────────────────────────────────────┐
 │                    APPLICATION                       │
 │                     javascript                       │
 │                                                      │
 │  ┌────────────┐  ┌────────────────────────────────┐  │
-│  │ Toolbar    │  │         Score Editor            │  │
+│  │ Toolbar    │  │         Score Editor           │  │
 │  │            │  │                                │  │
 │  │ Notes      │  │       Partition SVG            │  │
 │  │ Silences   │  │                                │  │
@@ -79,82 +69,75 @@ Il est responsable de la représentation graphique de la partition.
 Je structurerais le projet ainsi :
 text
 
-src/
+music-editor/
 │
-├── app/
-│   ├── App.tsx
-│   └── EditorLayout.tsx
+├── index.html
 │
-├── components/
-│   ├── toolbar/
-│   │   ├── NoteToolbar.tsx
-│   │   ├── DurationToolbar.tsx
-│   │   ├── AccidentalToolbar.tsx
-│   │   └── ArticulationToolbar.tsx
+├── css/
+│   ├── main.css
+│   ├── toolbar.css
+│   └── editor.css
+│
+├── src/
+│   ├── main.js
 │   │
-│   ├── panels/
-│   │   ├── PropertiesPanel.tsx
-│   │   └── InstrumentPanel.tsx
+│   ├── app/
+│   │   ├── Application.js
+│   │   └── EditorLayout.js
 │   │
-│   └── editor/
-│       ├── ScoreEditor.tsx
-│       ├── ScoreViewport.tsx
-│       ├── ScoreOverlay.tsx
-│       └── SelectionOverlay.tsx
-│
-├── core/
-│   ├── model/
-│   │   ├── Score.ts
-│   │   ├── Instrument.ts
-│   │   ├── Staff.ts
-│   │   ├── Measure.ts
-│   │   ├── Voice.ts
-│   │   ├── Note.ts
-│   │   └── Duration.ts
+│   ├── components/
+│   │   ├── Toolbar.js
+│   │   ├── PropertiesPanel.js
+│   │   ├── ScoreViewport.js
+│   │   └── SelectionOverlay.js
 │   │
-│   ├── commands/
-│   │   ├── Command.ts
-│   │   ├── CommandManager.ts
-│   │   ├── AddNoteCommand.ts
-│   │   ├── MoveNoteCommand.ts
-│   │   ├── DeleteNoteCommand.ts
-│   │   └── ChangeDurationCommand.ts
+│   ├── core/
+│   │   ├── model/
+│   │   │   ├── Score.js
+│   │   │   ├── Instrument.js
+│   │   │   ├── Staff.js
+│   │   │   ├── Measure.js
+│   │   │   ├── Voice.js
+│   │   │   └── Note.js
+│   │   │
+│   │   ├── commands/
+│   │   │   ├── CommandManager.js
+│   │   │   ├── AddNoteCommand.js
+│   │   │   ├── MoveNoteCommand.js
+│   │   │   └── DeleteNoteCommand.js
+│   │   │
+│   │   ├── selection/
+│   │   │   └── SelectionManager.js
+│   │   │
+│   │   ├── geometry/
+│   │   │   ├── CoordinateMapper.js
+│   │   │   ├── StaffGeometry.js
+│   │   │   └── HitTesting.js
+│   │   │
+│   │   └── music/
+│   │       ├── PitchCalculator.js
+│   │       ├── RhythmCalculator.js
+│   │       └── Quantizer.js
 │   │
-│   ├── selection/
-│   │   ├── SelectionManager.ts
-│   │   └── Selection.ts
+│   ├── rendering/
+│   │   ├── OSMDRenderer.js
+│   │   ├── OSMDAdapter.js
+│   │   └── RenderScheduler.js
 │   │
-│   ├── geometry/
-│   │   ├── CoordinateMapper.ts
-│   │   ├── StaffGeometry.ts
-│   │   └── HitTesting.ts
+│   ├── interaction/
+│   │   ├── InteractionController.js
+│   │   ├── PointerHandler.js
+│   │   ├── NoteDragHandler.js
+│   │   └── NoteInsertionHandler.js
 │   │
-│   └── music/
-│       ├── PitchCalculator.ts
-│       ├── RhythmCalculator.ts
-│       └── Quantizer.ts
+│   └── io/
+│       ├── MusicXMLImporter.js
+│       ├── MusicXMLExporter.js
+│       └── FileManager.js
 │
-├── rendering/
-│   ├── OSMDRenderer.ts
-│   ├── OSMDAdapter.ts
-│   ├── NoteLocator.ts
-│   └── RenderScheduler.ts
-│
-├── interaction/
-│   ├── InteractionController.ts
-│   ├── PointerHandler.ts
-│   ├── NoteDragHandler.ts
-│   ├── NoteInsertionHandler.ts
-│   └── KeyboardHandler.ts
-│
-├── io/
-│   ├── MusicXMLImporter.ts
-│   ├── MusicXMLExporter.ts
-│   └── FileManager.ts
-│
-└── store/
-    ├── editorStore.ts
-    └── scoreStore.ts
+└── tests/
+    ├── unit/
+    └── integration/
 
 Cette séparation permettra notamment de remplacer OSMD ultérieurement sans réécrire le moteur d'édition.
 3. Le modèle musical interne
