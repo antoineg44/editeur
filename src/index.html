@@ -1,0 +1,177 @@
+<!doctype html>
+
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Lecteur MusicXML</title>
+
+    <!-- Affichage des partitions -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay@2.2.1/build/opensheetmusicdisplay.min.js"></script>-->
+<script src="../build/opensheetmusicdisplay.min.js"></script>
+
+    <!-- Moteur audio -->
+
+    <script src="https://unpkg.com/tone@15.1.22/build/Tone.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    
+  </head>
+
+  <body>
+    <header><h2>Lecteur de partitions MusicXML</h2></header>
+
+    <div class="toolbar">
+      <input type="file" id="fileInput" accept=".xml,.musicxml" />
+
+      <button id="previousPage">◀ Page précédente</button>
+
+      <span id="pageInfo">Page 0 / 0</span>
+
+      <button id="nextPage">Page suivante ▶</button>
+
+      <button id="zoomOut">−</button>
+
+      <span id="zoomInfo">100 %</span>
+
+      <button id="zoomIn">+</button>
+
+      <button id="fullscreen">⛶ Plein écran</button>
+<button id="toggleAddNote">✏️ Activer l'ajout de notes</button>
+
+    </div>
+
+    <div id="status">Sélectionnez un fichier MusicXML.</div>
+
+    <div id="scoreContainer">
+        <div id="score"></div>
+    </div>
+
+    <!-- pour ajout_notes.js -->
+     <div id="infoNote">Aucune note sélectionnée</div>
+
+    <div id="player">
+      <button id="play">▶ Lecture</button>
+
+      <button id="pause">⏸ Pause</button>
+
+      <button id="stop">⏹ Arrêt</button>
+
+      <label>
+        Tempo :
+        <input type="number" id="tempo" value="100" min="30" max="250" />
+        BPM
+      </label>
+
+      <label>
+        Volume :
+        <input type="range" id="volume" min="0" max="100" value="70" />
+      </label>
+
+      <span id="timeInfo">Mesure : 1</span>
+    </div>
+
+    <script>
+    var musicxml = null;
+      // -------------------------------------------------- // INITIALISATION // --------------------------------------------------
+      const container = document.getElementById("score");
+      const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(container, {
+        backend: "svg",
+        autoResize: true,
+        drawTitle: true,
+        drawSubtitle: true,
+        drawComposer: true,
+        pageFormat: "A4_P",
+        pageBackgroundColor: "#FFFFFF",
+        drawPartNames: true,
+        cursorsOptions: [
+          { type: 0, color: "#FF0000", alpha: 0.35, follow: false },
+        ],
+      });
+      let zoom = 1;
+      let currentPage = 0;
+      let pages = [];
+      let events = [];
+      let eventIds = [];
+      let synth = null;
+      let loaded = false;
+      let playing = false;
+      let startPosition = 0;
+      let totalDuration = 0;
+      const transport = Tone.getTransport();
+      transport.timeSignature = 4; // -------------------------------------------------- // CHARGEMENT DU MUSICXML // --------------------------------------------------
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", async function (e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          stopPlayback();
+          document.getElementById("status").textContent =
+            "Chargement de " + file.name + "...";
+          try {
+            const xml = await file.text();
+            musicXMLText = xml;
+            await osmd.load(xml);
+            osmd.render();
+            loaded = true;
+            zoom = 1;
+            osmd.Zoom = zoom; // Initialisation du curseur
+            osmd.cursor.show();
+            osmd.cursor.reset(); // Recherche des pages SVG
+            setTimeout(() => {
+              pages = Array.from(container.querySelectorAll("svg"));
+              currentPage = 0;
+              updatePage();
+            }, 300); // Extraction des événements musicaux
+events = buildPlaybackTimeline();
+            totalDuration = Math.max(
+    ...events.map(e => e.time),
+    0
+);
+
+            document.getElementById("status").textContent =
+              "Partition chargée : " +
+              file.name +
+              " — " +
+              events.length +
+              " événements musicaux.";
+          } catch (error) {
+            console.error(error);
+            document.getElementById("status").textContent =
+              "Erreur de chargement : " + error.message;
+          }
+        }); // -------------------------------------------------- // NAVIGATION ENTRE LES PAGES // --------------------------------------------------
+      function updatePage() {
+        if (!pages.length) return;
+        currentPage = Math.max(0, Math.min(currentPage, pages.length - 1));
+        pages.forEach((page, index) => {
+          page.classList.toggle("current-page", index === currentPage);
+        });
+        document.getElementById("pageInfo").textContent =
+          "Page " + (currentPage + 1) + " / " + pages.length;
+        pages[currentPage].scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+      document.getElementById("previousPage").addEventListener("click", () => {
+        currentPage--;
+        updatePage();
+      });
+      document.getElementById("nextPage").addEventListener("click", () => {
+        currentPage++;
+        updatePage();
+      });  
+      
+
+      
+    </script>
+
+    <script src="audio.js"></script>
+    <script src="button.js"></script>
+
+    <script src="detection_click.js"></script>
+    <script src="position.js"></script>
+  </body>
+</html>

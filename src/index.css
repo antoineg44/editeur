@@ -1,0 +1,92 @@
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #e9e9e9;
+      }
+      header {
+        background: #263746;
+        color: white;
+        padding: 15px;
+        text-align: center;
+      }
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+        background: #34495e;
+      }
+      button {
+        padding: 9px 15px;
+        border: none;
+        border-radius: 4px;
+        background: #3498db;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      button:hover {
+        background: #217dbb;
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+      input[type="file"] {
+        color: white;
+        max-width: 230px;
+      }
+      #status {
+        text-align: center;
+        padding: 8px;
+        background: #fff;
+      }
+      #pageInfo {
+        color: white;
+        padding: 5px 12px;
+      }
+      #scoreContainer {
+        height: calc(100vh - 175px);
+        overflow: auto;
+        background: #c9c9c9;
+        padding: 20px;
+      }
+      #score {
+        width: 100%;
+        margin: auto;
+        background: white;
+        min-height: 500px;
+        padding: 20px;
+      }
+      #score svg {
+        display: block;
+        margin: 0 auto 25px auto;
+        background: white;
+      }
+      #score svg.current-page {
+        outline: 2px solid #3498db;
+      }
+      #player {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: #263746;
+        color: white;
+        flex-wrap: wrap;
+      }
+      #progress {
+        width: 180px;
+      }
+      #tempo {
+        width: 65px;
+      }
+      :fullscreen #scoreContainer {
+        height: calc(100vh - 175px);
+      }
