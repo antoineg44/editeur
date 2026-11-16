@@ -133,21 +133,21 @@ set -Eeuo pipefail
 
 status=0
 
-output=$(
+output=\$(
     /usr/bin/timeout 90 \
-    /usr/bin/flock -n -E 75 "$HOME/.deploy.lock" \
-    /usr/local/sbin/deploy-editeur </dev/null 2>&1
-) || status=$?
+    /usr/bin/flock -n -E 75 "$DEPLOY_HOME/.deploy.lock" \
+    /usr/local/sbin/deploy-$SITE_NAME </dev/null 2>&1
+) || status=\$?
 
-if [[ $status -eq 75 ]]; then
+if [[ \$status -eq 75 ]]; then
     output="Un deploiement est deja en cours."
-elif [[ $status -eq 124 ]]; then
-    output="Delai de deploiement depasse (90 secondes). $output"
+elif [[ \$status -eq 124 ]]; then
+    output="Delai de deploiement depasse (90 secondes). \$output"
 fi
 
-printf '%s\n%s\n' "$status" "$output"
+printf '%s\n%s\n' "\$status" "\$output"
 
-exit "$status"
+exit "\$status"
 EOF
 
 chown root:root "$DEPLOY_WORKER"
