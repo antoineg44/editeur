@@ -24,6 +24,7 @@
 
     <div class="toolbar">
       <input type="file" id="fileInput" accept=".xml,.musicxml" />
+      <button id="downloadMusicXML" disabled>Télécharger le MusicXML</button>
 
       <button id="previousPage">◀ Page précédente</button>
 
@@ -39,6 +40,15 @@
 
       <button id="fullscreen">⛶ Plein écran</button>
 <button id="toggleAddNote">✏️ Activer l'ajout de notes</button>
+      <button id="toggleAddLyric" disabled aria-pressed="false">Ajouter des paroles</button>
+      <button id="toggleAddChord" disabled aria-pressed="false">Ajouter des accords</button>
+      <label id="lyricVerseSelector" hidden>Ligne de paroles :
+        <select id="lyricVerse">
+          <option value="auto">Automatique</option>
+          <option value="1">Première ligne</option>
+          <option value="2">Deuxième ligne</option>
+        </select>
+      </label>
 
     </div>
 
@@ -74,6 +84,8 @@
 
     <script>
     var musicxml = null;
+    let musicXMLText = "";
+    let updatingScore = false;
       // -------------------------------------------------- // INITIALISATION // --------------------------------------------------
       const container = document.getElementById("score");
       const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(container, {
@@ -106,14 +118,19 @@
         .addEventListener("change", async function (e) {
           const file = e.target.files[0];
           if (!file) return;
+          updatingScore = true;
+          this.disabled = true;
           stopPlayback();
           document.getElementById("status").textContent =
             "Chargement de " + file.name + "...";
           try {
             const xml = await file.text();
-            musicXMLText = xml;
             await osmd.load(xml);
             osmd.render();
+            musicXMLText = xml;
+            document.getElementById("downloadMusicXML").disabled = false;
+            document.getElementById("toggleAddLyric").disabled = false;
+            document.getElementById("toggleAddChord").disabled = false;
             loaded = true;
             zoom = 1;
             osmd.Zoom = zoom; // Initialisation du curseur
@@ -140,9 +157,12 @@ events = buildPlaybackTimeline();
             console.error(error);
             document.getElementById("status").textContent =
               "Erreur de chargement : " + error.message;
+          } finally {
+            updatingScore = false;
+            this.disabled = false;
           }
         }); // -------------------------------------------------- // NAVIGATION ENTRE LES PAGES // --------------------------------------------------
-      function updatePage() {
+      function updatePage(scrollToPage = true) {
         if (!pages.length) return;
         currentPage = Math.max(0, Math.min(currentPage, pages.length - 1));
         pages.forEach((page, index) => {
@@ -150,10 +170,12 @@ events = buildPlaybackTimeline();
         });
         document.getElementById("pageInfo").textContent =
           "Page " + (currentPage + 1) + " / " + pages.length;
-        pages[currentPage].scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+        if (scrollToPage) {
+          pages[currentPage].scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
       }
       document.getElementById("previousPage").addEventListener("click", () => {
         currentPage--;
@@ -173,5 +195,7 @@ events = buildPlaybackTimeline();
 
     <script src="detection_click.js"></script>
     <script src="position.js"></script>
+    <script src="paroles.js"></script>
+    <script src="accords.js"></script>
   </body>
 </html>
