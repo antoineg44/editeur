@@ -114,12 +114,14 @@ function scheduleMusic() {
 
 // -------------------------------------------------- // COMMANDES DU LECTEUR // --------------------------------------------------
 document.getElementById("play").addEventListener("click", async () => {
+  if (updatingScore) return;
   if (!loaded || !events.length) {
     alert("Chargez d'abord un fichier MusicXML.");
     return;
   }
 
   await initAudio();
+  if (updatingScore) return;
 
   if (transport.state === "paused") {
     transport.start();
