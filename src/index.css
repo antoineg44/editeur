@@ -21,6 +21,9 @@
         padding: 12px;
         background: #34495e;
       }
+      #lyricVerseSelector {
+        color: white;
+      }
       button {
         padding: 9px 15px;
         border: none;
@@ -51,6 +54,7 @@
         padding: 5px 12px;
       }
       #scoreContainer {
+        position: relative;
         height: calc(100vh - 175px);
         overflow: auto;
         background: #c9c9c9;
@@ -70,6 +74,46 @@
       }
       #score svg.current-page {
         outline: 2px solid #3498db;
+      }
+      #score img[id^="cursorImg-"] {
+        pointer-events: none;
+      }
+      #score.adding-lyrics .vf-stavenote {
+        cursor: pointer;
+      }
+      #score.adding-chords .vf-stavenote {
+        cursor: pointer;
+      }
+      .beat-grid-overlay {
+        pointer-events: auto !important;
+      }
+      .beat-marker {
+        cursor: pointer !important;
+      }
+      .beat-marker:hover {
+        background-color: #3498db !important;
+        opacity: 1 !important;
+      }
+      .lyric-editor {
+        position: absolute;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        background: white;
+        box-shadow: 0 0 0 2px #3498db;
+        white-space: pre;
+      }
+      .lyric-editor input {
+        min-width: 2ch;
+        padding: 0;
+        border: 0;
+        font: inherit;
+        outline: none;
+      }
+      .lyric-editor button {
+        padding: 2px 5px;
+        border-radius: 0;
+        font-size: 14px;
       }
       #player {
         display: flex;
