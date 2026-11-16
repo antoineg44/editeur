@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Tests des accords</title></head>
+<body>
+<style>.lyric-editor { position: absolute; display: flex; }</style>
+<div id="status"></div>
+<div id="scoreContainer" style="position:relative;overflow:auto"><div id="score"></div></div>
+<button id="downloadMusicXML"></button>
+<button id="toggleAddLyric"></button>
+<label id="lyricVerseSelector" hidden><select id="lyricVerse"><option value="auto">Automatique</option></select></label>
+<button id="toggleAddChord"></button>
+<pre id="result"></pre>
+<script src="../build/opensheetmusicdisplay.min.js"></script>
+<script>
+let musicXMLText = "";
+let updatingScore = false;
+let zoom = 1;
+let pages = [];
+let currentPage = 0;
+const container = document.getElementById("score");
+const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(container, { backend: "svg" });
+function stopPlayback() {}
+function updatePage() {}
+</script>
+<script src="../src/paroles.js"></script>
+<script src="../src/accords.js"></script>
+<script>
+const tests = [];
+function check(name, passed) {
+    tests.push([name, passed]);
+    if (!passed) throw new Error(name);
+}
+const fixture = `<?xml version="1.0"?>
+<score-partwise version="4.0"><part-list><score-part id="P1"><part-name>Test</part-name></score-part></part-list>
+<part id="P1"><measure number="1">
+  <attributes><divisions>1</divisions><time><beats>4</beats><beat-type>4</beat-type></time>
+  <clef><sign>G</sign><line>2</line></clef></attributes>
+  <direction placement="above"><direction-type><words>Rém</words></direction-type></direction>
+  <note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration><voice>1</voice><type>quarter</type></note>
+  <harmony><root><root-step>G</root-step></root><kind>dominant</kind></harmony>
+  <note><pitch><step>D</step><octave>4</octave></pitch><duration>1</duration><voice>1</voice><type>quarter</type></note>
+  <note><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration><voice>1</voice><type>quarter</type></note>
+  <note><rest/><duration>1</duration><voice>1</voice><type>quarter</type></note>
+</measure><measure number="2">
+  <direction placement="above"><direction-type><words>Allegro</words></direction-type></direction>
+  <note><pitch><step>F</step><octave>4</octave></pitch><duration>1</duration><voice>1</voice><type>quarter</type></note>
+</measure></part></score-partwise>`;
+
+async function waitFor(condition) {
+    const deadline = Date.now() + 10000;
+    while (!condition()) {
+        if (Date.now() > deadline) throw new Error("Délai de rendu dépassé.");
+        await new Promise(resolve => setTimeout(resolve, 20));
+    }
+}
+function key(input, value) {
+    const event = new KeyboardEvent("keydown", { key: value, bubbles: true, cancelable: true });
+    input.dispatchEvent(event);
+    return event.defaultPrevented;
+}
+function parsedXml() {
+    return new DOMParser().parseFromString(musicXMLText, "application/xml");
+}
+
+async function runTests() {
+    musicXMLText = fixture;
+    await osmd.load(fixture);
+    osmd.render();
+    osmd.cursor.show();
+    pages = Array.from(container.querySelectorAll("svg"));
+    check("accords structurés et texte affichés", chordGraphics().some(item => item.text === "G7") &&
+        chordGraphics().some(item => item.text === "Rém"));
+    check("texte ordinaire non pris pour un accord", !chordTextLooksLikeSymbol("Allegro"));
+    const offsetXml = new DOMParser().parseFromString(`<score-partwise><part id="P1"><measure>
+        <attributes><divisions>4</divisions></attributes>
+        <note><duration>4</duration><voice>1</voice></note>
+        <direction placement="above"><direction-type><words>C</words></direction-type><offset>-4</offset></direction>
+        <backup><duration>4</duration></backup>
+        <note><duration>4</duration><voice>2</voice></note>
+    </measure></part></score-partwise>`, "application/xml");
+    const offsetTimeline = chordTimeline(offsetXml.querySelector("part"), "1");
+    check("décalage et voix simultanées", offsetTimeline.symbols[0].time === 0 &&
+        offsetTimeline.positions.length === 2 && offsetTimeline.positions[1].time === 0);
+    const original = chordGraphics().find(item => item.text === "Rém");
+    original.svg.querySelector("text").dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
+    let input = document.querySelector(".lyric-editor input");
+    check("double-clic sur un texte d'accord", input?.value === "Rém");
+    input.value = "Solm";
+    check("tiret sans navigation", !key(input, "-") && input.isConnected);
+    key(input, " ");
+    await waitFor(() => {
+        const current = document.querySelector(".lyric-editor input");
+        return current && !current.disabled && current.value === "G7";
+    });
+    input = document.querySelector(".lyric-editor input");
+    check("Espace passe à l'accord structuré suivant", input?.value === "G7");
+    check("texte d'accord enregistré", parsedXml().querySelector("direction words").textContent === "Solm");
+    input.value = "Dm7/F";
+    key(input, " ");
+    await waitFor(() => {
+        const current = document.querySelector(".lyric-editor input");
+        return current && !current.disabled && current.value === "";
+    });
+    input = document.querySelector(".lyric-editor input");
+    check("Espace propose une note sans accord", !!input && input.value === "");
+    let harmony = parsedXml().querySelector("harmony");
+    check("accord structuré modifié avec basse", harmony.querySelector("root-step").textContent === "D" &&
+        harmony.querySelector("kind").textContent === "minor-seventh" &&
+        harmony.querySelector("bass-step").textContent === "F");
+    input.value = "C-7";
+    key(input, " ");
+    await waitFor(() => {
+        const current = document.querySelector(".lyric-editor input");
+        return current && !current.disabled && current.value === "";
+    });
+    const harmonies = parsedXml().querySelectorAll("harmony");
+    check("création d'un accord structuré sur la note vide",
+        harmonies.length === 2 && harmonies[1].querySelector("kind").textContent === "minor-seventh");
+    const lastNoteRect = Array.from(container.querySelectorAll(".vf-stavenote")).at(-1).getBoundingClientRect();
+    check("navigation après un silence et changement de mesure",
+        Math.abs(document.querySelector(".lyric-editor").getBoundingClientRect().left - lastNoteRect.left) < 1);
+    key(document.querySelector(".lyric-editor input"), "Escape");
+
+    document.getElementById("toggleAddLyric").click();
+    document.getElementById("toggleAddChord").click();
+    check("modes paroles et accords exclusifs", !addingLyrics && addingChords);
+    const lastNote = Array.from(container.querySelectorAll(".vf-stavenote")).at(-1);
+    lastNote.querySelector(".vf-notehead").dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    input = document.querySelector(".lyric-editor input");
+    check("bouton d'ajout sur une note sans accord", !!input && input.value === "");
+    const beforeCancel = musicXMLText;
+    input.value = "C";
+    key(input, "Escape");
+    check("annulation sans nouvel accord", musicXMLText === beforeCancel && !document.querySelector(".lyric-editor"));
+    lastNote.querySelector(".vf-notehead").dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    input = document.querySelector(".lyric-editor input");
+    input.value = "C7";
+    document.querySelector(".lyric-editor").requestSubmit();
+    await waitFor(() => !document.querySelector(".lyric-editor"));
+    const words = Array.from(parsedXml().querySelectorAll("direction words")).map(element => element.textContent);
+    check("création sans écraser une indication", words.includes("Allegro") && words.includes("C7"));
+    check("altération structurée", (() => {
+        const doc = parsedXml();
+        const chord = doc.createElement("harmony");
+        updateHarmony(chord, "C7(b9)");
+        return chord.querySelector("kind").textContent === "dominant" &&
+            chord.querySelector("degree-value").textContent === "9" &&
+            chord.querySelector("degree-alter").textContent === "-1" &&
+            chord.querySelector("degree-type").textContent === "add";
+    })());
+    check("validation refuse un accord structuré inconnu", (() => {
+        try { parseChord("Cxyz"); return false; } catch (error) { return error.message.includes("non reconnu"); }
+    })());
+    document.getElementById("toggleAddChord").click();
+    const graphic = chordGraphics().find(item => item.type === "harmony");
+    graphic.svg.querySelector("text").dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
+    input = document.querySelector(".lyric-editor input");
+    const beforeInvalid = musicXMLText;
+    input.value = "Cxyz";
+    document.querySelector(".lyric-editor").requestSubmit();
+    check("saisie structurée invalide conservée sans modification",
+        musicXMLText === beforeInvalid && input.isConnected && document.getElementById("status").textContent.includes("non reconnu"));
+    key(input, "Escape");
+}
+
+runTests().then(() => {
+    document.getElementById("result").textContent = tests.map(([name, ok]) =>
+        (ok ? "OK : " : "ÉCHEC : ") + name).join("\n");
+}).catch(error => {
+    document.getElementById("result").textContent = tests.map(([name, ok]) =>
+        (ok ? "OK : " : "ÉCHEC : ") + name).join("\n") + "\nÉCHEC : " + error.message;
+    throw error;
+});
+</script>
+</body>
+</html>
