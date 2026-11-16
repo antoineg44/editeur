@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Tests des paroles</title></head>
+<body>
+<div id="status"></div>
+<div id="scoreContainer"><div id="score"></div></div>
+<button id="downloadMusicXML"></button>
+<button id="toggleAddLyric"></button>
+<label id="lyricVerseSelector" hidden>Ligne de paroles :
+    <select id="lyricVerse"><option value="auto">Automatique</option>
+        <option value="1">Première ligne</option><option value="2">Deuxième ligne</option></select>
+</label>
+<pre id="result"></pre>
+<script>
+const osmd = { graphic: { measureList: [] } };
+let musicXMLText = "";
+let updatingScore = false;
+let zoom = 1;
+let pages = [];
+let currentPage = 0;
+const container = document.getElementById("score");
+function stopPlayback() {}
+function updatePage() {}
+</script>
+<script src="../src/paroles.js"></script>
+<script>
+const xml = new DOMParser().parseFromString(`
+<score-partwise>
+  <part id="P1">
+    <measure number="1"><attributes><divisions>4</divisions></attributes></measure>
+    <measure number="2">
+      <note><duration>4</duration><voice>1</voice><lyric number="1"><text>mot</text></lyric></note>
+      <note><duration>4</duration><voice>1</voice><lyric number="1"><text>mot</text></lyric></note>
+      <backup><duration>8</duration></backup>
+      <forward><duration>4</duration></forward>
+      <note><duration>4</duration><voice>2</voice><staff>2</staff><lyric number="2"><text>mot</text></lyric></note>
+      <backup><duration>4</duration></backup>
+      <note><duration>4</duration><voice>1</voice><lyric number="1"><text>mot</text></lyric></note>
+      <note><duration>4</duration><lyric><text>al</text><elision> </elision><text>lu</text></lyric></note>
+    </measure>
+  </part>
+</score-partwise>`, "application/xml");
+
+const staff1 = { id: 1, parentInstrument: { idString: "P1" } };
+const staff2 = { id: 2, parentInstrument: { idString: "P1" } };
+const source1 = { parentStaff: staff1 };
+const source2 = { parentStaff: staff2 };
+function lyric(source, voice, time, verse) {
+    const parent = {
+        parentSourceStaffEntry: source,
+        parentVoice: { voiceId: voice },
+        timestamp: { RealValue: time },
+        notes: [{ sourceMeasure: { measureListIndex: 1 } }]
+    };
+    return { text: "mot", verseNumber: verse, parent };
+}
+const first = lyric(source1, 1, 0, "1");
+const duplicate1 = lyric(source1, 1, 0.25, "1");
+const duplicate2 = lyric(source1, 1, 0.25, "1");
+const otherStaff = lyric(source2, 2, 0.25, "2");
+const elision = lyric(source1, 1, 0.5, "1");
+elision.text = "al lu";
+osmd.graphic.measureList[1] = [{ staffEntries: [{
+    lyricsEntries: [first, duplicate1, duplicate2, otherStaff, elision].map(entry => ({ lyricsEntry: entry }))
+}] }];
+osmd.graphic.measureList[0] = [];
+
+const xmlLyrics = Array.from(xml.querySelectorAll("lyric"));
+const tests = [
+    ["première position", findXmlLyric(xml, first) === xmlLyrics[0]],
+    ["première parole simultanée", findXmlLyric(xml, duplicate1) === xmlLyrics[1]],
+    ["autre portée et couplet", findXmlLyric(xml, otherStaff) === xmlLyrics[2]],
+    ["seconde parole simultanée", findXmlLyric(xml, duplicate2) === xmlLyrics[3]],
+    ["élision et numéro de couplet implicite", findXmlLyric(xml, elision) === xmlLyrics[4]]
+];
+let rejected = false;
+try {
+    findXmlLyric(xml, lyric(source1, 1, 0.75, "1"));
+} catch (error) {
+    rejected = error.message.includes("identifier");
+}
+tests.push(["parole introuvable refusée", rejected]);
+
+const navigationXml = new DOMParser().parseFromString(`
+<score-partwise><part id="P1">
+  <measure number="1">
+    <attributes><divisions>4</divisions></attributes>
+    <note><duration>4</duration><voice>1</voice><lyric number="2"><text>al</text></lyric></note>
+    <note><rest/><duration>4</duration><voice>1</voice></note>
+    <note><duration>4</duration><voice>1</voice></note>
+    <note><chord/><duration>4</duration><voice>1</voice></note>
+    <backup><duration>12</duration></backup>
+    <note><duration>12</duration><voice>2</voice></note>
+  </measure>
+  <measure number="2"><note><duration>4</duration><voice>1</voice></note></measure>
+</part></score-partwise>`, "application/xml");
+const navigationNotes = Array.from(navigationXml.querySelectorAll("note"));
+tests.push(["note suivante sans parole, après un silence",
+    findNextXmlNote(navigationNotes[0]).note === navigationNotes[2]]);
+tests.push(["mesure suivante sans changer de voix",
+    findNextXmlNote(navigationNotes[2]).note === navigationNotes[5]]);
+tests.push(["dernière note", findNextXmlNote(navigationNotes[5]) === null]);
+const chordLyric = createXmlLyric(navigationNotes[3], null);
+chordLyric.querySelector("text").textContent = "accord";
+tests.push(["parole existante sur une autre note de l'accord",
+    findChordLyrics(navigationNotes[2], "1")[0] === chordLyric]);
+tests.push(["choix automatique limité à la voix et à la portée",
+    defaultLyricVerse(navigationNotes[0]) === "2" &&
+    defaultLyricVerse(navigationNotes[4]) === "1"]);
+let ambiguous = false;
+try {
+    findNextXmlNote(xml.querySelector("note"));
+} catch (error) {
+    ambiguous = error.message.includes("ambiguë");
+}
+tests.push(["note suivante ambiguë refusée", ambiguous]);
+const firstSyllable = navigationNotes[0].querySelector("lyric");
+const secondSyllable = createXmlLyric(navigationNotes[2], firstSyllable);
+setSyllabicLink(firstSyllable, null, true);
+setSyllabicLink(secondSyllable, true, false);
+tests.push(["création du même couplet et liaison par tiret",
+    secondSyllable.getAttribute("number") === "2" &&
+    firstSyllable.querySelector("syllabic").textContent === "begin" &&
+    secondSyllable.querySelector("syllabic").textContent === "end"]);
+setSyllabicLink(secondSyllable, null, true);
+tests.push(["syllabe intermédiaire",
+    secondSyllable.querySelector("syllabic").textContent === "middle"]);
+setSyllabicLink(secondSyllable, null, false);
+tests.push(["espace conserve le lien précédent",
+    secondSyllable.querySelector("syllabic").textContent === "end"]);
+
+async function testInlineEditing() {
+    musicXMLText = new XMLSerializer().serializeToString(xml);
+    const original = musicXMLText;
+    osmd.load = async () => {};
+    osmd.render = () => {};
+    osmd.cursor = { show() {}, reset() {} };
+    container.innerHTML = '<svg><g class="lyrics"><text>mot</text></g></svg>';
+    const svg = container.querySelector(".lyrics");
+    osmd.graphic.measureList[1][0].staffEntries[0].lyricsEntries[0].graphicalLabel = { SVGNode: svg };
+    const openEditor = () => svg.querySelector("text").dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
+
+    openEditor();
+    let input = document.querySelector(".lyric-editor input");
+    tests.push(["édition sur la partition", !!input && input.value === "mot"]);
+    input.value = "annulé";
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    tests.push(["annulation sans modification", !document.querySelector(".lyric-editor") && musicXMLText === original]);
+
+    openEditor();
+    input = document.querySelector(".lyric-editor input");
+    input.value = " ";
+    document.querySelector(".lyric-editor").requestSubmit();
+    tests.push(["texte vide refusé", !!document.querySelector(".lyric-editor") && musicXMLText === original]);
+    input.value = "nouveau";
+    document.querySelector(".lyric-editor").requestSubmit();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    const updated = new DOMParser().parseFromString(musicXMLText, "application/xml");
+    tests.push(["validation dans le MusicXML",
+        updated.querySelector("lyric text").textContent === "nouveau" && !updatingScore]);
+}
+
+async function testAddingLyrics() {
+    musicXMLText = `<score-partwise><part id="P1"><measure>
+        <attributes><divisions>1</divisions></attributes>
+        <note><duration>1</duration><voice>1</voice></note>
+        <note><duration>1</duration><voice>1</voice></note>
+        <note><rest/><duration>1</duration><voice>1</voice></note>
+    </measure></part></score-partwise>`;
+    const original = musicXMLText;
+    let loadedXml;
+    osmd.load = async text => { loadedXml = new DOMParser().parseFromString(text, "application/xml"); };
+    osmd.render = () => {
+        const notes = Array.from(loadedXml.querySelectorAll("note"));
+        container.innerHTML = '<svg>' + notes.map(() =>
+            '<g class="vf-stavenote"><g class="vf-notehead"></g></g>').join("") + '</svg>';
+        const groups = container.querySelectorAll(".vf-stavenote");
+        const entries = notes.map((note, index) => {
+            const voice = { parentSourceStaffEntry: source1, parentVoice: { voiceId: 1 },
+                timestamp: { RealValue: index / 4 }, notes: [] };
+            const sourceNote = { voiceEntry: voice, sourceMeasure: { measureListIndex: 0 },
+                isRest: () => !!note.querySelector("rest") };
+            voice.notes.push(sourceNote);
+            const graphicalNote = { sourceNote, getSVGGElement: () => groups[index] };
+            const graphicalStaffEntry = { graphicalVoiceEntries: [{ notes: [graphicalNote] }], lyricsEntries: [] };
+            for (const xmlLyric of note.querySelectorAll("lyric")) {
+                const text = xmlLyric.querySelector("text").textContent;
+                let svgNode = null;
+                if (text) {
+                    svgNode = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                    svgNode.classList.add("lyrics");
+                    const svgText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    svgText.textContent = text;
+                    svgNode.appendChild(svgText);
+                    container.querySelector("svg").appendChild(svgNode);
+                }
+                graphicalStaffEntry.lyricsEntries.push({
+                    lyricsEntry: { text, verseNumber: xmlLyric.getAttribute("number") || "1", parent: voice },
+                    graphicalLabel: { SVGNode: svgNode, boundingBox: { absolutePosition: { x: 1, y: 4 } },
+                        label: { fontHeight: 1 } },
+                    graphicalStaffEntry
+                });
+            }
+            return graphicalStaffEntry;
+        });
+        osmd.graphic.measureList = [[{ staffEntries: entries }]];
+    };
+    await osmd.load(musicXMLText);
+    osmd.render();
+    const clickNote = index => container.querySelectorAll(".vf-notehead")[index]
+        .dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    document.getElementById("toggleAddLyric").click();
+    document.getElementById("lyricVerse").value = "2";
+    clickNote(0);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    let input = document.querySelector(".lyric-editor input");
+    tests.push(["sélection explicite de la deuxième ligne sans première ligne",
+        !!input && osmd.graphic.measureList[0][0].staffEntries[0].lyricsEntries[0]
+            ?.lyricsEntry.verseNumber === "2"]);
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await new Promise(resolve => setTimeout(resolve, 0));
+    document.getElementById("lyricVerse").value = "auto";
+    clickNote(0);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    input = document.querySelector(".lyric-editor input");
+    tests.push(["bouton : création sur une note sans parole", !!input && input.value === ""]);
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await new Promise(resolve => setTimeout(resolve, 0));
+    tests.push(["annulation d'une création sans parole vide",
+        musicXMLText === original && !document.querySelector(".lyric-editor") &&
+        osmd.graphic.measureList[0][0].staffEntries[0].lyricsEntries.length === 0]);
+
+    clickNote(0);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    input = document.querySelector(".lyric-editor input");
+    input.value = "bonjour";
+    document.querySelector(".lyric-editor").requestSubmit();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    tests.push(["création enregistrée sur la note sélectionnée",
+        new DOMParser().parseFromString(musicXMLText, "application/xml")
+            .querySelector("note lyric text")?.textContent === "bonjour"]);
+    const firstLineXml = musicXMLText;
+    clickNote(0);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    input = document.querySelector(".lyric-editor input");
+    tests.push(["deuxième ligne proposée sur une parole existante", input?.value === ""]);
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await new Promise(resolve => setTimeout(resolve, 0));
+    tests.push(["annulation de la deuxième ligne", musicXMLText === firstLineXml]);
+    clickNote(1);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    input = document.querySelector(".lyric-editor input");
+    tests.push(["deuxième ligne proposée sur une note sans parole",
+        !!input && osmd.graphic.measureList[0][0].staffEntries[1].lyricsEntries[0]
+            ?.lyricsEntry.verseNumber === "2"]);
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await new Promise(resolve => setTimeout(resolve, 0));
+    clickNote(0);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    input = document.querySelector(".lyric-editor input");
+    input.value = "nou";
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "-", bubbles: true }));
+    await new Promise(resolve => setTimeout(resolve, 0));
+    input = document.querySelector(".lyric-editor input");
+    input.value = "veau";
+    document.querySelector(".lyric-editor").requestSubmit();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    const secondLineXml = new DOMParser().parseFromString(musicXMLText, "application/xml");
+    const xmlNotes = secondLineXml.querySelectorAll("note");
+    tests.push(["deuxième ligne et navigation sans modifier la première",
+        xmlNotes[0].querySelector('lyric:not([number]) text')?.textContent === "bonjour" &&
+        xmlNotes[0].querySelector('lyric[number="2"] text')?.textContent === "nou" &&
+        xmlNotes[1].querySelector('lyric[number="2"] text')?.textContent === "veau"]);
+    clickNote(0);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    input = document.querySelector(".lyric-editor input");
+    tests.push(["deuxième ligne existante ouverte sans doublon", input?.value === "nou"]);
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    document.getElementById("lyricVerse").value = "1";
+    clickNote(0);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    input = document.querySelector(".lyric-editor input");
+    tests.push(["sélection explicite de la première ligne", input?.value === "bonjour"]);
+    input.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    clickNote(2);
+    await new Promise(resolve => setTimeout(resolve, 0));
+    tests.push(["silence refusé", !document.querySelector(".lyric-editor") &&
+        document.getElementById("status").textContent.includes("silence")]);
+    document.getElementById("toggleAddLyric").click();
+    tests.push(["désactivation du mode d'ajout",
+        document.getElementById("toggleAddLyric").getAttribute("aria-pressed") === "false"]);
+}
+
+testInlineEditing().then(testAddingLyrics).then(() => {
+    document.getElementById("result").textContent = tests.map(([name, ok]) =>
+        (ok ? "OK : " : "ÉCHEC : ") + name
+    ).join("\n");
+    if (tests.some(([, ok]) => !ok)) throw new Error("Échec des tests des paroles.");
+}).catch(error => {
+    document.getElementById("result").textContent = "ÉCHEC : " + error.message;
+    throw error;
+});
+</script>
+</body>
+</html>
