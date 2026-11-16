@@ -1,5 +1,6 @@
 // -------------------------------------------------- // ZOOM // --------------------------------------------------
 function setZoom(value) {
+  if (updatingScore) return;
   zoom = Math.max(0.4, Math.min(2.5, value));
   osmd.Zoom = zoom;
   osmd.render();
