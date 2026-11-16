@@ -123,9 +123,6 @@ document.getElementById("scoreContainer")
 // GESTION DU MUSICXML
 // --------------------------------------------------
 
-// Contenu XML original sous forme de texte
-let musicXMLText = "";
-
 // Prochaine voix disponible
 let prochaineVoix = 10;
 
