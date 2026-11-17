@@ -213,7 +213,7 @@ if (!$autorise) {
 
         <?php if ($autorise): ?>
 <iframe
-    src="src/index.php"
+    src="src/index.html"
     title="Bibliothèque vidéo"
     width="100%"
     height="500"
