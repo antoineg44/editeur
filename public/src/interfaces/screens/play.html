@@ -1,0 +1,237 @@
+<!-- Viritura / play - MIT, Viritura contributors (2026) -->
+<div id="root">
+<div class="_stageHidden_1xvfy_28" data-testid="video-stage">
+</div>
+<div style="display: flex; flex-direction: column; height: 100vh; width: 100vw; overflow: hidden;">
+<div class="app-chrome app-chrome--top" style="display: flex; align-items: center; flex-shrink: 0; height: 48px;">
+<div role="menubar" class="_menuBar_oip4i_3" aria-label="Menu bar" tabindex="0" data-orientation="horizontal" style="outline: none;">
+<span class="_appMark_oip4i_11" aria-hidden="true"><img alt="" draggable="false" src="./assets/branding/favicon.svg"></span>
+<button type="button" role="menuitem" id="radix-_r_1_" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="_trigger_oip4i_30" tabindex="0" data-orientation="horizontal" data-radix-collection-item="" data-ui="File">
+File
+</button>
+<button type="button" role="menuitem" id="radix-_r_5_" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="_trigger_oip4i_30" tabindex="-1" data-orientation="horizontal" data-radix-collection-item="" data-ui="Edit">
+Edit
+</button>
+<button type="button" role="menuitem" id="radix-_r_9_" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="_trigger_oip4i_30" tabindex="-1" data-orientation="horizontal" data-radix-collection-item="" data-ui="View">
+View
+</button>
+<button type="button" role="menuitem" id="radix-_r_d_" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="_trigger_oip4i_30" tabindex="-1" data-orientation="horizontal" data-radix-collection-item="" data-ui="Help">
+Help
+</button>
+</div>
+<div style="flex: 1 1 0%; display: flex; align-items: center; height: 100%; min-width: 0px;">
+<div style="display: flex; align-items: center; gap: 8px; padding: 0px 12px; height: 100%; margin-left: auto; flex-shrink: 0;">
+<div style="display: flex; align-items: center; gap: 4px;">
+<button aria-label="Back to start" data-state="closed" style="width: 36px; height: 36px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; background: var(--surface-raised); box-shadow: var(--elevation-0); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, opacity 0.15s; opacity: 0.5;" data-ui="Back to start">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skip-back" aria-hidden="true"><path d="M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"></path><path d="M3 20V4"></path></svg>
+</button>
+<button aria-label="Play" data-state="closed" style="width: 36px; height: 36px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; background: var(--accent); box-shadow: var(--elevation-1); color: rgb(255, 255, 255); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, opacity 0.15s;" data-ui="Play">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play" aria-hidden="true"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg>
+</button>
+<button disabled="" aria-label="Stop" data-state="closed" style="width: 36px; height: 36px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; background: var(--surface-raised); box-shadow: var(--elevation-0); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, opacity 0.15s; opacity: 0.5;" data-ui="Stop">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect></svg>
+</button>
+</div>
+<span aria-live="polite" style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px;"></span>
+<button type="button" aria-label="Showing time — click for measure:beat" data-state="closed" style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; background: var(--surface-raised); box-shadow: var(--inset-soft); font-family: monospace; font-size: 0.85rem; user-select: none; cursor: pointer;" data-ui="Showing time — click for measure:beat">
+<span style="color: var(--text); font-weight: 600; min-width: 32px; text-align: right;">0:00</span><span style="color: var(--text-muted);">/</span><span style="color: var(--text-muted); min-width: 32px;">0:16</span>
+</button>
+<button aria-label="Follow playhead on" aria-pressed="true" data-state="closed" style="width: 30px; height: 30px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; background: var(--accent); box-shadow: var(--inset-soft); color: rgb(255, 255, 255); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, color 0.15s, background 0.15s;" data-ui="Follow playhead on">
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right-to-line" aria-hidden="true"><path d="M17 12H3"></path><path d="m11 18 6-6-6-6"></path><path d="M21 5v14"></path></svg>
+</button>
+<button aria-label="Metronome off" aria-pressed="false" data-state="closed" style="width: 30px; height: 30px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; background: var(--surface-raised); box-shadow: var(--elevation-0); color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, color 0.15s, background 0.15s;" data-ui="Metronome off">
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-metronome" aria-hidden="true"><path d="M12 11.4V9.1"></path><path d="m12 17 6.59-6.59"></path><path d="m15.05 5.7-.218-.691a3 3 0 0 0-5.663 0L4.418 19.695A1 1 0 0 0 5.37 21h13.253a1 1 0 0 0 .951-1.31L18.45 16.2"></path><circle cx="20" cy="9" r="2"></circle></svg>
+</button>
+</div>
+</div>
+</div>
+<div style="display: flex; flex: 1 1 0%; min-height: 0px; overflow: hidden;">
+<div class="_bar_ponj1_3 app-chrome app-chrome--side">
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Setup" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Setup" data-activity="setup">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 5v16"></path><path d="M16 13h2"></path><path d="M16 9h2"></path><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"></path><path d="M6 13h2"></path><path d="M6 9h2"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Write" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Write" data-activity="write">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Engrave" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Engrave" data-activity="engrave">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ruler" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"></path><path d="m14.5 12.5 2-2"></path><path d="m11.5 9.5 2-2"></path><path d="m8.5 6.5 2-2"></path><path d="m17.5 15.5 2-2"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Play" aria-pressed="true" data-active="true" type="button" data-state="closed" data-ui="Play" data-activity="play">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play" aria-hidden="true"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Roll" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Roll" data-activity="roll">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-piano" aria-hidden="true"><path d="M10 13v4"></path><path d="M14 13v4"></path><path d="M18 13v4"></path><path d="M2 13h20"></path><path d="M22 11.5A3.5 3.5 0 0018.5 8a3.52 3.52 0 01-3.173-2A7 7 0 002 9v10a2 2 0 002 2h16a2 2 0 002-2z"></path><path d="M6 13v4"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Review" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Review" data-activity="review">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-diff" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M9 10h6"></path><path d="M12 13V7"></path><path d="M9 17h6"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Publish" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Publish" data-activity="publish">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket" aria-hidden="true"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"></path><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"></path></svg>
+</button>
+<div class="_bottomActions_ponj1_15">
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Settings" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Settings" data-activity="settings">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
+</button>
+</div>
+</div>
+<div style="flex: 1 1 0%; min-height: 0px; min-width: 0px; display: flex; flex-direction: column; overflow: hidden;">
+<div style="display: flex; flex-direction: column; height: 100%; overflow: hidden;">
+<div class="_shell_14dhm_6" style="--workspace-status-zone-height: 0px;">
+<div class="_canvasLayer_14dhm_53">
+<div style="position: absolute; inset: 0px; z-index: 0;">
+<div style="width: 100%; height: 100%; min-height: 200px; position: relative; overflow: hidden; background: var(--surface-raised); border-radius: 8px; user-select: none;">
+<svg width="1098" height="678" style="display: block; touch-action: none;"><line x1="0" y1="-678" x2="0" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="68.625" y1="-678" x2="68.625" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="137.25" y1="-678" x2="137.25" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="205.875" y1="-678" x2="205.875" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="274.5" y1="-678" x2="274.5" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="343.125" y1="-678" x2="343.125" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="411.75" y1="-678" x2="411.75" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="480.375" y1="-678" x2="480.375" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="549" y1="-678" x2="549" y2="1356" stroke="var(--border)" stroke-width="1" stroke-dasharray="" opacity="0.3"></line><line x1="617.625" y1="-678" x2="617.625" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="686.25" y1="-678" x2="686.25" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="754.875" y1="-678" x2="754.875" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="823.5" y1="-678" x2="823.5" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="892.125" y1="-678" x2="892.125" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="960.75" y1="-678" x2="960.75" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="1029.375" y1="-678" x2="1029.375" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="1098" y1="-678" x2="1098" y2="1356" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="678" x2="2196" y2="678" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="638.1176470588235" x2="2196" y2="638.1176470588235" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="598.2352941176471" x2="2196" y2="598.2352941176471" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="558.3529411764706" x2="2196" y2="558.3529411764706" stroke="var(--border)" stroke-width="1" stroke-dasharray="" opacity="0.3"></line><line x1="-1098" y1="518.470588235294" x2="2196" y2="518.470588235294" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="478.5882352941177" x2="2196" y2="478.5882352941177" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="438.7058823529412" x2="2196" y2="438.7058823529412" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="398.8235294117647" x2="2196" y2="398.8235294117647" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="358.94117647058823" x2="2196" y2="358.94117647058823" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="319.05882352941177" x2="2196" y2="319.05882352941177" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="279.1764705882353" x2="2196" y2="279.1764705882353" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="239.29411764705884" x2="2196" y2="239.29411764705884" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="199.41176470588235" x2="2196" y2="199.41176470588235" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="159.52941176470588" x2="2196" y2="159.52941176470588" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="119.64705882352942" x2="2196" y2="119.64705882352942" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="79.76470588235294" x2="2196" y2="79.76470588235294" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="39.88235294117647" x2="2196" y2="39.88235294117647" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><line x1="-1098" y1="0" x2="2196" y2="0" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="2,4" opacity="0.3"></line><defs><radialGradient id="stageFloorWash" cx="50%" cy="22%" r="78%"><stop offset="0%" stop-color="var(--accent)" stop-opacity="0.10"></stop><stop offset="55%" stop-color="var(--accent)" stop-opacity="0.04"></stop><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"></stop></radialGradient><filter id="stageFloorShadow" x="-10%" y="-10%" width="120%" height="130%"><feGaussianBlur in="SourceAlpha" stdDeviation="6"></feGaussianBlur><feOffset dx="0" dy="4" result="blurred"></feOffset><feComponentTransfer><feFuncA type="linear" slope="0.25"></feFuncA></feComponentTransfer><feMerge><feMergeNode></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs><rect x="137.25" y="79.76470588235294" width="823.5" height="478.5882352941177" rx="12" fill="url(#stageFloorWash)" stroke="var(--border)" stroke-width="1" opacity="0.95" filter="url(#stageFloorShadow)"></rect><text x="549" y="39.88235294117647" text-anchor="middle" fill="var(--text-muted)" font-size="14" opacity="0.5">UPSTAGE</text><text x="549" y="638.1176470588235" text-anchor="middle" fill="var(--text-muted)" font-size="14" opacity="0.5">AUDIENCE</text><g style="cursor: grab;"><foreignObject x="171.875" y="364.8235294117647" width="68" height="68" style="overflow: visible; pointer-events: none;">
+<div style="width: 34px; height: 34px; margin: 17px 0px 0px 17px;">
+<div class="_wrap_1tfg5_10" style="width: 34px; height: 34px; --sphere-color: #ec4899; --sphere-lift: 0;">
+<div class="_ground_1tfg5_22">
+</div>
+<div class="_shadow_1tfg5_50">
+<div class="_overlay_1tfg5_100">
+</div>
+</div>
+</div>
+</div>
+</foreignObject><circle cx="205.875" cy="398.8235294117647" r="13.26" fill="transparent" stroke="none" stroke-width="1"></circle><text x="205.875" y="380.5635294117647" text-anchor="middle" fill="var(--text)" font-size="13" opacity="0.7" font-weight="400" style="pointer-events: none;">Piano</text></g><g style="cursor: grab;"><foreignObject x="513" y="482.47058823529403" width="72" height="72" style="overflow: visible; pointer-events: none;">
+<div style="width: 36px; height: 36px; margin: 18px 0px 0px 18px;">
+<div class="_wrap_1tfg5_10" style="width: 36px; height: 36px; --sphere-color: var(--accent); --sphere-lift: 0;">
+<div class="_ground_1tfg5_22">
+</div>
+<div class="_shadow_1tfg5_50">
+<div class="_overlay_1tfg5_100">
+</div>
+</div>
+</div>
+</div>
+</foreignObject><circle cx="549" cy="518.470588235294" r="14.040000000000001" fill="transparent" stroke="none" stroke-width="2"></circle><text x="549" y="550.510588235294" text-anchor="middle" fill="var(--text-muted)" font-size="13">Listener</text></g></svg>
+</div>
+</div>
+</div>
+<div class="_panel_3cc04_15" style="width: 280px; z-index: 2; position: absolute; top: 0px; margin-top: 14px; margin-bottom: 14px; height: calc(100% - 28px); left: 14px;">
+<div class="_chrome_3cc04_42">
+<div class="_panel_120kv_19">
+<div class="_header_1do1f_3 ">
+<div class="_row_1do1f_19">
+<span class="_titleGroup_1do1f_27"><span class="_title_1do1f_27">Mixer</span></span>
+</div>
+<div class="_subtitle_1do1f_56">
+Levels, panning, and effects per part.
+</div>
+</div>
+<div class="_groupList_120kv_29 viritura-scroll">
+<section class="_group_120kv_29">
+<div class="_groupHeader_120kv_51">
+<button class="_button_4hx0m_4 _xs_4hx0m_71 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112" aria-label="Collapse Keys" type="button" data-state="closed" data-ui="Collapse Keys">
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+<div class="_faderBar_120kv_187 _groupFader_120kv_90" role="slider" tabindex="0" aria-label="Keys bus volume" aria-valuemin="-60" aria-valuemax="6" aria-valuenow="0" aria-valuetext="0.0 dB" data-state="closed" style="--fill: 90.9090909090909%;">
+<div class="_faderFill_120kv_214">
+</div>
+<div class="_faderLabel_120kv_193">
+<span class="_faderName_120kv_199"><span class="_groupName_120kv_73">Keys</span></span><span class="_readout_120kv_147">0.0 dB</span>
+</div>
+</div>
+<span class="_toggles_120kv_157">
+<button class="_button_4hx0m_4 _xs_4hx0m_71 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112" aria-label="Mute Keys bus" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Mute Keys bus">
+M
+</button>
+<button class="_button_4hx0m_4 _xs_4hx0m_71 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112" aria-label="Solo Keys bus" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Solo Keys bus">
+S
+</button>
+</span>
+</div>
+<div class="_groupTracks_120kv_94">
+<div class="_track_120kv_113" data-testid="mixer-channel-0" data-part-id="01a20860-a4f2-78e4-8437-d54e0e03e975">
+<div class="_faderBar_120kv_187 _channelFader_120kv_187" role="slider" tabindex="0" aria-label="Volume Piano" aria-valuemin="-60" aria-valuemax="6" aria-valuenow="-6.000000000000001" aria-valuetext="-6.0 dB" data-state="closed" style="--fill: 81.81818181818183%;">
+<div class="_faderFill_120kv_214">
+</div>
+<div class="_faderLabel_120kv_193">
+<span class="_faderName_120kv_199">Piano</span><span class="_readout_120kv_147">-6.0 dB</span>
+</div>
+</div>
+<span class="_channelControls_120kv_163">
+<button class="_button_4hx0m_4 _xs_4hx0m_71 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112" aria-label="Mute Piano" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Mute Piano">
+M
+</button>
+<button class="_button_4hx0m_4 _xs_4hx0m_71 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112" aria-label="Solo Piano" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Solo Piano">
+S
+</button>
+<button class="_button_4hx0m_4 _sm_4hx0m_85 _defaultVariant_4hx0m_156 _fullWidth_4hx0m_415 _trigger_q5r50_1 _triggerFull_q5r50_8 _button_gg2qz_1" aria-label="Sound for Piano: VirituraSounds — Notation default: Piano" type="button" id="radix-_r_2e7_" aria-haspopup="menu" aria-expanded="false" data-state="closed" data-ui="Sound for Piano: VirituraSounds — Notation default: Piano">
+<span class="_triggerLabel_q5r50_12">VirituraSounds — Notation default: Piano</span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down _triggerIcon_q5r50_19" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _xs_4hx0m_71 _defaultVariant_4hx0m_156" aria-label="Piano spatial mode: Stage" aria-pressed="true" data-active="true" type="button" data-state="closed" data-ui="Piano spatial mode: Stage">
+3D
+</button>
+</span>
+</div>
+</div>
+</section>
+</div>
+<div class="_master_120kv_312">
+<div class="_track_120kv_113 _masterTrack_120kv_351" data-testid="mixer-master">
+<div class="_faderBar_120kv_187 _masterFader_120kv_312" role="slider" tabindex="0" aria-label="Master Volume" aria-valuemin="-60" aria-valuemax="6" aria-valuenow="0" aria-valuetext="0.0 dB" data-state="closed" style="--fill: 90.9090909090909%;">
+<div class="_faderFill_120kv_214">
+</div>
+<div class="_faderLabel_120kv_193">
+<span class="_faderName_120kv_199"><span class="_masterLabel_120kv_315"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-2" aria-hidden="true" style="color: var(--text-muted); flex-shrink: 0;"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"></path><path d="M16 9a5 5 0 0 1 0 6"></path><path d="M19.364 18.364a9 9 0 0 0 0-12.728"></path></svg>Master</span></span><span class="_readout_120kv_147">0.0 dB</span>
+</div>
+</div>
+<span class="_toggles_120kv_157">
+<button class="_button_4hx0m_4 _xs_4hx0m_71 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112" aria-label="Mute Master" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Mute Master">
+M
+</button>
+</span>
+</div>
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" data-state="open" aria-controls="radix-_r_2ed_" data-ui="Master FX">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Master FX</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_2ed_" class="_content_eh69h_68" style="--radix-collapsible-content-height: 215px; --radix-collapsible-content-width: 262px;">
+<div class="_contentInner_eh69h_69">
+<div class="_fxBody_120kv_383">
+<div class="_fxGroup_120kv_390">
+<span class="_fxGroupHeader_120kv_396"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-waves-horizontal lucide-waves" aria-hidden="true"><path d="M2 12q2.5 2 5 0t5 0 5 0 5 0"></path><path d="M2 19q2.5 2 5 0t5 0 5 0 5 0"></path><path d="M2 5q2.5 2 5 0t5 0 5 0 5 0"></path></svg>Reverb</span>
+<div class="_fxRowSelect_120kv_423">
+<span class="_fxLabel_120kv_415">Room</span>
+<button type="button" class="_trigger_wnkfr_1 _fullWidth_wnkfr_23" role="combobox" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-ui="Vienna Musikverein">
+<span class="_triggerInner_wnkfr_80"><span style="pointer-events: none;">Vienna Musikverein</span></span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down _chevron_wnkfr_97" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+</div>
+<div class="_fxRow_120kv_325">
+<span class="_fxLabel_120kv_415">Wet</span><input min="0" max="1" step="0.01" class="_slider_eiriu_11" aria-label="Reverb wet" data-state="closed" type="range" value="0.25" style="--fill: 25%; --fill-start: 0%; --fill-end: 25%; --center: 0%;"><span class="_readout_120kv_147">25</span>
+</div>
+</div>
+<div class="_fxGroup_120kv_390">
+<span class="_fxGroupHeader_120kv_396"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-audio-waveform" aria-hidden="true"><path d="M2 13a2 2 0 0 0 2-2V7a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0V4a2 2 0 0 1 4 0v13a2 2 0 0 0 4 0v-4a2 2 0 0 1 2-2"></path></svg>Air EQ</span>
+<div class="_fxRow_120kv_325">
+<span class="_fxLabel_120kv_415">8 kHz</span><input min="-6" max="8" step="0.5" class="_slider_eiriu_11" aria-label="Air EQ gain" data-bipolar="true" data-state="closed" type="range" value="2.5" style="--fill: 60.71428571428571%; --fill-start: 42.857142857142854%; --fill-end: 60.71428571428571%; --center: 42.857142857142854%;"><span class="_readout_120kv_147">+2.5</span>
+</div>
+</div>
+<div class="_fxGroup_120kv_390">
+<span class="_fxGroupHeader_120kv_396"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>Limiter</span>
+<div class="_fxRow_120kv_325">
+<span class="_fxLabel_120kv_415">Thresh</span><input min="-24" max="0" step="1" class="_slider_eiriu_11" aria-label="Limiter threshold" data-state="closed" type="range" value="-6" style="--fill: 75%; --fill-start: 0%; --fill-end: 75%; --center: 0%;"><span class="_readout_120kv_147">-6</span>
+</div>
+<div class="_fxRow_120kv_325">
+<span class="_fxLabel_120kv_415">Ratio</span><input min="1" max="20" step="1" class="_slider_eiriu_11" aria-label="Limiter ratio" data-state="closed" type="range" value="4" style="--fill: 15.789473684210526%; --fill-start: 0%; --fill-end: 15.789473684210526%; --center: 0%;"><span class="_readout_120kv_147">4:1</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="_resize_3cc04_227" data-side="right">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section aria-label="Notifications alt+T" tabindex="-1" aria-live="polite" aria-relevant="additions text" aria-atomic="false">
+</section>
+</div>

@@ -1,0 +1,974 @@
+<!-- Viritura / write - MIT, Viritura contributors (2026) -->
+<div id="root">
+<div class="_stageHidden_1xvfy_28" data-testid="video-stage">
+</div>
+<div style="display: flex; flex-direction: column; height: 100vh; width: 100vw; overflow: hidden;">
+<div class="app-chrome app-chrome--top" style="display: flex; align-items: center; flex-shrink: 0; height: 48px;">
+<div role="menubar" class="_menuBar_oip4i_3" aria-label="Menu bar" tabindex="0" data-orientation="horizontal" style="outline: none;">
+<span class="_appMark_oip4i_11" aria-hidden="true"><img alt="" draggable="false" src="./assets/branding/favicon.svg"></span>
+<button type="button" role="menuitem" id="radix-_r_1_" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="_trigger_oip4i_30" tabindex="-1" data-orientation="horizontal" data-radix-collection-item="" data-ui="File">
+File
+</button>
+<button type="button" role="menuitem" id="radix-_r_5_" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="_trigger_oip4i_30" tabindex="-1" data-orientation="horizontal" data-radix-collection-item="" data-ui="Edit">
+Edit
+</button>
+<button type="button" role="menuitem" id="radix-_r_9_" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="_trigger_oip4i_30" tabindex="-1" data-orientation="horizontal" data-radix-collection-item="" data-ui="View">
+View
+</button>
+<button type="button" role="menuitem" id="radix-_r_d_" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="_trigger_oip4i_30" tabindex="-1" data-orientation="horizontal" data-radix-collection-item="" data-ui="Help">
+Help
+</button>
+</div>
+<div style="flex: 1 1 0%; display: flex; align-items: center; height: 100%; min-width: 0px;">
+<div class="_toolbar_18h0f_1">
+<div class="_left_18h0f_13">
+<div class="_root_wk6gy_3">
+<button type="button" class="_trigger_wnkfr_1 _trigger_wk6gy_8" aria-label="Select score or part: Full score" aria-haspopup="dialog" aria-expanded="false" data-state="closed" data-ui="Select score or part: Full score">
+<span class="_triggerInner_wnkfr_80"><span class="_leading_wnkfr_90"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-music" aria-hidden="true" style="flex-shrink: 0; opacity: 0.7;"><path d="M16 5H3"></path><path d="M11 12H3"></path><path d="M11 19H3"></path><path d="M21 16V5"></path><circle cx="18" cy="16" r="3"></circle></svg></span><span class="_triggerLabel_wk6gy_12">Full score</span></span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down _chevron_wnkfr_97" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+</div>
+</div>
+<div class="_center_18h0f_14">
+<div class="_toolbar_1rdja_3" role="toolbar" aria-label="Note input toolbar">
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156" aria-label="Toggle note input (N)" aria-pressed="false" data-active="false" data-testid="toolbar-note-input" type="button" data-state="closed" data-ui="Toggle note input (N)">
+N
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156" aria-label="Chord mode" aria-pressed="false" data-active="false" data-testid="toolbar-chord-lock" type="button" data-state="closed" data-ui="Chord mode">
+<span aria-hidden="true" style="display: inline-flex; flex-direction: column; align-items: center; justify-content: center; font-family: Bravura; font-size: 18px; line-height: 4.4px; height: 20px; transform: translateY(-6px);"><span></span><span></span><span></span></span>
+</button>
+<div class="_vertical_7ojyi_1" role="separator">
+</div>
+<button type="button" class="_trigger_wnkfr_1 _iconButton_wnkfr_27" aria-label="Rhythm reading off; using manual duration" data-testid="toolbar-rhythm-source" role="combobox" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-ui="Rhythm reading off; using manual duration">
+<span class="_triggerInner_wnkfr_80"><span style="pointer-events: none;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-glasses" aria-hidden="true"><circle cx="6" cy="15" r="4"></circle><circle cx="18" cy="15" r="4"></circle><path d="M14 15a2 2 0 0 0-2-2 2 2 0 0 0-2 2"></path><path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"></path><path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"></path></svg></span></span><span class="_corner_wnkfr_102" data-select-corner="true" aria-hidden="true"></span>
+</button>
+<div class="_group_1rdja_36" role="group" aria-label="Duration">
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="16th note (3)" aria-pressed="false" data-active="false" data-testid="toolbar-duration-16" type="button" data-state="closed" data-ui="16th note (3)">
+<span style="display: inline-block; transform: translateY(-1.1616px);"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="Eighth note (4)" aria-pressed="false" data-active="false" data-testid="toolbar-duration-8" type="button" data-state="closed" data-ui="Eighth note (4)">
+<span style="display: inline-block; transform: translateY(-1.2px);"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="Quarter note (5)" aria-pressed="true" data-active="true" data-testid="toolbar-duration-4" type="button" data-state="closed" data-ui="Quarter note (5)">
+<span style="display: inline-block; transform: translateY(-1.2768px);"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="Half note (6)" aria-pressed="false" data-active="false" data-testid="toolbar-duration-2" type="button" data-state="closed" data-ui="Half note (6)">
+<span style="display: inline-block; transform: translateY(-1.2768px);"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="Whole note (7)" aria-pressed="false" data-active="false" data-testid="toolbar-duration-1" type="button" data-state="closed" data-ui="Whole note (7)">
+<span style="display: inline-block; transform: translateY(-6.528px);"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156" aria-label="Toggle extended durations" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Toggle extended durations">
+<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-right" aria-hidden="true"><path d="m6 17 5-5-5-5"></path><path d="m13 17 5-5-5-5"></path></svg>
+</button>
+</div>
+<div class="_vertical_7ojyi_1" role="separator">
+</div>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433 _trigger_216cq_4" aria-label="Augmentation dot — 1 dot (click to apply, right-click for options)" aria-pressed="false" data-active="false" data-testid="toolbar-dot" type="button" aria-haspopup="menu" aria-expanded="false" data-state="closed" data-ui="Augmentation dot — 1 dot (click to apply, right-click for options)">
+<span style="display: inline-flex; align-items: center; gap: 3px;"><span></span><span style="letter-spacing: 2px;"></span></span><span class="_caret_216cq_11" aria-hidden="true"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="Rest (0)" aria-pressed="false" data-active="false" data-testid="toolbar-rest" type="button" data-state="closed" data-ui="Rest (0)">
+<span style="display: inline-block; transform: translateY(-6.5472px);"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433 _trigger_216cq_4" aria-label="Grace note (click to toggle, right-click for options)" aria-pressed="false" data-active="false" data-testid="toolbar-grace" type="button" aria-haspopup="menu" aria-expanded="false" data-state="closed" data-ui="Grace note (click to toggle, right-click for options)">
+<span></span><span class="_caret_216cq_11" aria-hidden="true"></span>
+</button>
+<div class="_vertical_7ojyi_1" role="separator">
+</div>
+<div class="_group_1rdja_36" role="group" aria-label="Accidentals">
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="Flat (−)" aria-pressed="false" data-active="false" data-testid="toolbar-accidental-flat" type="button" data-state="closed" data-ui="Flat (−)">
+<span style="display: inline-block; font-size: 1.55rem; transform: translateY(-5.1584px);"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="Natural (\ note input; 0 normal mode)" aria-pressed="false" data-active="false" data-testid="toolbar-accidental-natural" type="button" data-state="closed" data-ui="Natural (\ note input; 0 normal mode)">
+<span style="display: inline-block; font-size: 1.55rem; transform: translateY(-8.3576px);"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="Sharp (=)" aria-pressed="false" data-active="false" data-testid="toolbar-accidental-sharp" type="button" data-state="closed" data-ui="Sharp (=)">
+<span style="display: inline-block; font-size: 1.55rem; transform: translateY(-8.4072px);"></span>
+</button>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156" aria-label="Toggle extended accidentals" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Toggle extended accidentals">
+<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-right" aria-hidden="true"><path d="m6 17 5-5-5-5"></path><path d="m13 17 5-5-5-5"></path></svg>
+</button>
+</div>
+<div class="_vertical_7ojyi_1" role="separator">
+</div>
+<button type="button" class="_trigger_wnkfr_1 _iconButton_wnkfr_27" aria-label="Voice" data-testid="toolbar-voice" role="combobox" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-ui="Voice">
+<span class="_triggerInner_wnkfr_80"><span style="pointer-events: none;">↑1</span></span><span class="_corner_wnkfr_102" data-select-corner="true" aria-hidden="true"></span>
+</button>
+</div>
+</div>
+<div class="_right_18h0f_15">
+<div style="display: flex; align-items: center; gap: 8px; padding: 0px 12px; height: 100%; margin-left: auto; flex-shrink: 0;">
+<div style="display: flex; align-items: center; gap: 4px;">
+<button aria-label="Back to start" data-state="closed" style="width: 36px; height: 36px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; background: var(--surface-raised); box-shadow: var(--elevation-0); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, opacity 0.15s; opacity: 0.5;" data-ui="Back to start">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skip-back" aria-hidden="true"><path d="M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"></path><path d="M3 20V4"></path></svg>
+</button>
+<button aria-label="Play" data-state="closed" style="width: 36px; height: 36px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; background: var(--accent); box-shadow: var(--elevation-1); color: rgb(255, 255, 255); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, opacity 0.15s;" data-ui="Play">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play" aria-hidden="true"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg>
+</button>
+<button disabled="" aria-label="Stop" data-state="closed" style="width: 36px; height: 36px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; background: var(--surface-raised); box-shadow: var(--elevation-0); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, opacity 0.15s; opacity: 0.5;" data-ui="Stop">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect></svg>
+</button>
+</div>
+<span aria-live="polite" style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px;"></span>
+<button type="button" aria-label="Showing time — click for measure:beat" data-state="closed" style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; background: var(--surface-raised); box-shadow: var(--inset-soft); font-family: monospace; font-size: 0.85rem; user-select: none; cursor: pointer;" data-ui="Showing time — click for measure:beat">
+<span style="color: var(--text); font-weight: 600; min-width: 32px; text-align: right;">0:00</span><span style="color: var(--text-muted);">/</span><span style="color: var(--text-muted); min-width: 32px;">0:16</span>
+</button>
+<button aria-label="Follow playhead on" aria-pressed="true" data-state="closed" style="width: 30px; height: 30px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; background: var(--accent); box-shadow: var(--inset-soft); color: rgb(255, 255, 255); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, color 0.15s, background 0.15s;" data-ui="Follow playhead on">
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right-to-line" aria-hidden="true"><path d="M17 12H3"></path><path d="m11 18 6-6-6-6"></path><path d="M21 5v14"></path></svg>
+</button>
+<button aria-label="Metronome off" aria-pressed="false" data-state="closed" style="width: 30px; height: 30px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; background: var(--surface-raised); box-shadow: var(--elevation-0); color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, color 0.15s, background 0.15s;" data-ui="Metronome off">
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-metronome" aria-hidden="true"><path d="M12 11.4V9.1"></path><path d="m12 17 6.59-6.59"></path><path d="m15.05 5.7-.218-.691a3 3 0 0 0-5.663 0L4.418 19.695A1 1 0 0 0 5.37 21h13.253a1 1 0 0 0 .951-1.31L18.45 16.2"></path><circle cx="20" cy="9" r="2"></circle></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="display: flex; flex: 1 1 0%; min-height: 0px; overflow: hidden;">
+<div class="_bar_ponj1_3 app-chrome app-chrome--side">
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Setup" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Setup" data-activity="setup">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open-text" aria-hidden="true"><path d="M12 5v16"></path><path d="M16 13h2"></path><path d="M16 9h2"></path><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"></path><path d="M6 13h2"></path><path d="M6 9h2"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Write" aria-pressed="true" data-active="true" type="button" data-state="closed" data-ui="Write" data-activity="write">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Engrave" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Engrave" data-activity="engrave">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ruler" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"></path><path d="m14.5 12.5 2-2"></path><path d="m11.5 9.5 2-2"></path><path d="m8.5 6.5 2-2"></path><path d="m17.5 15.5 2-2"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Play" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Play" data-activity="play">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play" aria-hidden="true"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Roll" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Roll" data-activity="roll">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-piano" aria-hidden="true"><path d="M10 13v4"></path><path d="M14 13v4"></path><path d="M18 13v4"></path><path d="M2 13h20"></path><path d="M22 11.5A3.5 3.5 0 0018.5 8a3.52 3.52 0 01-3.173-2A7 7 0 002 9v10a2 2 0 002 2h16a2 2 0 002-2z"></path><path d="M6 13v4"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Review" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Review" data-activity="review">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-diff" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M9 10h6"></path><path d="M12 13V7"></path><path d="M9 17h6"></path></svg>
+</button>
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Publish" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Publish" data-activity="publish">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket" aria-hidden="true"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"></path><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"></path></svg>
+</button>
+<div class="_bottomActions_ponj1_15">
+<button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24" aria-label="Settings" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Settings" data-activity="settings">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings" aria-hidden="true"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
+</button>
+</div>
+</div>
+<div style="flex: 1 1 0%; min-height: 0px; min-width: 0px; display: flex; flex-direction: column; overflow: hidden;">
+<div style="display: flex; flex: 1 1 0%; min-height: 0px; flex-direction: column; overflow: hidden;">
+<div style="font-family: system-ui, sans-serif; display: flex; flex-direction: column; flex: 1 1 0%; min-height: 0px; position: relative; overflow: hidden; background: var(--bg); color: var(--text);">
+<div class="_shell_14dhm_6" style="--workspace-status-zone-height: 56px;">
+<div class="_canvasLayer_14dhm_53">
+<div style="position: relative; display: flex; flex-direction: column; height: 100%;">
+<div class="static-score">
+Partition — aperçu statique
+</div>
+<div style="position: relative; flex: 1 1 0%;">
+</div>
+</div>
+</div>
+<div class="_panel_3cc04_15" style="width: 300px; z-index: 2; position: absolute; top: 0px; margin-top: 14px; margin-bottom: 14px; height: calc(100% - 28px); left: 14px;">
+<div class="_chrome_3cc04_42">
+<div class="_container_1lemc_5">
+<div class="_tabBar_qi46t_7 _panelTabBar_qi46t_16 " role="tablist">
+<button type="button" class="_tabButton_qi46t_27" aria-selected="true" role="tab" data-ui="Palettes">
+<span class="_tabIcon_qi46t_119"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg></span><span class="_tabLabel_qi46t_125">Palettes</span>
+</button>
+<button type="button" class="_tabButton_qi46t_27" aria-selected="false" role="tab" data-ui="History">
+<span class="_tabIcon_qi46t_119"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg></span><span class="_tabLabel_qi46t_125">History</span>
+</button>
+<button type="button" class="_tabButton_qi46t_27" aria-selected="false" role="tab" data-ui="Properties">
+<span class="_tabIcon_qi46t_119"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders-horizontal" aria-hidden="true"><path d="M10 5H3"></path><path d="M12 19H3"></path><path d="M14 3v4"></path><path d="M16 17v4"></path><path d="M21 12h-9"></path><path d="M21 19h-5"></path><path d="M21 5h-7"></path><path d="M8 10v4"></path><path d="M8 12H3"></path></svg></span><span class="_tabLabel_qi46t_125">Properties</span>
+</button>
+</div>
+<div class="_tabContent_qi46t_131" role="tabpanel">
+<div style="display: flex; flex-direction: column; height: 100%; background: transparent; color: var(--text); font-size: 12px;">
+<div class="_root_jwnbw_1">
+<div class="_inputWrap_jwnbw_10">
+<input class="_input_1x3o9_42" placeholder="Search palettes..." aria-label="Search palettes" type="text" value="">
+</div>
+<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112" aria-label="Collapse all palette sections" type="button" data-state="closed" data-ui="Collapse all palette sections">
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-down-up" aria-hidden="true"><path d="m7 20 5-5 5 5"></path><path d="m7 4 5 5 5-5"></path></svg>
+</button>
+</div>
+<div class="viritura-scroll" style="flex: 1 1 0%; overflow: hidden auto;">
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_14s_" data-state="open" data-ui="ClefShift+C">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Clef</span><span class="_shortcut_eh69h_55">Shift+C</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_14s_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 182px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Treble" aria-pressed="false" data-state="closed" data-ui="Treble">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 36.620000000000005" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 36.62px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="7.710000000000001" x2="235" y2="7.710000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.71" x2="235" y2="12.71" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.71" x2="235" y2="17.71" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.71" x2="235" y2="22.71" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.71" x2="235" y2="27.71" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="22.71" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Alto" aria-pressed="false" data-state="closed" data-ui="Alto">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 21.740000000000002" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 21.74px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="0.870000000000001" x2="235" y2="0.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="5.870000000000001" x2="235" y2="5.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="10.870000000000001" x2="235" y2="10.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="15.870000000000001" x2="235" y2="15.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="20.87" x2="235" y2="20.87" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="10.870000000000001" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Tenor" aria-pressed="false" data-state="closed" data-ui="Tenor">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 26.62" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 26.62px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="5.870000000000001" x2="235" y2="5.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="10.870000000000001" x2="235" y2="10.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="15.870000000000001" x2="235" y2="15.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="20.87" x2="235" y2="20.87" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="25.87" x2="235" y2="25.87" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="10.870000000000001" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Bass" aria-pressed="false" data-state="closed" data-ui="Bass">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 21.740000000000002" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 21.74px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="0.9900000000000002" x2="235" y2="0.9900000000000002" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="5.99" x2="235" y2="5.99" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="10.99" x2="235" y2="10.99" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="15.99" x2="235" y2="15.99" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="20.990000000000002" x2="235" y2="20.990000000000002" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="5.99" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Percussion" aria-pressed="false" data-state="closed" data-ui="Percussion">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 21.5" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 21.5px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="0.75" x2="235" y2="0.75" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="5.75" x2="235" y2="5.75" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="10.75" x2="235" y2="10.75" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="15.75" x2="235" y2="15.75" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="20.75" x2="235" y2="20.75" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="10.75" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Treble 8vb" aria-pressed="false" data-state="closed" data-ui="Treble 8vb">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 41.02" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 41.02px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="7.710000000000001" x2="235" y2="7.710000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.71" x2="235" y2="12.71" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.71" x2="235" y2="17.71" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.71" x2="235" y2="22.71" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.71" x2="235" y2="27.71" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="22.71" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Treble 15mb" aria-pressed="false" data-state="closed" data-ui="Treble 15mb">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 41.080000000000005" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 41.08px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="7.710000000000001" x2="235" y2="7.710000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.71" x2="235" y2="12.71" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.71" x2="235" y2="17.71" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.71" x2="235" y2="22.71" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.71" x2="235" y2="27.71" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="22.71" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Treble 8va" aria-pressed="false" data-state="closed" data-ui="Treble 8va">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 41.06" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 41.06px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="12.150000000000002" x2="235" y2="12.150000000000002" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.150000000000002" x2="235" y2="17.150000000000002" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.150000000000002" x2="235" y2="22.150000000000002" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.150000000000002" x2="235" y2="27.150000000000002" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="32.150000000000006" x2="235" y2="32.150000000000006" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="27.150000000000002" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Treble 15ma" aria-pressed="false" data-state="closed" data-ui="Treble 15ma">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 41.03999999999999" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 41.04px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="12.129999999999999" x2="235" y2="12.129999999999999" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.13" x2="235" y2="17.13" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.13" x2="235" y2="22.13" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.13" x2="235" y2="27.13" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="32.129999999999995" x2="235" y2="32.129999999999995" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="27.13" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Bass 8vb" aria-pressed="false" data-state="closed" data-ui="Bass 8vb">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 21.740000000000002" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 21.74px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="0.9900000000000002" x2="235" y2="0.9900000000000002" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="5.99" x2="235" y2="5.99" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="10.99" x2="235" y2="10.99" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="15.99" x2="235" y2="15.99" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="20.990000000000002" x2="235" y2="20.990000000000002" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="5.99" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Bass 15mb" aria-pressed="false" data-state="closed" data-ui="Bass 15mb">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 21.740000000000002" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 21.74px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="0.9900000000000002" x2="235" y2="0.9900000000000002" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="5.99" x2="235" y2="5.99" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="10.99" x2="235" y2="10.99" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="15.99" x2="235" y2="15.99" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="20.990000000000002" x2="235" y2="20.990000000000002" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="5.99" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Bass 8va" aria-pressed="false" data-state="closed" data-ui="Bass 8va">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 26.4" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 26.4px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="5.65" x2="235" y2="5.65" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="10.65" x2="235" y2="10.65" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="15.65" x2="235" y2="15.65" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="20.65" x2="235" y2="20.65" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="25.65" x2="235" y2="25.65" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="10.65" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Bass 15ma" aria-pressed="false" data-state="closed" data-ui="Bass 15ma">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 26.42" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 26.42px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="5.67" x2="235" y2="5.67" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="10.67" x2="235" y2="10.67" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="15.67" x2="235" y2="15.67" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="20.67" x2="235" y2="20.67" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="25.67" x2="235" y2="25.67" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="10.67" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Alto 8vb" aria-pressed="false" data-state="closed" data-ui="Alto 8vb">
+<span style="display: inline-block; font: inherit;"><svg viewBox="0 0 35 26.44" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display: block; width: 35px; height: 26.44px; max-width: 100%; max-height: 100%;"><line x1="-200" y1="0.870000000000001" x2="235" y2="0.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="5.870000000000001" x2="235" y2="5.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="10.870000000000001" x2="235" y2="10.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="15.870000000000001" x2="235" y2="15.870000000000001" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="20.87" x2="235" y2="20.87" stroke="currentColor" stroke-width="0.5"></line><text x="17.5" y="10.870000000000001" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_15b_" data-state="open" data-ui="Key signatureShift+5">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Key signature</span><span class="_shortcut_eh69h_55">Shift+5</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_15b_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 241px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="C major / A minor" aria-pressed="false" data-state="closed" data-ui="C major / A minor">
+<span style="display: inline-block; font: inherit;"><svg width="40" height="35" viewBox="0 0 40 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="240" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="240" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="240" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="240" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="240" y2="27.5" stroke="currentColor" stroke-width="0.5"></line></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Atonal" aria-pressed="false" data-state="closed" data-ui="Atonal">
+<span style="display: inline-block; font: inherit;"><span style="font-size: var(--type-eyebrow-size); font-style: italic;">atonal</span></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="G major / E minor" aria-pressed="false" data-state="closed" data-ui="G major / E minor">
+<span style="display: inline-block; font: inherit;"><svg width="20" height="35" viewBox="0 0 20 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="220" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="220" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="220" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="220" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="220" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="7.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="D major / B minor" aria-pressed="false" data-state="closed" data-ui="D major / B minor">
+<span style="display: inline-block; font: inherit;"><svg width="25.5" height="35" viewBox="0 0 25.5 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="225.5" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="225.5" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="225.5" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="225.5" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="225.5" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="7.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="15" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="A major / F♯ minor" aria-pressed="false" data-state="closed" data-ui="A major / F♯ minor">
+<span style="display: inline-block; font: inherit;"><svg width="31" height="35" viewBox="0 0 31 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="231" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="231" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="231" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="231" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="231" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="7.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="15" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="6.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="E major / C♯ minor" aria-pressed="false" data-state="closed" data-ui="E major / C♯ minor">
+<span style="display: inline-block; font: inherit;"><svg width="36.5" height="35" viewBox="0 0 36.5 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="236.5" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="236.5" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="236.5" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="236.5" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="236.5" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="7.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="15" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="6.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="26.5" y="13.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="B major / G♯ minor" aria-pressed="false" data-state="closed" data-ui="B major / G♯ minor">
+<span style="display: inline-block; font: inherit;"><svg width="42" height="35" viewBox="0 0 42 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="242" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="242" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="242" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="242" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="242" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="7.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="15" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="6.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="26.5" y="13.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="32" y="21.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="F♯ major / D♯ minor" aria-pressed="false" data-state="closed" data-ui="F♯ major / D♯ minor">
+<span style="display: inline-block; font: inherit;"><svg width="47.5" height="35" viewBox="0 0 47.5 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="247.5" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="247.5" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="247.5" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="247.5" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="247.5" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="7.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="15" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="6.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="26.5" y="13.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="32" y="21.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="37.5" y="11.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="C♯ major / A♯ minor" aria-pressed="false" data-state="closed" data-ui="C♯ major / A♯ minor">
+<span style="display: inline-block; font: inherit;"><svg width="53" height="35" viewBox="0 0 53 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="253" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="253" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="253" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="253" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="253" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="7.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="15" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="6.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="26.5" y="13.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="32" y="21.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="37.5" y="11.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="43" y="18.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="F major / D minor" aria-pressed="false" data-state="closed" data-ui="F major / D minor">
+<span style="display: inline-block; font: inherit;"><svg width="20" height="35" viewBox="0 0 20 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="220" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="220" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="220" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="220" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="220" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="17.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="B♭ major / G minor" aria-pressed="false" data-state="closed" data-ui="B♭ major / G minor">
+<span style="display: inline-block; font: inherit;"><svg width="25.5" height="35" viewBox="0 0 25.5 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="225.5" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="225.5" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="225.5" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="225.5" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="225.5" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="17.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="10" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="E♭ major / C minor" aria-pressed="false" data-state="closed" data-ui="E♭ major / C minor">
+<span style="display: inline-block; font: inherit;"><svg width="31" height="35" viewBox="0 0 31 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="231" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="231" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="231" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="231" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="231" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="17.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="10" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="18.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="A♭ major / F minor" aria-pressed="false" data-state="closed" data-ui="A♭ major / F minor">
+<span style="display: inline-block; font: inherit;"><svg width="36.5" height="35" viewBox="0 0 36.5 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="236.5" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="236.5" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="236.5" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="236.5" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="236.5" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="17.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="10" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="18.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="26.5" y="11.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="D♭ major / B♭ minor" aria-pressed="false" data-state="closed" data-ui="D♭ major / B♭ minor">
+<span style="display: inline-block; font: inherit;"><svg width="42" height="35" viewBox="0 0 42 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="242" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="242" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="242" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="242" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="242" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="17.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="10" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="18.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="26.5" y="11.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="32" y="20" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="G♭ major / E♭ minor" aria-pressed="false" data-state="closed" data-ui="G♭ major / E♭ minor">
+<span style="display: inline-block; font: inherit;"><svg width="47.5" height="35" viewBox="0 0 47.5 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="247.5" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="247.5" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="247.5" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="247.5" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="247.5" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="17.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="10" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="18.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="26.5" y="11.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="32" y="20" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="37.5" y="12.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="C♭ major / A♭ minor" aria-pressed="false" data-state="closed" data-ui="C♭ major / A♭ minor">
+<span style="display: inline-block; font: inherit;"><svg width="53" height="35" viewBox="0 0 53 35" overflow="visible" style="display: block;"><line x1="-200" y1="7.5" x2="253" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="253" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="253" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="253" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="27.5" x2="253" y2="27.5" stroke="currentColor" stroke-width="0.5"></line><text x="10" y="17.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="15.5" y="10" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="21" y="18.75" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="26.5" y="11.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="32" y="20" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="37.5" y="12.5" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text><text x="43" y="21.25" text-anchor="middle" font-size="20" font-family="Bravura, serif" fill="currentColor"></text></svg></span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_15s_" data-state="open" data-ui="Time signatureShift+4">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Time signature</span><span class="_shortcut_eh69h_55">Shift+4</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_15s_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 182px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="4/4" aria-pressed="false" data-state="closed" data-ui="4/4">
+<span style="display: inline-block; font: inherit;"><svg width="19.1" height="40" viewBox="0 -10 19.1 40" preserveAspectRatio="xMidYMid meet" overflow="visible" aria-hidden="true" style="display: block; margin: 0px auto;"><g><text x="2.500000000000001" y="2.5" font-family="Bravura" font-size="30" fill="currentColor"></text><text x="2.500000000000001" y="17.5" font-family="Bravura" font-size="30" fill="currentColor"></text></g></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="3/4" aria-pressed="false" data-state="closed" data-ui="3/4">
+<span style="display: inline-block; font: inherit;"><svg width="19.1" height="40" viewBox="0 -10 19.1 40" preserveAspectRatio="xMidYMid meet" overflow="visible" aria-hidden="true" style="display: block; margin: 0px auto;"><g><text x="3.235000000000001" y="2.5" font-family="Bravura" font-size="30" fill="currentColor"></text><text x="2.500000000000001" y="17.5" font-family="Bravura" font-size="30" fill="currentColor"></text></g></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="2/4" aria-pressed="false" data-state="closed" data-ui="2/4">
+<span style="display: inline-block; font: inherit;"><svg width="19.1" height="40" viewBox="0 -10 19.1 40" preserveAspectRatio="xMidYMid meet" overflow="visible" aria-hidden="true" style="display: block; margin: 0px auto;"><g><text x="2.8600000000000003" y="2.5" font-family="Bravura" font-size="30" fill="currentColor"></text><text x="2.500000000000001" y="17.5" font-family="Bravura" font-size="30" fill="currentColor"></text></g></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="2/2" aria-pressed="false" data-state="closed" data-ui="2/2">
+<span style="display: inline-block; font: inherit;"><svg width="18.380000000000003" height="40" viewBox="0 -10 18.380000000000003 40" preserveAspectRatio="xMidYMid meet" overflow="visible" aria-hidden="true" style="display: block; margin: 0px auto;"><g><text x="2.500000000000001" y="2.5" font-family="Bravura" font-size="30" fill="currentColor"></text><text x="2.500000000000001" y="17.5" font-family="Bravura" font-size="30" fill="currentColor"></text></g></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="3/8" aria-pressed="false" data-state="closed" data-ui="3/8">
+<span style="display: inline-block; font: inherit;"><svg width="18.08" height="40" viewBox="0 -10 18.08 40" preserveAspectRatio="xMidYMid meet" overflow="visible" aria-hidden="true" style="display: block; margin: 0px auto;"><g><text x="2.7249999999999996" y="2.5" font-family="Bravura" font-size="30" fill="currentColor"></text><text x="2.499999999999999" y="17.5" font-family="Bravura" font-size="30" fill="currentColor"></text></g></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="6/8" aria-pressed="false" data-state="closed" data-ui="6/8">
+<span style="display: inline-block; font: inherit;"><svg width="18.08" height="40" viewBox="0 -10 18.08 40" preserveAspectRatio="xMidYMid meet" overflow="visible" aria-hidden="true" style="display: block; margin: 0px auto;"><g><text x="2.5299999999999994" y="2.5" font-family="Bravura" font-size="30" fill="currentColor"></text><text x="2.499999999999999" y="17.5" font-family="Bravura" font-size="30" fill="currentColor"></text></g></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="9/8" aria-pressed="false" data-state="closed" data-ui="9/8">
+<span style="display: inline-block; font: inherit;"><svg width="18.08" height="40" viewBox="0 -10 18.08 40" preserveAspectRatio="xMidYMid meet" overflow="visible" aria-hidden="true" style="display: block; margin: 0px auto;"><g><text x="2.5299999999999994" y="2.5" font-family="Bravura" font-size="30" fill="currentColor"></text><text x="2.499999999999999" y="17.5" font-family="Bravura" font-size="30" fill="currentColor"></text></g></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="12/8" aria-pressed="false" data-state="closed" data-ui="12/8">
+<span style="display: inline-block; font: inherit;"><svg width="28.400000000000002" height="40" viewBox="0 -10 28.400000000000002 40" preserveAspectRatio="xMidYMid meet" overflow="visible" aria-hidden="true" style="display: block; margin: 0px auto;"><g><text x="2.5" y="2.5" font-family="Bravura" font-size="30" fill="currentColor"></text><text x="12.520000000000001" y="2.5" font-family="Bravura" font-size="30" fill="currentColor"></text><text x="7.660000000000001" y="17.5" font-family="Bravura" font-size="30" fill="currentColor"></text></g></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Common time" aria-pressed="false" data-state="closed" data-ui="Common time">
+<span style="display: inline-block; font: inherit;"><span style="font-family: Bravura; font-size: 42px;"><span style="display: inline-block; font: inherit; transform: translateY(13px);"></span></span></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Cut time" aria-pressed="false" data-state="closed" data-ui="Cut time">
+<span style="display: inline-block; font: inherit;"><span style="font-family: Bravura; font-size: 42px;"><span style="display: inline-block; font: inherit; transform: translateY(13px);"></span></span></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Open meter" aria-pressed="false" data-state="closed" data-ui="Open meter">
+<span style="display: inline-block; font: inherit;"><span style="font-family: Bravura; font-size: 42px;"><span style="display: inline-block; font: inherit; transform: translateY(13px);"></span></span></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Custom time signature" aria-pressed="false" data-state="closed" data-ui="Custom time signature">
+<span style="display: inline-block; font: inherit;"><span style="font-family: var(--font-mono, monospace); font-size: 16px;">n/d</span></span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_169_" data-state="open" data-ui="TupletsShift+3">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Tuplets</span><span class="_shortcut_eh69h_55">Shift+3</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_169_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 123px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Duplet" aria-pressed="false" data-state="closed" data-ui="Duplet">
+2:3
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Triplet (Ctrl+3)" aria-pressed="false" data-state="closed" data-ui="Triplet (Ctrl+3)">
+3:2
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Quadruplet" aria-pressed="false" data-state="closed" data-ui="Quadruplet">
+4:3
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Quintuplet (Ctrl+5)" aria-pressed="false" data-state="closed" data-ui="Quintuplet (Ctrl+5)">
+5:4
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Sextuplet (Ctrl+6)" aria-pressed="false" data-state="closed" data-ui="Sextuplet (Ctrl+6)">
+6:4
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Septuplet" aria-pressed="false" data-state="closed" data-ui="Septuplet">
+7:4
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Octuplet" aria-pressed="false" data-state="closed" data-ui="Octuplet">
+8:6
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Nonuplet" aria-pressed="false" data-state="closed" data-ui="Nonuplet">
+9:8
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Custom tuplet ratio" aria-pressed="false" data-state="closed" data-ui="Custom tuplet ratio">
+N:M
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_16j_" data-state="open" data-ui="BarsShift+B">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Bars</span><span class="_shortcut_eh69h_55">Shift+B</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_16j_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 123px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Single" aria-pressed="false" data-state="closed" data-ui="Single">
+<span style="display: inline-block; font: inherit;"><svg width="15" height="25" viewBox="0 0 15 25" overflow="visible" style="display: block;"><line x1="-200" y1="2.5" x2="215" y2="2.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="7.5" x2="215" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="215" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="215" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="215" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><text x="7.5" y="22.5" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Double" aria-pressed="false" data-state="closed" data-ui="Double">
+<span style="display: inline-block; font: inherit;"><svg width="15" height="25" viewBox="0 0 15 25" overflow="visible" style="display: block;"><line x1="-200" y1="2.5" x2="215" y2="2.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="7.5" x2="215" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="215" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="215" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="215" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><text x="7.5" y="22.5" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Final" aria-pressed="false" data-state="closed" data-ui="Final">
+<span style="display: inline-block; font: inherit;"><svg width="15" height="25" viewBox="0 0 15 25" overflow="visible" style="display: block;"><line x1="-200" y1="2.5" x2="215" y2="2.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="7.5" x2="215" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="215" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="215" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="215" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><text x="7.5" y="22.5" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Heavy" aria-pressed="false" data-state="closed" data-ui="Heavy">
+<span style="display: inline-block; font: inherit;"><svg width="15" height="25" viewBox="0 0 15 25" overflow="visible" style="display: block;"><line x1="-200" y1="2.5" x2="215" y2="2.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="7.5" x2="215" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="215" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="215" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="215" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><text x="7.5" y="22.5" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Heavy-light" aria-pressed="false" data-state="closed" data-ui="Heavy-light">
+<span style="display: inline-block; font: inherit;"><svg width="15" height="25" viewBox="0 0 15 25" overflow="visible" style="display: block;"><line x1="-200" y1="2.5" x2="215" y2="2.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="7.5" x2="215" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="215" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="215" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="215" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><text x="7.5" y="22.5" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Heavy-heavy" aria-pressed="false" data-state="closed" data-ui="Heavy-heavy">
+<span style="display: inline-block; font: inherit;"><svg width="15" height="25" viewBox="0 0 15 25" overflow="visible" style="display: block;"><line x1="-200" y1="2.5" x2="215" y2="2.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="7.5" x2="215" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="215" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="215" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="215" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><text x="7.5" y="22.5" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="Dashed" aria-pressed="false" data-state="closed" data-ui="Dashed">
+<span style="display: inline-block; font: inherit;"><svg width="15" height="25" viewBox="0 0 15 25" overflow="visible" style="display: block;"><line x1="-200" y1="2.5" x2="215" y2="2.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="7.5" x2="215" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="215" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="215" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="215" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><text x="7.5" y="22.5" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _tall_1cmru_68" aria-label="No barline" aria-pressed="false" data-state="closed" data-ui="No barline">
+<span style="display: inline-block; font: inherit;"><svg width="15" height="25" viewBox="0 0 15 25" overflow="visible" style="display: block;"><line x1="-200" y1="2.5" x2="215" y2="2.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="7.5" x2="215" y2="7.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="12.5" x2="215" y2="12.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="17.5" x2="215" y2="17.5" stroke="currentColor" stroke-width="0.5"></line><line x1="-200" y1="22.5" x2="215" y2="22.5" stroke="currentColor" stroke-width="0.5"></line><text x="7.5" y="22.5" font-family="Bravura" font-size="20" fill="currentColor" text-anchor="middle"></text></svg></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="Add bars" aria-pressed="false" data-ui="Add bars">
+Add bars
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_16s_" data-state="open" data-ui="TremolosShift+R">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Tremolos</span><span class="_shortcut_eh69h_55">Shift+R</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_16s_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 123px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Single-note tremolo, 1 slash" aria-pressed="false" data-state="closed" data-ui="Single-note tremolo, 1 slash">
+<span style="display: inline-block; font-family: Bravura, serif; font-size: 28px; transform: translateX(2.1px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Single-note tremolo, 2 slashes" aria-pressed="false" data-state="closed" data-ui="Single-note tremolo, 2 slashes">
+<span style="display: inline-block; font-family: Bravura, serif; font-size: 28px; transform: translateX(2.1px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Single-note tremolo, 3 slashes" aria-pressed="false" data-state="closed" data-ui="Single-note tremolo, 3 slashes">
+<span style="display: inline-block; font-family: Bravura, serif; font-size: 28px; transform: translateX(2.1px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Two-note tremolo, 1 slash" aria-pressed="false" data-state="closed" data-ui="Two-note tremolo, 1 slash">
+<svg width="40" height="40" viewBox="0 0 44 40" aria-hidden="true" style="display: block;"><text x="4" y="31" font-family="Bravura" font-size="20" fill="currentColor"></text><line x1="9.9" y1="30.16" x2="9.9" y2="8" stroke="currentColor" stroke-width="1.4"></line><text x="34" y="31" font-family="Bravura" font-size="20" fill="currentColor"></text><line x1="39.9" y1="30.16" x2="39.9" y2="8" stroke="currentColor" stroke-width="1.4"></line><polygon points="14.9,16.2 34.9,11.8 34.9,14.3 14.9,18.7" fill="currentColor"></polygon></svg>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Two-note tremolo, 2 slashes" aria-pressed="false" data-state="closed" data-ui="Two-note tremolo, 2 slashes">
+<svg width="40" height="40" viewBox="0 0 44 40" aria-hidden="true" style="display: block;"><text x="4" y="31" font-family="Bravura" font-size="20" fill="currentColor"></text><line x1="9.9" y1="30.16" x2="9.9" y2="8" stroke="currentColor" stroke-width="1.4"></line><text x="34" y="31" font-family="Bravura" font-size="20" fill="currentColor"></text><line x1="39.9" y1="30.16" x2="39.9" y2="8" stroke="currentColor" stroke-width="1.4"></line><polygon points="14.9,14.325 34.9,9.925 34.9,12.425 14.9,16.825" fill="currentColor"></polygon><polygon points="14.9,18.075 34.9,13.675 34.9,16.175 14.9,20.575" fill="currentColor"></polygon></svg>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Two-note tremolo, 3 slashes" aria-pressed="false" data-state="closed" data-ui="Two-note tremolo, 3 slashes">
+<svg width="40" height="40" viewBox="0 0 44 40" aria-hidden="true" style="display: block;"><text x="4" y="31" font-family="Bravura" font-size="20" fill="currentColor"></text><line x1="9.9" y1="30.16" x2="9.9" y2="8" stroke="currentColor" stroke-width="1.4"></line><text x="34" y="31" font-family="Bravura" font-size="20" fill="currentColor"></text><line x1="39.9" y1="30.16" x2="39.9" y2="8" stroke="currentColor" stroke-width="1.4"></line><polygon points="14.9,12.45 34.9,8.05 34.9,10.55 14.9,14.95" fill="currentColor"></polygon><polygon points="14.9,16.2 34.9,11.8 34.9,14.3 14.9,18.7" fill="currentColor"></polygon><polygon points="14.9,19.95 34.9,15.55 34.9,18.05 14.9,22.45" fill="currentColor"></polygon></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_173_" data-state="open" data-ui="Repeats &amp; navigationShift+R">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Repeats &amp; navigation</span><span class="_shortcut_eh69h_55">Shift+R</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_173_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 418px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Repeat start" aria-pressed="false" data-state="closed" data-ui="Repeat start">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Repeat end" aria-pressed="false" data-state="closed" data-ui="Repeat end">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Repeat both" aria-pressed="false" data-state="closed" data-ui="Repeat both">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="1-bar repeat" aria-pressed="false" data-state="closed" data-ui="1-bar repeat">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="2-bar repeat" aria-pressed="false" data-state="closed" data-ui="2-bar repeat">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="4-bar repeat" aria-pressed="false" data-state="closed" data-ui="4-bar repeat">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Segno" aria-pressed="false" data-state="closed" data-ui="Segno">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Coda" aria-pressed="false" data-state="closed" data-ui="Coda">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="Fine" aria-pressed="false" data-ui="Fine">
+Fine
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="D.C." aria-pressed="false" data-ui="D.C.">
+D.C.
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="D.C. al Coda" aria-pressed="false" data-ui="D.C. al Coda">
+D.C. al Coda
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="D.C. al Fine" aria-pressed="false" data-ui="D.C. al Fine">
+D.C. al Fine
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="D.S. al Coda" aria-pressed="false" data-ui="D.S. al Coda">
+D.S. al Coda
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="D.S. al Fine" aria-pressed="false" data-ui="D.S. al Fine">
+D.S. al Fine
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="D.S." aria-pressed="false" data-ui="D.S.">
+D.S.
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="To Coda" aria-pressed="false" data-ui="To Coda">
+To Coda
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="1st ending" aria-pressed="false" data-ui="1st ending">
+1st ending
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="2nd ending" aria-pressed="false" data-ui="2nd ending">
+2nd ending
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="1st+2nd ending" aria-pressed="false" data-ui="1st+2nd ending">
+1st+2nd ending
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_17c_" data-state="open" data-ui="ArticulationsShift+A">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Articulations</span><span class="_shortcut_eh69h_55">Shift+A</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_17c_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 182px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Staccato (Z)" aria-pressed="false" data-state="closed" data-ui="Staccato (Z)">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Accent (C)" aria-pressed="false" data-state="closed" data-ui="Accent (C)">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Tenuto (X)" aria-pressed="false" data-state="closed" data-ui="Tenuto (X)">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Marcato (V)" aria-pressed="false" data-state="closed" data-ui="Marcato (V)">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Staccatissimo (B)" aria-pressed="false" data-state="closed" data-ui="Staccatissimo (B)">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Staccatissimo wedge" aria-pressed="false" data-state="closed" data-ui="Staccatissimo wedge">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Staccatissimo stroke" aria-pressed="false" data-state="closed" data-ui="Staccatissimo stroke">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Stress" aria-pressed="false" data-state="closed" data-ui="Stress">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Unstress" aria-pressed="false" data-state="closed" data-ui="Unstress">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Down-bow" aria-pressed="false" data-state="closed" data-ui="Down-bow">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Up-bow" aria-pressed="false" data-state="closed" data-ui="Up-bow">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_17o_" data-state="open" data-ui="Notehead markings">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Notehead markings</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_17o_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 64px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Scoop" aria-pressed="false" data-state="closed" data-ui="Scoop">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Plop" aria-pressed="false" data-state="closed" data-ui="Plop">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Falloff" aria-pressed="false" data-state="closed" data-ui="Falloff">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Doit" aria-pressed="false" data-state="closed" data-ui="Doit">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_17t_" data-state="open" data-ui="Connections">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Connections</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_17t_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 64px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Tie (T)" aria-pressed="false" data-state="closed" data-ui="Tie (T)">
+<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="display: block;"><g><line x1="10.4" y1="24.2" x2="10.4" y2="11" stroke="currentColor" stroke-width="1.4"></line><text x="4" y="25" font-family="Bravura" font-size="24" fill="currentColor"></text></g><path d="M12 27 C16 36 25 36 29 27 C24 33 17 33 12 27 Z" fill="currentColor"></path><g><line x1="35.4" y1="24.2" x2="35.4" y2="11" stroke="currentColor" stroke-width="1.4"></line><text x="29" y="25" font-family="Bravura" font-size="24" fill="currentColor"></text></g></svg>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Slur (S)" aria-pressed="false" data-state="closed" data-ui="Slur (S)">
+<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="display: block;"><path d="M8 30 C14 39 30 35 34 22 C30 32 15 36 8 30 Z" fill="currentColor"></path><g><line x1="10.4" y1="24.2" x2="10.4" y2="11" stroke="currentColor" stroke-width="1.4"></line><text x="4" y="25" font-family="Bravura" font-size="24" fill="currentColor"></text></g><g><line x1="23.4" y1="20.2" x2="23.4" y2="7" stroke="currentColor" stroke-width="1.4"></line><text x="17" y="21" font-family="Bravura" font-size="24" fill="currentColor"></text></g><g><line x1="36.4" y1="16.2" x2="36.4" y2="3" stroke="currentColor" stroke-width="1.4"></line><text x="30" y="17" font-family="Bravura" font-size="24" fill="currentColor"></text></g></svg>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Laissez vibrer tie (T)" aria-pressed="false" data-state="closed" data-ui="Laissez vibrer tie (T)">
+<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="display: block;"><g><line x1="16.4" y1="24.2" x2="16.4" y2="11" stroke="currentColor" stroke-width="1.4"></line><text x="10" y="25" font-family="Bravura" font-size="24" fill="currentColor"></text></g><path d="M18 27 C21 33 26 33 29 27 C26 31 21 31 18 27 Z" fill="currentColor"></path></svg>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Glissando" aria-pressed="false" data-state="closed" data-ui="Glissando">
+<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="display: block;"><g><line x1="10.4" y1="26.2" x2="10.4" y2="13" stroke="currentColor" stroke-width="1.4"></line><text x="4" y="27" font-family="Bravura" font-size="24" fill="currentColor"></text></g><g transform="translate(12 24) rotate(-28)"><text x="0" y="0" font-family="Bravura" font-size="20" fill="currentColor"></text><text x="4.8" y="0" font-family="Bravura" font-size="20" fill="currentColor"></text><text x="9.6" y="0" font-family="Bravura" font-size="20" fill="currentColor"></text><text x="14.399999999999999" y="0" font-family="Bravura" font-size="20" fill="currentColor"></text></g><g><line x1="30.65" y1="13.8" x2="30.65" y2="27" stroke="currentColor" stroke-width="1.4"></line><text x="30" y="13" font-family="Bravura" font-size="24" fill="currentColor"></text></g></svg>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Portamento" aria-pressed="false" data-state="closed" data-ui="Portamento">
+<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="display: block;"><g><line x1="10.4" y1="26.2" x2="10.4" y2="13" stroke="currentColor" stroke-width="1.4"></line><text x="4" y="27" font-family="Bravura" font-size="24" fill="currentColor"></text></g><line x1="12" y1="24" x2="29" y2="15" stroke="currentColor" stroke-width="1.4"></line><g><line x1="30.65" y1="13.8" x2="30.65" y2="27" stroke="currentColor" stroke-width="1.4"></line><text x="30" y="13" font-family="Bravura" font-size="24" fill="currentColor"></text></g></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_183_" data-state="open" data-ui="Ornaments &amp; arpeggiosShift+E">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Ornaments &amp; arpeggios</span><span class="_shortcut_eh69h_55">Shift+E</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_183_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 182px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Trill" aria-pressed="false" data-state="closed" data-ui="Trill">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Turn" aria-pressed="false" data-state="closed" data-ui="Turn">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Inverted turn" aria-pressed="false" data-state="closed" data-ui="Inverted turn">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Mordent" aria-pressed="false" data-state="closed" data-ui="Mordent">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Inverted mordent" aria-pressed="false" data-state="closed" data-ui="Inverted mordent">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Trill mordent" aria-pressed="false" data-state="closed" data-ui="Trill mordent">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Delayed turn" aria-pressed="false" data-state="closed" data-ui="Delayed turn">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Schleifer" aria-pressed="false" data-state="closed" data-ui="Schleifer">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Upward arpeggio" aria-pressed="false" data-state="closed" data-ui="Upward arpeggio">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Downward arpeggio" aria-pressed="false" data-state="closed" data-ui="Downward arpeggio">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Arpeggio without arrow" aria-pressed="false" data-state="closed" data-ui="Arpeggio without arrow">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Non-arpeggio bracket" aria-pressed="false" data-state="closed" data-ui="Non-arpeggio bracket">
+<svg width="36" height="40" viewBox="0 0 36 40" aria-hidden="true" style="display: block;"><line x1="14" y1="8" x2="14" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="square"></line><line x1="14" y1="8" x2="24" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="square"></line><line x1="14" y1="32" x2="24" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="square"></line></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_18g_" data-state="open" data-ui="Breath &amp; fermataShift+H">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Breath &amp; fermata</span><span class="_shortcut_eh69h_55">Shift+H</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_18g_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 182px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Comma breath mark" aria-pressed="false" data-state="closed" data-ui="Comma breath mark">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Tick breath mark" aria-pressed="false" data-state="closed" data-ui="Tick breath mark">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Upbow breath mark" aria-pressed="false" data-state="closed" data-ui="Upbow breath mark">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Salzedo breath mark" aria-pressed="false" data-state="closed" data-ui="Salzedo breath mark">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Normal fermata" aria-pressed="false" data-state="closed" data-ui="Normal fermata">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Very short fermata" aria-pressed="false" data-state="closed" data-ui="Very short fermata">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Short fermata" aria-pressed="false" data-state="closed" data-ui="Short fermata">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Long fermata" aria-pressed="false" data-state="closed" data-ui="Long fermata">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Very long fermata" aria-pressed="false" data-state="closed" data-ui="Very long fermata">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Long Henze fermata" aria-pressed="false" data-state="closed" data-ui="Long Henze fermata">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Caesura" aria-pressed="false" data-state="closed" data-ui="Caesura">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_18s_" data-state="open" data-ui="DynamicsShift+D">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Dynamics</span><span class="_shortcut_eh69h_55">Shift+D</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_18s_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 182px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Pianississimo" aria-pressed="false" data-state="closed" data-ui="Pianississimo">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Pianissimo" aria-pressed="false" data-state="closed" data-ui="Pianissimo">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Piano" aria-pressed="false" data-state="closed" data-ui="Piano">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Mezzo piano" aria-pressed="false" data-state="closed" data-ui="Mezzo piano">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Mezzo forte" aria-pressed="false" data-state="closed" data-ui="Mezzo forte">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Forte" aria-pressed="false" data-state="closed" data-ui="Forte">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Fortissimo" aria-pressed="false" data-state="closed" data-ui="Fortissimo">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Fortississimo" aria-pressed="false" data-state="closed" data-ui="Fortississimo">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Forte-piano" aria-pressed="false" data-state="closed" data-ui="Forte-piano">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Piano-forte" aria-pressed="false" data-state="closed" data-ui="Piano-forte">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Sforzando" aria-pressed="false" data-state="closed" data-ui="Sforzando">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Rinforzando" aria-pressed="false" data-state="closed" data-ui="Rinforzando">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Niente" aria-pressed="false" data-state="closed" data-ui="Niente">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Crescendo hairpin" aria-pressed="false" data-state="closed" data-ui="Crescendo hairpin">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Decrescendo hairpin" aria-pressed="false" data-state="closed" data-ui="Decrescendo hairpin">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_19c_" data-state="open" data-ui="Text &amp; tempo">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Text &amp; tempo</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_19c_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 182px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="System text / tempo (Shift+T)" aria-pressed="false" data-state="closed" data-ui="System text / tempo (Shift+T)">
+System text / tempo
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="Staff text (Shift+X)" aria-pressed="false" data-state="closed" data-ui="Staff text (Shift+X)">
+Staff text
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="Expression text (Shift+D)" aria-pressed="false" data-state="closed" data-ui="Expression text (Shift+D)">
+<span style="font-style: italic; font-size: 14px;">espress.</span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="Chord symbol (Shift+K)" aria-pressed="false" data-state="closed" data-ui="Chord symbol (Shift+K)">
+<span style="font-size: 18px; font-weight: 600;">CΔ⁷</span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Rehearsal mark" aria-pressed="false" data-state="closed" data-ui="Rehearsal mark">
+<span style="display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0px 4px; border: 1.5px solid; border-radius: 2px; font-weight: 600; font-size: 14px; line-height: 1;">A</span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="Page text frame" aria-pressed="false" data-ui="Page text frame">
+Page text frame
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _wide_1cmru_14" aria-label="Lyrics (Shift+W)" aria-pressed="false" data-state="closed" data-ui="Lyrics (Shift+W)">
+Lyrics
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_19j_" data-state="open" data-ui="FingeringShift+F">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Fingering</span><span class="_shortcut_eh69h_55">Shift+F</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_19j_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 123px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Fingering 0" aria-pressed="false" data-state="closed" data-ui="Fingering 0">
+0
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Fingering 1" aria-pressed="false" data-state="closed" data-ui="Fingering 1">
+1
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Fingering 2" aria-pressed="false" data-state="closed" data-ui="Fingering 2">
+2
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Fingering 3" aria-pressed="false" data-state="closed" data-ui="Fingering 3">
+3
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Fingering 4" aria-pressed="false" data-state="closed" data-ui="Fingering 4">
+4
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Fingering 5" aria-pressed="false" data-state="closed" data-ui="Fingering 5">
+5
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="viritura-palette-row" role="button" tabindex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-4" style="opacity: 1; position: relative; cursor: grab;">
+<div data-state="open" class="_container_eh69h_1 ">
+<div class="_header_eh69h_7">
+<button type="button" class="_trigger_eh69h_12" aria-expanded="true" aria-controls="radix-_r_19q_" data-state="open" data-ui="Octaves &amp; pedals">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="_chevron_eh69h_33 _chevronOpen_eh69h_41"><polyline points="9 18 15 12 9 6"></polyline></svg><span class="_title_eh69h_51">Octaves &amp; pedals</span>
+</button>
+</div>
+<div data-state="open" id="radix-_r_19q_" class="_content_eh69h_68" style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 123px; --radix-collapsible-content-width: 290px;">
+<div class="_contentInner_eh69h_69">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 7px;">
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="8va above" aria-pressed="false" data-state="closed" data-ui="8va above">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="8vb below" aria-pressed="false" data-state="closed" data-ui="8vb below">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="15ma above" aria-pressed="false" data-state="closed" data-ui="15ma above">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="15mb below" aria-pressed="false" data-state="closed" data-ui="15mb below">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="22ma above" aria-pressed="false" data-state="closed" data-ui="22ma above">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="22mb below" aria-pressed="false" data-state="closed" data-ui="22mb below">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Sustain pedal" aria-pressed="false" data-state="closed" data-ui="Sustain pedal">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17 _bravura_1cmru_90" aria-label="Sostenuto pedal" aria-pressed="false" data-state="closed" data-ui="Sostenuto pedal">
+<span style="display: inline-block; font: inherit; transform: translateY(9px);"></span>
+</button>
+<button type="button" class="_paletteButton_1cmru_17" aria-label="Una corda pedal" aria-pressed="false" data-state="closed" data-ui="Una corda pedal">
+u.c.
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="DndLiveRegion-4" role="status" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 0px; left: 0px; width: 1px; height: 1px; margin: -1px; border: 0px; padding: 0px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(100%); white-space: nowrap;">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="_resize_3cc04_227" data-side="right">
+</div>
+</div>
+<div class="_statusZone_14dhm_124">
+<div class="_bar_d959r_10 " role="status" aria-label="Status bar" data-on-dark="true">
+<div class="_right_d959r_60">
+<div class="_group_1svcp_1 " role="radiogroup" aria-orientation="horizontal" aria-disabled="false">
+<button type="button" role="radio" aria-checked="true" tabindex="0" class="_option_1svcp_20 _active_1svcp_47" data-ui="Concert">
+Concert
+</button>
+<button type="button" role="radio" aria-checked="false" tabindex="-1" class="_option_1svcp_20" data-ui="Written">
+Written
+</button>
+</div>
+<div class="_wrap_rftzn_91">
+<button type="button" class="_trigger_rftzn_7" aria-haspopup="listbox" aria-expanded="false" aria-label="View mode" data-state="closed" data-ui="View mode">
+<span class="_label_rftzn_43">Horizon</span><svg class="_chevron_rftzn_47" width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3,4.5 6,7.5 9,4.5"></polyline></svg>
+</button>
+</div>
+<div class="_group_1lyg3_5">
+<input min="0.03149606299212599" max="3.149606299212599" step="0.05" class="_slider_eiriu_11" aria-label="Zoom slider" type="range" value="0.331496062992126" style="--fill: 9.090909090909092%; --fill-start: 0%; --fill-end: 9.090909090909092%; --center: 0%; width: 80px;">
+<button class="_button_4hx0m_4 _sm_4hx0m_85 _ghost_4hx0m_186" aria-label="Reset zoom" type="button" data-state="closed" data-ui="Reset zoom">
+100%
+</button>
+<button class="_button_4hx0m_4 _sm_4hx0m_85 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112" aria-label="Calibrate display" type="button" data-state="closed" data-ui="Calibrate display">
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ruler" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"></path><path d="m14.5 12.5 2-2"></path><path d="m11.5 9.5 2-2"></path><path d="m8.5 6.5 2-2"></path><path d="m17.5 15.5 2-2"></path></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section aria-label="Notifications alt+T" tabindex="-1" aria-live="polite" aria-relevant="additions text" aria-atomic="false">
+</section>
+</div>
