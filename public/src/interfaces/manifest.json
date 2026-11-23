@@ -1,0 +1,218 @@
+{
+  "settings:Account": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-account.html"
+  },
+  "settings:Page Defaults": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-page-defaults.html"
+  },
+  "settings:Appearance": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-appearance.html"
+  },
+  "settings:Chord track": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-chord-track.html"
+  },
+  "settings:Playback": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-playback.html"
+  },
+  "settings:Instrument Profiles": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-instrument-profiles.html"
+  },
+  "settings:MIDI Input": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-midi-input.html"
+  },
+  "settings:Import": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-import.html"
+  },
+  "settings:Rendering": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-rendering.html"
+  },
+  "settings:Layout Debug": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-layout-debug.html"
+  },
+  "settings:Page & System Debug": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/settings-page-system-debug.html"
+  },
+  "setup": {
+    "kind": "screen",
+    "path": "./interfaces/screens/setup.html"
+  },
+  "write": {
+    "kind": "screen",
+    "path": "./interfaces/screens/write.html"
+  },
+  "engrave": {
+    "kind": "screen",
+    "path": "./interfaces/screens/engrave.html"
+  },
+  "play": {
+    "kind": "screen",
+    "path": "./interfaces/screens/play.html"
+  },
+  "roll": {
+    "kind": "screen",
+    "path": "./interfaces/screens/roll.html"
+  },
+  "review": {
+    "kind": "screen",
+    "path": "./interfaces/screens/review.html"
+  },
+  "publish": {
+    "kind": "screen",
+    "path": "./interfaces/screens/publish.html"
+  },
+  "menu:File": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/menu-file.html"
+  },
+  "menu:Edit": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/menu-edit.html"
+  },
+  "menu:View": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/menu-view.html"
+  },
+  "menu:Help": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/menu-help.html"
+  },
+  "help": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/help.html"
+  },
+  "start": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/start.html"
+  },
+  "new-project": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/new-project.html"
+  },
+  "share": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/share.html"
+  },
+  "setup:Project": {
+    "kind": "screen",
+    "path": "./interfaces/screens/setup-project.html"
+  },
+  "setup:Scores": {
+    "kind": "screen",
+    "path": "./interfaces/screens/setup-scores.html"
+  },
+  "instruments": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/instruments.html"
+  },
+  "instrument-menu": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/instrument-menu.html"
+  },
+  "engrave:Layouts": {
+    "kind": "screen",
+    "path": "./interfaces/screens/engrave-layouts.html"
+  },
+  "engrave:Properties": {
+    "kind": "screen",
+    "path": "./interfaces/screens/engrave-properties.html"
+  },
+  "setup:Instrument": {
+    "kind": "screen",
+    "path": "./interfaces/screens/setup-instrument.html"
+  },
+  "setup:Tuning": {
+    "kind": "screen",
+    "path": "./interfaces/screens/setup-tuning.html"
+  },
+  "score-switcher": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/score-switcher.html"
+  },
+  "calibrate:Credit Card": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/calibrate-credit-card.html"
+  },
+  "calibrate:Inch Ruler": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/calibrate-inch-ruler.html"
+  },
+  "calibrate:Cm Ruler": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/calibrate-cm-ruler.html"
+  },
+  "write:History": {
+    "kind": "screen",
+    "path": "./interfaces/screens/write-history.html"
+  },
+  "write:Properties": {
+    "kind": "screen",
+    "path": "./interfaces/screens/write-properties.html"
+  },
+  "voice": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/voice.html"
+  },
+  "dots": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/dots.html"
+  },
+  "grace": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/grace.html"
+  },
+  "write:Extended": {
+    "kind": "screen",
+    "path": "./interfaces/screens/write-extended.html"
+  },
+  "split-parts": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/split-parts.html"
+  },
+  "export-format": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/export-format.html"
+  },
+  "sound": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/sound.html"
+  },
+  "add-score": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/add-score.html"
+  },
+  "new-profile": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/new-profile.html"
+  },
+  "profile-instruments": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/profile-instruments.html"
+  },
+  "profile-editor": {
+    "kind": "overlay",
+    "path": "./interfaces/dialogs/profile-editor.html"
+  },
+  "setup:Instruments": {
+    "kind": "screen",
+    "path": "./interfaces/screens/setup.html"
+  },
+  "write:Palettes": {
+    "kind": "screen",
+    "path": "./interfaces/screens/write.html"
+  },
+  "engrave:House Style": {
+    "kind": "screen",
+    "path": "./interfaces/screens/engrave.html"
+  }
+}
