@@ -44,6 +44,40 @@
     function initialize(dependencies) {
         let pendingMusicXml = null;
         let isEditorReady = false;
+        let renderRequest = 0;
+        const scoreElement = document.getElementById("static-score");
+        const scorePlaceholder = document.getElementById("static-score-placeholder");
+        const scoreContainer = document.getElementById("musicxml-score");
+        const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(scoreContainer, {
+            backend: "svg",
+            autoResize: true,
+            drawTitle: true,
+            drawSubtitle: true,
+            drawComposer: true,
+            pageFormat: "A4_P",
+            pageBackgroundColor: "#FFFFFF",
+            drawPartNames: true
+        });
+
+        async function renderMusicXml(content) {
+            const request = ++renderRequest;
+            scoreContainer.replaceChildren();
+            scoreElement.classList.add("static-score--loaded");
+            scorePlaceholder.hidden = true;
+
+            try {
+                await osmd.load(content);
+                if (request !== renderRequest) return;
+                osmd.render();
+            } catch (error) {
+                if (request !== renderRequest) return;
+                console.error("Could not render the MusicXML score.", error);
+                scoreContainer.replaceChildren();
+                scoreElement.classList.remove("static-score--loaded");
+                scorePlaceholder.textContent = "Impossible d’afficher cette partition.";
+                scorePlaceholder.hidden = false;
+            }
+        }
 
         function deliverPendingMusicXml() {
             if (!pendingMusicXml || !isEditorReady) return;
@@ -61,12 +95,17 @@
             pendingMusicXml = { name: message.name, content: message.content };
             dependencies.selectEditActivity();
             dependencies.syncMenuActivity();
+            renderMusicXml(message.content);
             deliverPendingMusicXml();
         }
 
         function markEditorFrameReady() {
             isEditorReady = true;
             deliverPendingMusicXml();
+        }
+
+        function refreshMusicXml(event, message) {
+            renderMusicXml(message.content);
         }
 
         window.ButtonActionList.addMessages(window, "viritura-index-new", [
@@ -80,10 +119,17 @@
                 message: "editor-ready",
                 source: dependencies.editorWindow,
                 handler: "markEditorFrameReady"
+            },
+            {
+                message: "refresh-musicxml",
+                source: dependencies.editorWindow,
+                types: { content: "string" },
+                handler: "refreshMusicXml"
             }
         ], {
             openMusicXmlInEditor,
-            markEditorFrameReady
+            markEditorFrameReady,
+            refreshMusicXml
         });
     }
 
