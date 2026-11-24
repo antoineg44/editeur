@@ -160,6 +160,43 @@ html.overlay-document body {
   opacity: 0.7;
 }
 
+.static-score--loaded {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  display: block;
+  width: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 20px;
+  overflow: auto;
+  border-radius: 0;
+  background: var(--canvas-bg, #e0e2ea);
+  box-shadow: none;
+  color: var(--text);
+  text-align: left;
+}
+
+.static-score--loaded::before,
+.static-score--loaded::after {
+  display: none;
+  content: none;
+}
+
+.static-score--loaded #musicxml-score {
+  width: 100%;
+  min-height: 100%;
+  background: var(--paper, #fffdf8);
+}
+
+.static-score--loaded #musicxml-score svg {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto 24px;
+  background: var(--paper, #fffdf8);
+}
+
 .static-popup {
   position: fixed;
   z-index: 1400;
