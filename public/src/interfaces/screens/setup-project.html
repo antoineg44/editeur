@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../../assets/notation.css">
   <link rel="stylesheet" href="../../assets/interface.css">
   <link rel="stylesheet" href="../../assets/navigation.css">
+  <script src="../../assets/button-action-list.js"></script>
   <script defer src="../../assets/local-frame.js"></script>
 </head>
 
@@ -92,7 +93,7 @@
     </div>
   </div>
   <script>
-    document.addEventListener("click", event => {
+    window.ButtonActionList.add(document, "click", "Navigate setup tabs", event => {
       if (!(event.target instanceof Element)) return;
       const tab = event.target.closest('button[role="tab"][data-ui]');
       if (!tab || !["Project", "Instruments", "Scores"].includes(tab.dataset.ui)) return;
