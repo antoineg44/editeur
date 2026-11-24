@@ -108,6 +108,16 @@
     </section>
   </main>
   <script>
+    const input = document.querySelector(".text-editor__input");
+
+    document.querySelector(".text-editor__refresh").addEventListener("click", () => {
+      window.parent.postMessage({
+        channel: "viritura-index-new",
+        type: "refresh-musicxml",
+        content: input.value
+      }, "*");
+    });
+
     window.addEventListener("message", event => {
       const message = event.data;
       if (event.source !== window.parent ||
@@ -119,7 +129,6 @@
         return;
       }
 
-      const input = document.querySelector(".text-editor__input");
       input.value = message.content;
       document.querySelector(".text-editor__hint").textContent = `Fichier : ${message.name}`;
       document.title = `Edit — ${message.name}`;
