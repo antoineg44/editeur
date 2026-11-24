@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./assets/notation.css">
     <link rel="stylesheet" href="./assets/interface.css">
     <link rel="stylesheet" href="./assets/navigation.css">
+    <script src="./assets/button-action-list.js"></script>
     <script defer src="./assets/local-frame.js"></script>
 </head>
 
@@ -207,95 +208,260 @@
                 Layouts: "./interfaces/screens/engrave-layouts.html",
                 Properties: "./interfaces/screens/engrave-properties.html"
             };
-            const tabRoutes = [
-                { frame: writeFrame, type: "write-tab", sources: writeTabSources },
-                { frame: setupFrame, type: "setup-tab", sources: setupTabSources },
-                { frame: engraveFrame, type: "engrave-tab", sources: engraveTabSources }
-            ];
             const resizeHandle = screenPanel.querySelector('._resize_3cc04_227[data-side="right"]');
             let resizePointerId = null;
             let previousCursor = "";
             let previousUserSelect = "";
 
-            window.addEventListener("message", event => {
-                const message = event.data;
-                if (!message || message.channel !== "viritura-index-new") return;
-
-                if (event.source === horizontalMenuFrame.contentWindow &&
-                    message.type === "menu-open" &&
-                    Object.prototype.hasOwnProperty.call(menuOverlays, message.menu)) {
-                    const activeMenu = menuOverlays[message.menu];
-                    if (!activeMenu.hasAttribute("src")) activeMenu.src = activeMenu.dataset.src;
-                    Object.values(menuOverlays).forEach(frame => { frame.hidden = frame !== activeMenu; });
-                    return;
-                }
-
-                const dismissedMenu = Object.entries(menuOverlays).find(([name, frame]) =>
-                    event.source === frame.contentWindow &&
-                    message.type === "menu-dismiss" && message.menu === name);
-                if (dismissedMenu) {
-                    dismissedMenu[1].hidden = true;
-                    return;
-                }
-
-                const tabRoute = tabRoutes.find(route =>
-                    event.source === route.frame.contentWindow &&
-                    message.type === route.type &&
-                    Object.prototype.hasOwnProperty.call(route.sources, message.tab));
-                if (tabRoute) {
-                    tabRoute.frame.src = tabRoute.sources[message.tab];
-                    tabRoute.frame.title = message.tab + " screen";
-                    return;
-                }
-
-                if (event.source !== menuFrame.contentWindow ||
-                    message.type !== "menu-action" ||
-                    typeof message.wasSelected !== "boolean" ||
-                    !["setup", "write", "engrave", "play", "roll", "review", "publish", "settings"]
-                        .includes(message.activity)) return;
-
-                if (message.wasSelected && !screenPanel.hidden) {
-                    screenPanel.hidden = true;
-                    return;
-                }
-
-                const frames = {
-                    write: writeFrame,
-                    play: playFrame,
-                    setup: setupFrame,
-                    engrave: engraveFrame,
-                    roll: rollFrame,
-                    review: reviewFrame,
-                    publish: publishFrame
-                };
-                const activeFrame = frames[message.activity];
-                if (!activeFrame) return;
-                if (!activeFrame.hasAttribute("src")) activeFrame.src = activeFrame.dataset.src;
-                if (message.activity === "setup" &&
-                    setupFrame.getAttribute("src") !== setupTabSources.Instruments) {
-                    setupFrame.src = setupTabSources.Instruments;
-                    setupFrame.title = "Setup screen";
-                }
-                if (message.activity === "engrave" &&
-                    engraveFrame.getAttribute("src") !== engraveTabSources["House Style"]) {
-                    engraveFrame.src = engraveTabSources["House Style"];
-                    engraveFrame.title = "Engrave screen";
-                }
-                if (message.activity === "write" &&
-                    writeFrame.getAttribute("src") !== writeTabSources.Palettes) {
+            const messageActionHandlers = {
+                openFileMenu: function openFileMenu() {
+                    if (!menuOverlays.file.hasAttribute("src")) {
+                        menuOverlays.file.src = menuOverlays.file.dataset.src;
+                    }
+                    menuOverlays.file.hidden = false;
+                    menuOverlays.edit.hidden = true;
+                    menuOverlays.help.hidden = true;
+                    menuOverlays.view.hidden = true;
+                },
+                openEditMenu: function openEditMenu() {
+                    if (!menuOverlays.edit.hasAttribute("src")) {
+                        menuOverlays.edit.src = menuOverlays.edit.dataset.src;
+                    }
+                    menuOverlays.file.hidden = true;
+                    menuOverlays.edit.hidden = false;
+                    menuOverlays.help.hidden = true;
+                    menuOverlays.view.hidden = true;
+                },
+                openViewMenu: function openViewMenu() {
+                    if (!menuOverlays.view.hasAttribute("src")) {
+                        menuOverlays.view.src = menuOverlays.view.dataset.src;
+                    }
+                    menuOverlays.file.hidden = true;
+                    menuOverlays.edit.hidden = true;
+                    menuOverlays.help.hidden = true;
+                    menuOverlays.view.hidden = false;
+                },
+                openHelpMenu: function openHelpMenu() {
+                    if (!menuOverlays.help.hasAttribute("src")) {
+                        menuOverlays.help.src = menuOverlays.help.dataset.src;
+                    }
+                    menuOverlays.file.hidden = true;
+                    menuOverlays.edit.hidden = true;
+                    menuOverlays.help.hidden = false;
+                    menuOverlays.view.hidden = true;
+                },
+                closeFileMenu: function closeFileMenu() {
+                    menuOverlays.file.hidden = true;
+                },
+                closeEditMenu: function closeEditMenu() {
+                    menuOverlays.edit.hidden = true;
+                },
+                closeViewMenu: function closeViewMenu() {
+                    menuOverlays.view.hidden = true;
+                },
+                closeHelpMenu: function closeHelpMenu() {
+                    menuOverlays.help.hidden = true;
+                },
+                showWritePalettes: function showWritePalettes() {
                     writeFrame.src = writeTabSources.Palettes;
-                    writeFrame.title = "Write screen";
+                    writeFrame.title = "Palettes screen";
+                },
+                showWriteHistory: function showWriteHistory() {
+                    writeFrame.src = writeTabSources.History;
+                    writeFrame.title = "History screen";
+                },
+                showWriteProperties: function showWriteProperties() {
+                    writeFrame.src = writeTabSources.Properties;
+                    writeFrame.title = "Properties screen";
+                },
+                showSetupProject: function showSetupProject() {
+                    setupFrame.src = setupTabSources.Project;
+                    setupFrame.title = "Project screen";
+                },
+                showSetupInstruments: function showSetupInstruments() {
+                    setupFrame.src = setupTabSources.Instruments;
+                    setupFrame.title = "Instruments screen";
+                },
+                showSetupScores: function showSetupScores() {
+                    setupFrame.src = setupTabSources.Scores;
+                    setupFrame.title = "Scores screen";
+                },
+                showEngraveHouseStyle: function showEngraveHouseStyle() {
+                    engraveFrame.src = engraveTabSources["House Style"];
+                    engraveFrame.title = "House Style screen";
+                },
+                showEngraveLayouts: function showEngraveLayouts() {
+                    engraveFrame.src = engraveTabSources.Layouts;
+                    engraveFrame.title = "Layouts screen";
+                },
+                showEngraveProperties: function showEngraveProperties() {
+                    engraveFrame.src = engraveTabSources.Properties;
+                    engraveFrame.title = "Properties screen";
+                },
+                selectSetupActivity: function selectSetupActivity(event, message) {
+                    if (message.wasSelected && !screenPanel.hidden) {
+                        screenPanel.hidden = true;
+                        return;
+                    }
+                    if (!setupFrame.hasAttribute("src")) setupFrame.src = setupFrame.dataset.src;
+                    if (setupFrame.getAttribute("src") !== setupTabSources.Instruments) {
+                        setupFrame.src = setupTabSources.Instruments;
+                        setupFrame.title = "Setup screen";
+                    }
+                    screenPanel.hidden = false;
+                    writeFrame.hidden = true;
+                    playFrame.hidden = true;
+                    setupFrame.hidden = false;
+                    engraveFrame.hidden = true;
+                    rollFrame.hidden = true;
+                    reviewFrame.hidden = true;
+                    publishFrame.hidden = true;
+                },
+                selectWriteActivity: function selectWriteActivity(event, message) {
+                    if (message.wasSelected && !screenPanel.hidden) {
+                        screenPanel.hidden = true;
+                        return;
+                    }
+                    if (!writeFrame.hasAttribute("src")) writeFrame.src = writeFrame.dataset.src;
+                    if (writeFrame.getAttribute("src") !== writeTabSources.Palettes) {
+                        writeFrame.src = writeTabSources.Palettes;
+                        writeFrame.title = "Write screen";
+                    }
+                    screenPanel.hidden = false;
+                    writeFrame.hidden = false;
+                    playFrame.hidden = true;
+                    setupFrame.hidden = true;
+                    engraveFrame.hidden = true;
+                    rollFrame.hidden = true;
+                    reviewFrame.hidden = true;
+                    publishFrame.hidden = true;
+                },
+                selectEngraveActivity: function selectEngraveActivity(event, message) {
+                    if (message.wasSelected && !screenPanel.hidden) {
+                        screenPanel.hidden = true;
+                        return;
+                    }
+                    if (!engraveFrame.hasAttribute("src")) engraveFrame.src = engraveFrame.dataset.src;
+                    if (engraveFrame.getAttribute("src") !== engraveTabSources["House Style"]) {
+                        engraveFrame.src = engraveTabSources["House Style"];
+                        engraveFrame.title = "Engrave screen";
+                    }
+                    screenPanel.hidden = false;
+                    writeFrame.hidden = true;
+                    playFrame.hidden = true;
+                    setupFrame.hidden = true;
+                    engraveFrame.hidden = false;
+                    rollFrame.hidden = true;
+                    reviewFrame.hidden = true;
+                    publishFrame.hidden = true;
+                },
+                selectPlayActivity: function selectPlayActivity(event, message) {
+                    if (message.wasSelected && !screenPanel.hidden) {
+                        screenPanel.hidden = true;
+                        return;
+                    }
+                    if (!playFrame.hasAttribute("src")) playFrame.src = playFrame.dataset.src;
+                    screenPanel.hidden = false;
+                    writeFrame.hidden = true;
+                    playFrame.hidden = false;
+                    setupFrame.hidden = true;
+                    engraveFrame.hidden = true;
+                    rollFrame.hidden = true;
+                    reviewFrame.hidden = true;
+                    publishFrame.hidden = true;
+                },
+                selectRollActivity: function selectRollActivity(event, message) {
+                    if (message.wasSelected && !screenPanel.hidden) {
+                        screenPanel.hidden = true;
+                        return;
+                    }
+                    if (!rollFrame.hasAttribute("src")) rollFrame.src = rollFrame.dataset.src;
+                    screenPanel.hidden = false;
+                    writeFrame.hidden = true;
+                    playFrame.hidden = true;
+                    setupFrame.hidden = true;
+                    engraveFrame.hidden = true;
+                    rollFrame.hidden = false;
+                    reviewFrame.hidden = true;
+                    publishFrame.hidden = true;
+                },
+                selectReviewActivity: function selectReviewActivity(event, message) {
+                    if (message.wasSelected && !screenPanel.hidden) {
+                        screenPanel.hidden = true;
+                        return;
+                    }
+                    if (!reviewFrame.hasAttribute("src")) reviewFrame.src = reviewFrame.dataset.src;
+                    screenPanel.hidden = false;
+                    writeFrame.hidden = true;
+                    playFrame.hidden = true;
+                    setupFrame.hidden = true;
+                    engraveFrame.hidden = true;
+                    rollFrame.hidden = true;
+                    reviewFrame.hidden = false;
+                    publishFrame.hidden = true;
+                },
+                selectPublishActivity: function selectPublishActivity(event, message) {
+                    if (message.wasSelected && !screenPanel.hidden) {
+                        screenPanel.hidden = true;
+                        return;
+                    }
+                    if (!publishFrame.hasAttribute("src")) publishFrame.src = publishFrame.dataset.src;
+                    screenPanel.hidden = false;
+                    writeFrame.hidden = true;
+                    playFrame.hidden = true;
+                    setupFrame.hidden = true;
+                    engraveFrame.hidden = true;
+                    rollFrame.hidden = true;
+                    reviewFrame.hidden = true;
+                    publishFrame.hidden = false;
+                },
+                selectSettingsActivity: function selectSettingsActivity(event, message) {
+                    if (message.wasSelected && !screenPanel.hidden) {
+                        screenPanel.hidden = true;
+                    }
                 }
-                screenPanel.hidden = false;
-                Object.values(frames).forEach(frame => { frame.hidden = frame !== activeFrame; });
-            });
+            };
 
-            document.addEventListener("pointerdown", event => {
+            const messageActions = [
+                { message: "menu-open", data: { menu: "file" }, source: horizontalMenuFrame.contentWindow, handler: "openFileMenu" },
+                { message: "menu-open", data: { menu: "edit" }, source: horizontalMenuFrame.contentWindow, handler: "openEditMenu" },
+                { message: "menu-open", data: { menu: "view" }, source: horizontalMenuFrame.contentWindow, handler: "openViewMenu" },
+                { message: "menu-open", data: { menu: "help" }, source: horizontalMenuFrame.contentWindow, handler: "openHelpMenu" },
+                { message: "menu-dismiss", data: { menu: "file" }, source: menuOverlays.file.contentWindow, handler: "closeFileMenu" },
+                { message: "menu-dismiss", data: { menu: "edit" }, source: menuOverlays.edit.contentWindow, handler: "closeEditMenu" },
+                { message: "menu-dismiss", data: { menu: "view" }, source: menuOverlays.view.contentWindow, handler: "closeViewMenu" },
+                { message: "menu-dismiss", data: { menu: "help" }, source: menuOverlays.help.contentWindow, handler: "closeHelpMenu" },
+                { message: "write-tab", data: { tab: "Palettes" }, source: writeFrame.contentWindow, handler: "showWritePalettes" },
+                { message: "write-tab", data: { tab: "History" }, source: writeFrame.contentWindow, handler: "showWriteHistory" },
+                { message: "write-tab", data: { tab: "Properties" }, source: writeFrame.contentWindow, handler: "showWriteProperties" },
+                { message: "setup-tab", data: { tab: "Project" }, source: setupFrame.contentWindow, handler: "showSetupProject" },
+                { message: "setup-tab", data: { tab: "Instruments" }, source: setupFrame.contentWindow, handler: "showSetupInstruments" },
+                { message: "setup-tab", data: { tab: "Scores" }, source: setupFrame.contentWindow, handler: "showSetupScores" },
+                { message: "engrave-tab", data: { tab: "House Style" }, source: engraveFrame.contentWindow, handler: "showEngraveHouseStyle" },
+                { message: "engrave-tab", data: { tab: "Layouts" }, source: engraveFrame.contentWindow, handler: "showEngraveLayouts" },
+                { message: "engrave-tab", data: { tab: "Properties" }, source: engraveFrame.contentWindow, handler: "showEngraveProperties" },
+                { message: "menu-action", data: { activity: "setup" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectSetupActivity" },
+                { message: "menu-action", data: { activity: "write" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectWriteActivity" },
+                { message: "menu-action", data: { activity: "engrave" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectEngraveActivity" },
+                { message: "menu-action", data: { activity: "play" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectPlayActivity" },
+                { message: "menu-action", data: { activity: "roll" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectRollActivity" },
+                { message: "menu-action", data: { activity: "review" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectReviewActivity" },
+                { message: "menu-action", data: { activity: "publish" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectPublishActivity" },
+                { message: "menu-action", data: { activity: "settings" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectSettingsActivity" }
+            ];
+            window.ButtonActionList.addMessages(
+                window,
+                "viritura-index-new",
+                messageActions,
+                messageActionHandlers
+            );
+
+            window.ButtonActionList.add(document, "pointerdown", "Dismiss menu on outside click", event => {
                 const activeMenu = Object.values(menuOverlays).find(frame => !frame.hidden);
                 if (activeMenu && event.target !== activeMenu) activeMenu.hidden = true;
             });
 
-            resizeHandle.addEventListener("pointerdown", event => {
+            window.ButtonActionList.add(resizeHandle, "pointerdown", "Start resizing screen panel", event => {
                 event.preventDefault();
                 resizePointerId = event.pointerId;
                 previousCursor = document.documentElement.style.cursor;
@@ -305,7 +471,7 @@
                 resizeHandle.setPointerCapture(event.pointerId);
             });
 
-            resizeHandle.addEventListener("pointermove", event => {
+            window.ButtonActionList.add(resizeHandle, "pointermove", "Resize screen panel", event => {
                 if (event.pointerId !== resizePointerId) return;
 
                 const panelRect = screenPanel.getBoundingClientRect();
@@ -327,8 +493,8 @@
                 }
             }
 
-            resizeHandle.addEventListener("pointerup", stopResizing);
-            resizeHandle.addEventListener("pointercancel", stopResizing);
+            window.ButtonActionList.add(resizeHandle, "pointerup", "Finish resizing screen panel", stopResizing);
+            window.ButtonActionList.add(resizeHandle, "pointercancel", "Cancel screen panel resize", stopResizing);
         })();
     </script>
 </body>
