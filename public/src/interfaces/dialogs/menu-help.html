@@ -1,4 +1,20 @@
+<!doctype html>
 <!-- Viritura / menu:Help - MIT, Viritura contributors (2026) -->
+<html lang="en" data-theme="light" class="overlay-document">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../assets/notation.css">
+  <link rel="stylesheet" href="../../assets/interface.css">
+  <link rel="stylesheet" href="../../assets/navigation.css">
+  <style>
+    #overlays {
+      pointer-events: auto;
+    }
+  </style>
+  <script defer src="../../assets/local-frame.js"></script>
+</head>
+<body id="overlays">
 <div data-radix-popper-content-wrapper="" dir="ltr" style="position: fixed; left: 0px; top: 0px; transform: translate(172px, 41px); min-width: max-content; --radix-popper-transform-origin: 0% 0px; z-index: 1000; --radix-popper-available-width: 1146px; --radix-popper-available-height: 685px; --radix-popper-anchor-width: 44.890625px; --radix-popper-anchor-height: 30px;">
 <div data-side="bottom" data-align="start" role="menu" aria-orientation="vertical" data-state="open" data-radix-menu-content="" dir="ltr" id="radix-_r_e_" aria-labelledby="radix-_r_d_" data-radix-menubar-content="" class="_dropdown_oip4i_49 vi-glass-floating" tabindex="-1" data-orientation="vertical" style="outline: none; --radix-menubar-content-transform-origin: var(--radix-popper-transform-origin); --radix-menubar-content-available-width: var(--radix-popper-available-width); --radix-menubar-content-available-height: var(--radix-popper-available-height); --radix-menubar-trigger-width: var(--radix-popper-anchor-width); --radix-menubar-trigger-height: var(--radix-popper-anchor-height);">
 <div role="menuitem" class="_menuItem_oip4i_60" tabindex="-1" data-orientation="vertical" data-radix-collection-item="" data-ui="Keyboard ShortcutsF1">
@@ -9,3 +25,14 @@
 </div>
 </div>
 </div>
+<script>
+  document.addEventListener("click", () => {
+    window.parent.postMessage({
+      channel: "viritura-index-new",
+      type: "menu-dismiss",
+      menu: "help"
+    }, "*");
+  });
+</script>
+</body>
+</html>
