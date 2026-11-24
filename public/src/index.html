@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./assets/interface.css">
     <link rel="stylesheet" href="./assets/navigation.css">
     <script src="./assets/button-action-list.js"></script>
+    <script src="./js/file.js"></script>
     <script defer src="./assets/local-frame.js"></script>
 </head>
 
@@ -52,6 +53,12 @@
                                             <iframe id="write-screen-frame" src="./interfaces/screens/write.html"
                                                 title="Write screen"
                                                 style="display: block; width: 100%; height: 100%; border: 0"></iframe>
+
+                                            <iframe id="edit-screen-frame"
+                                                data-src="./interfaces/screens/edit.html"
+                                                title="Edit screen"
+                                                style="display: block; width: 100%; height: 100%; border: 0"
+                                                hidden></iframe>
 
                                             <iframe id="play-screen-frame"
                                                 data-src="./interfaces/screens/play.html"
@@ -186,6 +193,7 @@
             };
             const menuFrame = document.getElementById("vertical-menu-frame");
             const writeFrame = document.getElementById("write-screen-frame");
+            const editFrame = document.getElementById("edit-screen-frame");
             const playFrame = document.getElementById("play-screen-frame");
             const setupFrame = document.getElementById("setup-screen-frame");
             const engraveFrame = document.getElementById("engrave-screen-frame");
@@ -310,6 +318,7 @@
                     }
                     screenPanel.hidden = false;
                     writeFrame.hidden = true;
+                    editFrame.hidden = true;
                     playFrame.hidden = true;
                     setupFrame.hidden = false;
                     engraveFrame.hidden = true;
@@ -329,6 +338,23 @@
                     }
                     screenPanel.hidden = false;
                     writeFrame.hidden = false;
+                    editFrame.hidden = true;
+                    playFrame.hidden = true;
+                    setupFrame.hidden = true;
+                    engraveFrame.hidden = true;
+                    rollFrame.hidden = true;
+                    reviewFrame.hidden = true;
+                    publishFrame.hidden = true;
+                },
+                selectEditActivity: function selectEditActivity(event, message) {
+                    if (message.wasSelected && !screenPanel.hidden) {
+                        screenPanel.hidden = true;
+                        return;
+                    }
+                    if (!editFrame.hasAttribute("src")) editFrame.src = editFrame.dataset.src;
+                    screenPanel.hidden = false;
+                    writeFrame.hidden = true;
+                    editFrame.hidden = false;
                     playFrame.hidden = true;
                     setupFrame.hidden = true;
                     engraveFrame.hidden = true;
@@ -348,6 +374,7 @@
                     }
                     screenPanel.hidden = false;
                     writeFrame.hidden = true;
+                    editFrame.hidden = true;
                     playFrame.hidden = true;
                     setupFrame.hidden = true;
                     engraveFrame.hidden = false;
@@ -363,6 +390,7 @@
                     if (!playFrame.hasAttribute("src")) playFrame.src = playFrame.dataset.src;
                     screenPanel.hidden = false;
                     writeFrame.hidden = true;
+                    editFrame.hidden = true;
                     playFrame.hidden = false;
                     setupFrame.hidden = true;
                     engraveFrame.hidden = true;
@@ -378,6 +406,7 @@
                     if (!rollFrame.hasAttribute("src")) rollFrame.src = rollFrame.dataset.src;
                     screenPanel.hidden = false;
                     writeFrame.hidden = true;
+                    editFrame.hidden = true;
                     playFrame.hidden = true;
                     setupFrame.hidden = true;
                     engraveFrame.hidden = true;
@@ -393,6 +422,7 @@
                     if (!reviewFrame.hasAttribute("src")) reviewFrame.src = reviewFrame.dataset.src;
                     screenPanel.hidden = false;
                     writeFrame.hidden = true;
+                    editFrame.hidden = true;
                     playFrame.hidden = true;
                     setupFrame.hidden = true;
                     engraveFrame.hidden = true;
@@ -408,6 +438,7 @@
                     if (!publishFrame.hasAttribute("src")) publishFrame.src = publishFrame.dataset.src;
                     screenPanel.hidden = false;
                     writeFrame.hidden = true;
+                    editFrame.hidden = true;
                     playFrame.hidden = true;
                     setupFrame.hidden = true;
                     engraveFrame.hidden = true;
@@ -442,6 +473,7 @@
                 { message: "engrave-tab", data: { tab: "Properties" }, source: engraveFrame.contentWindow, handler: "showEngraveProperties" },
                 { message: "menu-action", data: { activity: "setup" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectSetupActivity" },
                 { message: "menu-action", data: { activity: "write" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectWriteActivity" },
+                { message: "menu-action", data: { activity: "edit" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectEditActivity" },
                 { message: "menu-action", data: { activity: "engrave" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectEngraveActivity" },
                 { message: "menu-action", data: { activity: "play" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectPlayActivity" },
                 { message: "menu-action", data: { activity: "roll" }, types: { wasSelected: "boolean" }, source: menuFrame.contentWindow, handler: "selectRollActivity" },
@@ -455,6 +487,20 @@
                 messageActions,
                 messageActionHandlers
             );
+            window.FileActions.initialize({
+                fileMenuWindow: menuOverlays.file.contentWindow,
+                editorWindow: editFrame.contentWindow,
+                selectEditActivity: function selectEditActivity() {
+                    messageActionHandlers.selectEditActivity(null, { wasSelected: false });
+                },
+                syncMenuActivity: function syncMenuActivity() {
+                    menuFrame.contentWindow.postMessage({
+                        channel: "viritura-index-new",
+                        type: "sync-activity",
+                        activity: "edit"
+                    }, "*");
+                }
+            });
 
             window.ButtonActionList.add(document, "pointerdown", "Dismiss menu on outside click", event => {
                 const activeMenu = Object.values(menuOverlays).find(frame => !frame.hidden);
