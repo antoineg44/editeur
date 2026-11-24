@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../assets/notation.css">
     <link rel="stylesheet" href="../../assets/interface.css">
+    <script src="../../assets/button-action-list.js"></script>
     <style>
         button[data-activity][aria-pressed="true"] {
             background-color: var(--accent);
@@ -130,7 +131,7 @@
         </button>
     </div>
     <script>
-        document.addEventListener("click", event => {
+        window.ButtonActionList.add(document, "click", "Select vertical activity", event => {
             if (!(event.target instanceof Element)) return;
 
             const button = event.target.closest("button[data-activity]");
