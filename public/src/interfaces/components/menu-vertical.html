@@ -45,6 +45,18 @@
         </svg>
     </button>
     <button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24"
+        aria-label="Edit" aria-pressed="false" data-active="false" type="button" data-state="closed"
+        data-ui="Edit" data-activity="edit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-file-pen" aria-hidden="true">
+            <path d="M12.5 22H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8l6 6v3.5"></path>
+            <path d="M14 2v7h7"></path>
+            <path d="m18.5 15.5 3 3"></path>
+            <path d="m16 18 2.5-2.5a2.1 2.1 0 0 1 3 3L19 21l-4 1z"></path>
+        </svg>
+    </button>
+    <button class="_button_4hx0m_4 _rail_4hx0m_100 _ghost_4hx0m_186 _iconShape_4hx0m_112 _item_ponj1_24"
         aria-label="Engrave" aria-pressed="false" data-active="false" type="button" data-state="closed"
         data-ui="Engrave" data-activity="engrave">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -151,6 +163,23 @@
                 activity,
                 wasSelected
             }, "*");
+        });
+
+        window.ButtonActionList.addMessages(window, "viritura-index-new", [
+            {
+                message: "sync-activity",
+                source: window.parent,
+                types: { activity: "string" },
+                handler: "syncActivity"
+            }
+        ], {
+            syncActivity: function syncActivity(event, message) {
+                document.querySelectorAll("button[data-activity]").forEach(item => {
+                    const active = item.dataset.activity === message.activity;
+                    item.setAttribute("aria-pressed", String(active));
+                    item.dataset.active = String(active);
+                });
+            }
         });
     </script>
 </body>
