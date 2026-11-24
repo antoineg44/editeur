@@ -274,6 +274,21 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("click", event => {
+            if (!(event.target instanceof Element)) return;
+            const button = event.target.closest('button[data-ui]');
+            const menus = { File: "file", Edit: "edit", View: "view", Help: "help" };
+            const menu = button && menus[button.dataset.ui];
+            if (!menu) return;
+
+            window.parent.postMessage({
+                channel: "viritura-index-new",
+                type: "menu-open",
+                menu
+            }, "*");
+        });
+    </script>
 </body>
 
 </html>
