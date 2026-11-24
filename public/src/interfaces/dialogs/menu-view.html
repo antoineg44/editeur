@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../../assets/notation.css">
   <link rel="stylesheet" href="../../assets/interface.css">
   <link rel="stylesheet" href="../../assets/navigation.css">
+  <script src="../../assets/button-action-list.js"></script>
   <style>
     #overlays {
       pointer-events: auto;
@@ -39,7 +40,7 @@
 </div>
 </div>
 <script>
-  document.addEventListener("click", () => {
+  window.ButtonActionList.add(document, "click", "Dismiss view menu", () => {
     window.parent.postMessage({
       channel: "viritura-index-new",
       type: "menu-dismiss",
