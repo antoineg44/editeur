@@ -1,0 +1,136 @@
+<!doctype html>
+<!-- Viritura / edit - MIT, Viritura contributors (2026) -->
+<html lang="fr" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../assets/notation.css">
+  <link rel="stylesheet" href="../../assets/interface.css">
+  <link rel="stylesheet" href="../../assets/navigation.css">
+  <script defer src="../../assets/local-frame.js"></script>
+  <style>
+    html,
+    body {
+      height: 100%;
+    }
+
+    .text-editor {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      color: var(--text);
+      background: var(--surface);
+      font-size: var(--type-control-size, 12px);
+    }
+
+    .text-editor__header {
+      flex: 0 0 auto;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid color-mix(in srgb, var(--text-muted) 18%, transparent);
+    }
+
+    .text-editor__header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .text-editor__title {
+      margin: 0;
+      font-size: var(--type-heading-size, 14px);
+      font-weight: var(--type-heading-weight, 600);
+    }
+
+    .text-editor__hint {
+      margin: 4px 0 0;
+      color: var(--text-muted);
+      font-size: var(--type-small-size, 11px);
+    }
+
+    .text-editor__content {
+      display: flex;
+      flex: 1 1 0%;
+      min-height: 0;
+      padding: 16px;
+      background: var(--canvas-bg, #e0e2ea);
+    }
+
+    .text-editor__input {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 0;
+      padding: 24px;
+      resize: none;
+      border: 1px solid color-mix(in srgb, var(--text-muted) 20%, transparent);
+      border-radius: var(--radius-md, 6px);
+      outline: none;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: var(--type-body-size, 13px);
+      line-height: 1.65;
+    }
+
+    .text-editor__input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+
+    .text-editor__input::placeholder {
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+
+<body style="height: 100%; margin: 0;">
+  <main class="text-editor">
+    <header class="text-editor__header">
+      <div class="text-editor__header-row">
+        <h1 class="text-editor__title">Éditeur de texte</h1>
+        <button class="text-editor__refresh _button_4hx0m_4 _ghost_4hx0m_186 _iconShape_4hx0m_112" type="button"
+          aria-label="Rafraîchir l’éditeur" title="Rafraîchir">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-refresh-cw" aria-hidden="true">
+            <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 5v4h4"></path>
+            <path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"></path>
+          </svg>
+        </button>
+      </div>
+      <p class="text-editor__hint" aria-live="polite">Texte brut</p>
+    </header>
+    <section class="text-editor__content" aria-label="Zone d’édition">
+      <textarea class="text-editor__input" aria-label="Contenu du document"
+        placeholder="Commencez à écrire…" spellcheck="true"></textarea>
+    </section>
+  </main>
+  <script>
+    window.addEventListener("message", event => {
+      const message = event.data;
+      if (event.source !== window.parent ||
+          (event.origin !== window.location.origin && event.origin !== "null") ||
+          !message || message.channel !== "viritura-editor" ||
+          message.type !== "load-musicxml" ||
+          typeof message.name !== "string" ||
+          typeof message.content !== "string") {
+        return;
+      }
+
+      const input = document.querySelector(".text-editor__input");
+      input.value = message.content;
+      document.querySelector(".text-editor__hint").textContent = `Fichier : ${message.name}`;
+      document.title = `Edit — ${message.name}`;
+      input.focus();
+    });
+
+    window.parent.postMessage({
+      channel: "viritura-index-new",
+      type: "editor-ready"
+    }, "*");
+  </script>
+</body>
+
+</html>
