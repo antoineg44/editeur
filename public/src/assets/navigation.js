@@ -1,14 +1,20 @@
 "use strict";
 
 (() => {
-  const app = document.getElementById("app");
-  const overlays = document.getElementById("overlays");
+  const local = location.protocol === "file:";
+  let screenFrame = document.getElementById("screen-frame");
+  let overlayFrame = document.getElementById("overlay-frame");
+  let app = screenFrame.contentDocument.body;
+  let overlays = overlayFrame.contentDocument.body;
   const notice = document.getElementById("notice");
   const { modes, features } = window.staticNavigationData;
   const choices = Object.assign({}, window.staticNavigationData.choices, ...features.map(feature => feature.choices));
   const forms = Object.assign({}, window.staticNavigationData.forms, ...features.map(feature => feature.forms));
   const templates = new Map();
-  const screenMemory = new Map();
+  const frameStates = new Map();
+  const initialBodies = new Map();
+  const displayedOverlays = new Set();
+  const declaredFrames = new Map([...document.querySelectorAll("iframe[data-interface]")].map(frame => [frame.dataset.interface, frame]));
   let manifest;
   let screen = "";
   let overlay = "";
@@ -42,14 +48,153 @@
 
   async function template(name) {
     if (!manifest[name]) throw new Error("Interface inconnue : " + name);
-    if (!templates.has(name)) templates.set(name, await fetchText(manifest[name].path));
-    return templates.get(name);
+    await loadFrame(name, manifest[name].kind);
+    return templates.get(manifest[name].path);
+  }
+
+  function configureFrame(frame, kind) {
+    const doc = frame.contentDocument;
+    const styles = ["./assets/notation.css", "./assets/interface.css", "./assets/navigation.css"].map(path => {
+      const href = new URL(path, location.href).href;
+      const existing = [...doc.querySelectorAll('link[rel="stylesheet"]')].find(link => link.href === href);
+      if (existing) {
+        return existing.sheet ? Promise.resolve() :
+          Promise.reject(new Error("Feuille de style introuvable : " + path));
+      }
+      const link = doc.createElement("link");
+      const loaded = new Promise((resolve, reject) => {
+        link.addEventListener("load", resolve, { once: true });
+        link.addEventListener("error", () => reject(new Error("Feuille de style introuvable : " + path)), { once: true });
+      });
+      link.rel = "stylesheet";
+      link.href = href;
+      doc.head.append(link);
+      return loaded;
+    });
+    doc.documentElement.dataset.theme = document.documentElement.dataset.theme;
+    if (kind === "overlay") doc.documentElement.classList.add("overlay-document");
+    doc.body.id = kind === "screen" ? "app" : "overlays";
+    installEvents(doc);
+    return Promise.all(styles);
+  }
+
+  function loadLocalFrame(frame, path) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        cleanup();
+        reject(new Error("Chargement impossible : " + path));
+      }, 15000);
+      function cleanup() {
+        clearTimeout(timer);
+        window.removeEventListener("message", received);
+        frame.removeEventListener("load", loaded);
+        frame.removeEventListener("error", failed);
+      }
+      function received(event) {
+        if (event.source !== frame.contentWindow || event.data?.channel !== "viritura-local" ||
+            event.data.type !== "frame-source" || typeof event.data.html !== "string") return;
+        window.removeEventListener("message", received);
+        frame.setAttribute("sandbox", "allow-same-origin");
+        frame.addEventListener("load", loaded);
+        // srcdoc inherits the parent origin, unlike a separate file:// document.
+        const base = new URL(path, location.href).href.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+        frame.srcdoc = '<!doctype html><html><head><base href="' + base + '"></head><body>' +
+          event.data.html + "</body></html>";
+      }
+      function loaded() {
+        cleanup();
+        if (!frame.contentDocument) reject(new Error("Iframe inaccessible : " + path));
+        else resolve();
+      }
+      function failed() {
+        cleanup();
+        reject(new Error("Chargement impossible : " + path));
+      }
+      frame.setAttribute("sandbox", "allow-scripts allow-same-origin");
+      window.addEventListener("message", received);
+      frame.addEventListener("error", failed);
+      frame.src = path;
+    });
+  }
+
+  async function loadFrame(name, kind) {
+    const entry = manifest[name];
+    if (!entry || entry.kind !== kind) throw new Error("Interface inconnue : " + name);
+    const frame = declaredFrames.get(entry.path);
+    if (!frame || frame.dataset.kind !== kind) throw new Error("Iframe non déclarée : " + entry.path);
+    if (frameStates.has(frame)) return frameStates.get(frame);
+    const loading = (async () => {
+      if (local) {
+        await loadLocalFrame(frame, entry.path);
+      } else {
+        frame.setAttribute("sandbox", "allow-same-origin");
+        await new Promise((resolve, reject) => {
+          const timer = setTimeout(() => {
+            cleanup();
+            reject(new Error("Chargement impossible : " + entry.path));
+          }, 15000);
+          function cleanup() {
+            clearTimeout(timer);
+            frame.removeEventListener("load", loaded);
+            frame.removeEventListener("error", failed);
+          }
+          function loaded() {
+            if (!frame.contentDocument) {
+              cleanup();
+              reject(new Error("Iframe inaccessible : " + entry.path));
+              return;
+            }
+            if (frame.contentDocument.URL === "about:blank") return;
+            cleanup();
+            resolve();
+          }
+          function failed() {
+            cleanup();
+            reject(new Error("Chargement impossible : " + entry.path));
+          }
+          frame.addEventListener("load", loaded);
+          frame.addEventListener("error", failed);
+          frame.src = entry.path;
+        });
+        const timing = frame.contentWindow.performance.getEntriesByType("navigation")[0];
+        const status = timing?.responseStatus;
+        if (typeof status === "number" && status > 0) {
+          if (status < 200 || status >= 400) throw new Error(entry.path + " (HTTP " + status + ")");
+        } else {
+          await fetchText(entry.path);
+        }
+      }
+      templates.set(entry.path, frame.contentDocument.body.innerHTML);
+      await configureFrame(frame, kind);
+      initialBodies.set(frame, frame.contentDocument.body.innerHTML);
+      frame.dataset.loaded = "true";
+      return frame;
+    })();
+    frameStates.set(frame, loading);
+    try {
+      return await loading;
+    } catch (error) {
+      frameStates.delete(frame);
+      templates.delete(entry.path);
+      frame.removeAttribute("srcdoc");
+      frame.removeAttribute("src");
+      throw error;
+    }
+  }
+
+  function hideFrame(frame) {
+    frame.hidden = true;
+    frame.removeAttribute("id");
+  }
+
+  function live(element) {
+    return element?.isConnected && (element.ownerDocument === app.ownerDocument || element.ownerDocument === overlays.ownerDocument);
   }
 
   function label(element) {
     const labelled = element.getAttribute("aria-labelledby");
     return element.getAttribute("aria-label") ||
-      (labelled && document.getElementById(labelled)?.textContent.trim()) ||
+      (labelled && element.ownerDocument.getElementById(labelled)?.textContent.trim()) ||
       (element.getAttribute("role") === "menuitem" && element.firstElementChild?.textContent.trim()) ||
       element.dataset.ui || element.textContent.trim();
   }
@@ -84,18 +229,20 @@
     });
   }
 
-  function rememberScreen() {
-    rememberControls(app);
-    if (screen) screenMemory.set(screen, app.innerHTML);
-  }
-
   function snapshotOverlay() {
     rememberControls(overlays);
     return { name: overlay, html: overlays.innerHTML, focus: returnFocus, parent: previousOverlay };
   }
 
-  function clearOverlay(restoreFocus = false) {
+  function clearOverlay(restoreFocus = false, preserveHistory = false) {
+    if (!preserveHistory) {
+      for (let saved = previousOverlay; saved; saved = saved.parent) {
+        if (saved.frame) hideFrame(saved.frame);
+      }
+    }
     overlays.replaceChildren();
+    overlayFrame.hidden = true;
+    if (local) overlayFrame.removeAttribute("id");
     overlay = "";
     choiceTarget = null;
     previousOverlay = null;
@@ -104,15 +251,22 @@
       element.setAttribute("aria-expanded", "false");
       element.dataset.state = "closed";
     });
-    if (restoreFocus && returnFocus?.isConnected) returnFocus.focus();
+    if (restoreFocus && live(returnFocus)) returnFocus.focus();
   }
 
   function closeOverlay() {
     transition++;
     if (previousOverlay) {
       const previous = previousOverlay;
+      if (previous.frame) {
+        clearOverlay(false, true);
+        hideFrame(overlayFrame);
+        overlayFrame = previous.frame;
+        overlayFrame.id = "overlay-frame";
+        overlays = overlayFrame.contentDocument.body;
+      }
       previousOverlay = previous.parent;
-      mountOverlay(previous.name, previous.html, previous.focus);
+      mountOverlay(previous.name, previous.html, previous.focus, Boolean(previous.frame));
     } else {
       clearOverlay(true);
     }
@@ -120,12 +274,17 @@
 
   async function showScreen(name, history = true) {
     if (name === screen) { transition++; clearOverlay(); return; }
+    if (!manifest[name] || manifest[name].kind !== "screen") throw new Error("Ecran inconnu : " + name);
     const ticket = ++transition;
-    const html = screenMemory.get(name) || await template(name);
+    const frame = await loadFrame(name, "screen");
     if (ticket !== transition) return;
-    rememberScreen();
     clearOverlay();
-    app.innerHTML = html;
+    hideFrame(screenFrame);
+    screenFrame = frame;
+    frame.id = "screen-frame";
+    app = frame.contentDocument.body;
+    frame.contentDocument.documentElement.dataset.theme = document.documentElement.dataset.theme;
+    frame.hidden = false;
     screen = name;
     prepare(app);
     app.setAttribute("aria-busy", "false");
@@ -134,7 +293,7 @@
     app.querySelector("[data-activity][aria-pressed=true]")?.focus({ preventScroll: true });
   }
 
-  function positionPopup(anchor, rect = anchor?.isConnected ? anchor.getBoundingClientRect() : null) {
+  function positionPopup(anchor, rect = live(anchor) ? anchor.getBoundingClientRect() : null) {
     if (!rect) return;
     const popup = overlays.querySelector(".static-popup") || overlays.querySelector("[data-radix-popper-content-wrapper]") ||
       (!overlays.querySelector("[data-dialog-content], .static-dialog") && overlays.firstElementChild);
@@ -151,17 +310,20 @@
       Math.max(8, rect.top - box.height - 5)) + "px";
   }
 
-  function mountOverlay(name, html, anchor) {
+  function mountOverlay(name, html, anchor, loaded = false, anchorRect = null) {
     const previous = previousOverlay;
-    const rect = anchor?.isConnected ? anchor.getBoundingClientRect() : null;
+    const rect = anchorRect || (live(anchor) ? anchor.getBoundingClientRect() : null);
     const sourceFocus = returnFocus;
-    clearOverlay();
+    if (!loaded) clearOverlay(false, true);
     previousOverlay = previous;
     const nestedChoices = name === "choices" && previous;
-    overlays.innerHTML = (nestedChoices ? previous.html : "") + html;
+    if (!loaded) overlays.innerHTML = (nestedChoices ? previous.html : "") + html;
+    overlays.ownerDocument.documentElement.dataset.theme = document.documentElement.dataset.theme;
+    overlayFrame.id = "overlay-frame";
+    overlayFrame.hidden = false;
     overlay = name;
-    returnFocus = anchor?.isConnected ? anchor :
-      (anchor?.id && document.getElementById(anchor.id)) || sourceFocus;
+    returnFocus = live(anchor) ? anchor :
+      (anchor?.id && (overlays.ownerDocument.getElementById(anchor.id) || app.ownerDocument.getElementById(anchor.id))) || sourceFocus;
     prepare(overlays);
     const modal = overlays.querySelector("[data-dialog-content], .static-dialog");
     app.inert = Boolean(modal);
@@ -172,7 +334,7 @@
       }
     }
     positionPopup(returnFocus, rect);
-    if (returnFocus?.isConnected && returnFocus.hasAttribute("aria-haspopup")) {
+    if (live(returnFocus) && returnFocus.hasAttribute("aria-haspopup")) {
       returnFocus.setAttribute("aria-expanded", "true");
       returnFocus.dataset.state = "open";
     }
@@ -184,12 +346,28 @@
   }
 
   async function showOverlay(name, anchor, nested = false) {
+    if (!manifest[name] || manifest[name].kind !== "overlay") throw new Error("Fenetre inconnue : " + name);
     const ticket = ++transition;
-    const html = await template(name);
+    const frame = await loadFrame(name, "overlay");
     if (ticket !== transition) return;
-    const previous = nested && overlay ? snapshotOverlay() : previousOverlay;
+    const keepFrame = nested && overlay;
+    const previous = keepFrame ? snapshotOverlay() : previousOverlay;
+    const rect = live(anchor) ? anchor.getBoundingClientRect() : null;
+    if (keepFrame) {
+      previous.frame = overlayFrame;
+      overlayFrame.hidden = true;
+      overlayFrame.removeAttribute("id");
+    } else {
+      clearOverlay(false, true);
+      hideFrame(overlayFrame);
+    }
+    overlayFrame = frame;
+    frame.id = "overlay-frame";
+    overlays = frame.contentDocument.body;
+    if (displayedOverlays.has(frame)) overlays.innerHTML = initialBodies.get(frame);
+    else displayedOverlays.add(frame);
     previousOverlay = previous;
-    mountOverlay(name, html, anchor || returnFocus);
+    mountOverlay(name, null, anchor || returnFocus, true, rect);
   }
 
   function make(tag, attributes = {}, text) {
@@ -246,9 +424,9 @@
 
   function setChoice(target, value) {
     if (!target) return;
-    if (!target.isConnected) {
-      target = document.getElementById(target.id) ||
-        [...document.querySelectorAll("[data-ui]")].find(element => element.dataset.ui === target.dataset.ui);
+    if (!live(target)) {
+      target = overlays.ownerDocument.getElementById(target.id) || app.ownerDocument.getElementById(target.id) ||
+        [...overlays.querySelectorAll("[data-ui]"), ...app.querySelectorAll("[data-ui]")].find(element => element.dataset.ui === target.dataset.ui);
     }
     if (!target) throw new Error("Champ de destination introuvable.");
     const inner = target.querySelector('[class*="_triggerInner_"], [class*="_triggerLabel_"], [class*="_label_"], [class*="_placeholder_"]');
@@ -261,7 +439,7 @@
   function controlLabel(element) {
     const labelled = element.getAttribute("aria-labelledby");
     return element.getAttribute("aria-label") ||
-      (labelled && document.getElementById(labelled)?.textContent.trim()) ||
+      (labelled && element.ownerDocument.getElementById(labelled)?.textContent.trim()) ||
       element.parentElement.querySelector("label")?.textContent.trim() || label(element);
   }
 
@@ -282,7 +460,11 @@
       }
     });
     const theme = label(element).toLowerCase();
-    if (["light", "dark", "midnight"].includes(theme)) document.documentElement.dataset.theme = theme;
+    if (["light", "dark", "midnight"].includes(theme)) {
+      document.documentElement.dataset.theme = theme;
+      app.ownerDocument.documentElement.dataset.theme = theme;
+      overlays.ownerDocument.documentElement.dataset.theme = theme;
+    }
   }
 
   function accordion(element, expanded = element.getAttribute("aria-expanded") !== "true") {
@@ -395,102 +577,102 @@
     }
   }
 
-  document.addEventListener("click", event => {
-    if (overlay === "choices" && !event.target.closest(".static-popup")) {
-      closeOverlay();
-      return;
-    }
-    if (event.target.matches("input, textarea, select, option")) return;
-    const target = event.target.closest("[data-ui], [role=option]");
-    if (target) {
-      event.preventDefault();
-      activate(target).catch(fail);
-    } else if (event.target.matches("[data-dialog-overlay], .static-dialog-backdrop") ||
-      overlay && !overlays.contains(event.target) && !app.inert) {
-      closeOverlay();
-    }
-  });
-  document.addEventListener("contextmenu", event => {
-    const button = event.target.closest("button");
-    if (!button) return;
-    if (/^(Augmentation dot|Grace note)/.test(label(button))) {
-      event.preventDefault();
-      activate(button).catch(fail);
-    }
-  });
-  document.addEventListener("submit", event => {
-    event.preventDefault();
-    preview();
-  });
-  document.addEventListener("input", event => {
-    const input = event.target;
-    if (input.matches("input")) filter(input);
-    if (input.matches('[aria-label="Zoom slider"]')) {
-      const reset = app.querySelector('[aria-label="Reset zoom"]');
-      if (reset) reset.textContent = Math.round(Number(input.value) / 0.331496062992126 * 100) + "%";
-    }
-    const context = featureContext(input);
-    for (const feature of features) feature.input?.(context);
-  });
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && overlay) { event.preventDefault(); closeOverlay(); return; }
-    if (event.key === "F1") {
-      event.preventDefault();
-      showOverlay("help", document.activeElement).catch(fail);
-      return;
-    }
-    if (event.ctrlKey || event.metaKey) {
-      const key = event.key.toLowerCase();
-      if (["s", "o", "n", "p", ","].includes(key)) {
-        event.preventDefault();
-        if (key === "s") preview();
-        else if (key === "p") showScreen("publish").catch(fail);
-        else if (key === ",") showOverlay("settings:Appearance", document.activeElement).catch(fail);
-        else if (key === "n") showOverlay("new-project", document.activeElement).catch(fail);
-        else showForm("file", document.activeElement);
+  function installEvents(doc) {
+    window.ButtonActionList.add(doc, "click", "Dispatch interface button action", event => {
+      if (overlay === "choices" && !event.target.closest(".static-popup")) {
+        closeOverlay();
         return;
       }
-    }
-    const modal = overlays.querySelector(".static-popup, [data-dialog-content]:not([inert]), .static-dialog:not([inert])");
-    if (event.key === "Tab" && modal) {
-      const elements = [...modal.querySelectorAll('button:not([disabled]), input:not([disabled]):not([type=hidden]), textarea, select, [tabindex="0"], a[href]')]
-        .filter(element => element.checkVisibility());
-      const first = elements[0];
-      const last = elements[elements.length - 1];
-      if (first && event.shiftKey && (document.activeElement === first || document.activeElement === modal)) {
-        event.preventDefault(); last.focus();
-      } else if (last && !event.shiftKey && document.activeElement === last) {
-        event.preventDefault(); first.focus();
+      if (event.target.matches("input, textarea, select, option")) return;
+      const target = event.target.closest("[data-ui], [role=option]");
+      if (target) {
+        event.preventDefault();
+        activate(target).catch(fail);
+      } else if (event.target.matches("[data-dialog-overlay], .static-dialog-backdrop") ||
+        overlay && !overlays.contains(event.target) && !app.inert) {
+        closeOverlay();
       }
-    }
-    const active = document.activeElement;
-    const container = active.closest('[role=menu], [role=listbox], [role=menubar], [role=tablist], [role=radiogroup]');
-    if (container && ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
-      const elements = [...container.querySelectorAll('[data-ui]:not([disabled]):not([aria-disabled=true])')]
-        .filter(element => element.checkVisibility());
-      if (!elements.length) return;
+    });
+    window.ButtonActionList.add(doc, "contextmenu", "Dispatch interface context-menu action", event => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      if (/^(Augmentation dot|Grace note)/.test(label(button))) {
+        event.preventDefault();
+        activate(button).catch(fail);
+      }
+    });
+    window.ButtonActionList.add(doc, "submit", "Dispatch interface form action", event => {
       event.preventDefault();
-      const direction = ["ArrowUp", "ArrowLeft"].includes(event.key) ? -1 : 1;
-      const next = event.key === "Home" ? 0 : event.key === "End" ? elements.length - 1 :
-        (elements.indexOf(active) + direction + elements.length) % elements.length;
-      elements[next].focus();
-    }
-    if (["Enter", " "].includes(event.key) && active.matches('[data-ui]:not(button):not(a)')) {
-      event.preventDefault();
-      activate(active).catch(fail);
-    }
-  });
-  window.addEventListener("resize", () => positionPopup(returnFocus));
-  window.addEventListener("popstate", () => {
+      preview();
+    });
+    window.ButtonActionList.add(doc, "input", "Dispatch interface input action", event => {
+      const input = event.target;
+      if (input.matches("input")) filter(input);
+      if (input.matches('[aria-label="Zoom slider"]')) {
+        const reset = app.querySelector('[aria-label="Reset zoom"]');
+        if (reset) reset.textContent = Math.round(Number(input.value) / 0.331496062992126 * 100) + "%";
+      }
+      const context = featureContext(input);
+      for (const feature of features) feature.input?.(context);
+    });
+    window.ButtonActionList.add(doc, "keydown", "Dispatch interface keyboard action", event => {
+      if (event.key === "Escape" && overlay) { event.preventDefault(); closeOverlay(); return; }
+      if (event.key === "F1") {
+        event.preventDefault();
+        showOverlay("help", doc.activeElement).catch(fail);
+        return;
+      }
+      if (event.ctrlKey || event.metaKey) {
+        const key = event.key.toLowerCase();
+        if (["s", "o", "n", "p", ","].includes(key)) {
+          event.preventDefault();
+          if (key === "s") preview();
+          else if (key === "p") showScreen("publish").catch(fail);
+          else if (key === ",") showOverlay("settings:Appearance", doc.activeElement).catch(fail);
+          else if (key === "n") showOverlay("new-project", doc.activeElement).catch(fail);
+          else showForm("file", doc.activeElement);
+          return;
+        }
+      }
+      const modal = overlays.querySelector(".static-popup, [data-dialog-content]:not([inert]), .static-dialog:not([inert])");
+      if (event.key === "Tab" && modal) {
+        const elements = [...modal.querySelectorAll('button:not([disabled]), input:not([disabled]):not([type=hidden]), textarea, select, [tabindex="0"], a[href]')]
+          .filter(element => element.checkVisibility());
+        const first = elements[0];
+        const last = elements[elements.length - 1];
+        if (first && event.shiftKey && (doc.activeElement === first || doc.activeElement === modal)) {
+          event.preventDefault(); last.focus();
+        } else if (last && !event.shiftKey && doc.activeElement === last) {
+          event.preventDefault(); first.focus();
+        }
+      }
+      const active = doc.activeElement;
+      const container = active.closest('[role=menu], [role=listbox], [role=menubar], [role=tablist], [role=radiogroup]');
+      if (container && ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+        const elements = [...container.querySelectorAll('[data-ui]:not([disabled]):not([aria-disabled=true])')]
+          .filter(element => element.checkVisibility());
+        if (!elements.length) return;
+        event.preventDefault();
+        const direction = ["ArrowUp", "ArrowLeft"].includes(event.key) ? -1 : 1;
+        const next = event.key === "Home" ? 0 : event.key === "End" ? elements.length - 1 :
+          (elements.indexOf(active) + direction + elements.length) % elements.length;
+        elements[next].focus();
+      }
+      if (["Enter", " "].includes(event.key) && active.matches('[data-ui]:not(button):not(a)')) {
+        event.preventDefault();
+        activate(active).catch(fail);
+      }
+    });
+  }
+  window.ButtonActionList.add(window, "resize", "Reposition popup after resize", () => positionPopup(returnFocus));
+  window.ButtonActionList.add(window, "popstate", "Restore screen from browser history", () => {
     const name = decodeURIComponent(location.hash.slice(1)) || "write";
     showScreen(name, false).catch(fail);
   });
 
   async function start() {
-    if (location.protocol === "file:") {
-      throw new Error("Ouvrez cette page via un serveur HTTP statique, pas en file://.");
-    }
-    manifest = JSON.parse(await fetchText("./interfaces/manifest.json"));
+    await configureFrame(overlayFrame, "overlay");
+    manifest = window.staticInterfaceManifest;
     const name = decodeURIComponent(location.hash.slice(1)) || "write";
     if (!manifest[name] || manifest[name].kind !== "screen") throw new Error("Ecran inconnu : " + name);
     await showScreen(name, false);
