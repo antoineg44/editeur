@@ -1,34 +1,336 @@
 <!doctype html>
+<!-- Viritura / write - MIT, Viritura contributors (2026) -->
 <html lang="en" data-theme="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#215e4e" />
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'" />
-    <title>Viritura — Interface statique</title>
-    <link rel="icon" type="image/svg+xml" href="./assets/branding/favicon.svg" />
-    <link rel="stylesheet" href="./assets/notation.css" />
-    <link rel="stylesheet" href="./assets/interface.css" />
-    <link rel="stylesheet" href="./assets/navigation.css" />
-    <script defer src="./assets/navigation-data.js"></script>
-    <script defer src="./assets/features/project.js"></script>
-    <script defer src="./assets/features/settings.js"></script>
-    <script defer src="./assets/features/setup.js"></script>
-    <script defer src="./assets/features/write.js"></script>
-    <script defer src="./assets/features/engrave.js"></script>
-    <script defer src="./assets/features/play.js"></script>
-    <script defer src="./assets/features/review.js"></script>
-    <script defer src="./assets/features/publish.js"></script>
-    <script defer src="./assets/navigation.js"></script>
-  </head>
-  <body>
-    <div id="app" aria-busy="true">
-      <p>Chargement de l'interface statique...</p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/notation.css">
+    <link rel="stylesheet" href="./assets/interface.css">
+    <link rel="stylesheet" href="./assets/navigation.css">
+    <script defer src="./assets/local-frame.js"></script>
+</head>
+
+<body id="app">
+    <div id="root">
+        <div class="_stageHidden_1xvfy_28" data-testid="video-stage">
+        </div>
+        <div style="display: flex; flex-direction: column; height: 100vh; width: 100vw; overflow: hidden;">
+            <div class="app-chrome app-chrome--top"
+                style="display: flex; align-items: center; flex-shrink: 0; height: 48px;">
+                <iframe id="horizontal-menu-frame" src="./interfaces/components/menu-horizontal.html"
+                    title="Menu horizontal" style="display: block; width: 100%; height: 100%; border: 0"></iframe>
+            </div>
+            <div style="display: flex; flex: 1 1 0%; min-height: 0px; overflow: hidden;">
+                <div class="_bar_ponj1_3 app-chrome app-chrome--side">
+                    <iframe id="vertical-menu-frame" src="./interfaces/components/menu-vertical.html"
+                        title="Menu vertical"
+                        style="display: block; width: 100%; height: 100%; border: 0"></iframe>
+                </div>
+                <div
+                    style="flex: 1 1 0%; min-height: 0px; min-width: 0px; display: flex; flex-direction: column; overflow: hidden;">
+                    <div
+                        style="display: flex; flex: 1 1 0%; min-height: 0px; flex-direction: column; overflow: hidden;">
+                        <div
+                            style="font-family: system-ui, sans-serif; display: flex; flex-direction: column; flex: 1 1 0%; min-height: 0px; position: relative; overflow: hidden; background: var(--bg); color: var(--text);">
+                            <div class="_shell_14dhm_6" style="--workspace-status-zone-height: 56px;">
+                                <div class="_canvasLayer_14dhm_53">
+                                    <div
+                                        style="position: relative; display: flex; flex-direction: column; height: 100%;">
+                                        <div class="static-score">
+                                            Partition — aperçu statique
+                                        </div>
+                                        <div style="position: relative; flex: 1 1 0%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="screen-panel" class="_panel_3cc04_15"
+                                    style="width: 300px; z-index: 2; position: absolute; top: 0px; margin-top: 14px; margin-bottom: 14px; height: calc(100% - 28px); left: 14px;">
+                                    <div class="_chrome_3cc04_42">
+                                        <div class="_container_1lemc_5">
+                                            <iframe id="write-screen-frame" src="./interfaces/screens/write.html"
+                                                title="Write screen"
+                                                style="display: block; width: 100%; height: 100%; border: 0"></iframe>
+
+                                            <iframe id="play-screen-frame"
+                                                data-src="./interfaces/screens/play.html"
+                                                title="Play screen"
+                                                style="display: block; width: 100%; height: 100%; border: 0"
+                                                hidden></iframe>
+
+                                            <iframe id="setup-screen-frame"
+                                                data-src="./interfaces/screens/setup.html"
+                                                title="Setup screen"
+                                                style="display: block; width: 100%; height: 100%; border: 0"
+                                                hidden></iframe>
+
+                                            <iframe id="engrave-screen-frame"
+                                                data-src="./interfaces/screens/engrave.html"
+                                                title="Engrave screen"
+                                                style="display: block; width: 100%; height: 100%; border: 0"
+                                                hidden></iframe>
+
+                                            <iframe id="roll-screen-frame"
+                                                data-src="./interfaces/screens/roll.html"
+                                                title="Roll screen"
+                                                style="display: block; width: 100%; height: 100%; border: 0"
+                                                hidden></iframe>
+
+                                            <iframe id="review-screen-frame"
+                                                data-src="./interfaces/screens/review.html"
+                                                title="Review screen"
+                                                style="display: block; width: 100%; height: 100%; border: 0"
+                                                hidden></iframe>
+
+                                            <iframe id="publish-screen-frame"
+                                                data-src="./interfaces/screens/publish.html"
+                                                title="Publish screen"
+                                                style="display: block; width: 100%; height: 100%; border: 0"
+                                                hidden></iframe>
+                                        </div>
+                                    </div>
+                                    <div class="_resize_3cc04_227" data-side="right">
+                                    </div>
+                                </div>
+                                <div class="_statusZone_14dhm_124">
+                                    <div class="_bar_d959r_10 " role="status" aria-label="Status bar"
+                                        data-on-dark="true">
+                                        <div class="_right_d959r_60">
+                                            <div class="_group_1svcp_1 " role="radiogroup" aria-orientation="horizontal"
+                                                aria-disabled="false">
+                                                <button type="button" role="radio" aria-checked="true" tabindex="0"
+                                                    class="_option_1svcp_20 _active_1svcp_47" data-ui="Concert">
+                                                    Concert
+                                                </button>
+                                                <button type="button" role="radio" aria-checked="false" tabindex="-1"
+                                                    class="_option_1svcp_20" data-ui="Written">
+                                                    Written
+                                                </button>
+                                            </div>
+                                            <div class="_wrap_rftzn_91">
+                                                <button type="button" class="_trigger_rftzn_7" aria-haspopup="listbox"
+                                                    aria-expanded="false" aria-label="View mode" data-state="closed"
+                                                    data-ui="View mode">
+                                                    <span class="_label_rftzn_43">Horizon</span><svg
+                                                        class="_chevron_rftzn_47" width="10" height="10"
+                                                        viewBox="0 0 12 12" fill="none" stroke="currentColor"
+                                                        stroke-width="1.6" stroke-linecap="round"
+                                                        stroke-linejoin="round" aria-hidden="true">
+                                                        <polyline points="3,4.5 6,7.5 9,4.5"></polyline>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <div class="_group_1lyg3_5">
+                                                <input min="0.03149606299212599" max="3.149606299212599" step="0.05"
+                                                    class="_slider_eiriu_11" aria-label="Zoom slider" type="range"
+                                                    value="0.331496062992126"
+                                                    style="--fill: 9.090909090909092%; --fill-start: 0%; --fill-end: 9.090909090909092%; --center: 0%; width: 80px;">
+                                                <button class="_button_4hx0m_4 _sm_4hx0m_85 _ghost_4hx0m_186"
+                                                    aria-label="Reset zoom" type="button" data-state="closed"
+                                                    data-ui="Reset zoom">
+                                                    100%
+                                                </button>
+                                                <button
+                                                    class="_button_4hx0m_4 _sm_4hx0m_85 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112"
+                                                    aria-label="Calibrate display" type="button" data-state="closed"
+                                                    data-ui="Calibrate display">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                        class="lucide lucide-ruler" aria-hidden="true">
+                                                        <path
+                                                            d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z">
+                                                        </path>
+                                                        <path d="m14.5 12.5 2-2"></path>
+                                                        <path d="m11.5 9.5 2-2"></path>
+                                                        <path d="m8.5 6.5 2-2"></path>
+                                                        <path d="m17.5 15.5 2-2"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section aria-label="Notifications alt+T" tabindex="-1" aria-live="polite" aria-relevant="additions text"
+            aria-atomic="false">
+        </section>
     </div>
-    <div id="overlays"></div>
-    <span class="static-badge">Maquette statique · Navigation uniquement</span>
-    <div id="notice" role="status" aria-live="polite"></div>
-    <noscript>Activez JavaScript pour naviguer entre les interfaces.</noscript>
-  </body>
+    <iframe id="edit-menu-frame" data-src="./interfaces/dialogs/menu-edit.html" title="Edit menu"
+        style="position: fixed; inset: 0; z-index: 1400; width: 100vw; height: 100vh; border: 0; background: transparent;"
+        hidden></iframe>
+    <iframe id="file-menu-frame" data-src="./interfaces/dialogs/menu-file.html" title="File menu"
+        style="position: fixed; inset: 0; z-index: 1400; width: 100vw; height: 100vh; border: 0; background: transparent;"
+        hidden></iframe>
+    <iframe id="help-menu-frame" data-src="./interfaces/dialogs/menu-help.html" title="Help menu"
+        style="position: fixed; inset: 0; z-index: 1400; width: 100vw; height: 100vh; border: 0; background: transparent;"
+        hidden></iframe>
+    <iframe id="view-menu-frame" data-src="./interfaces/dialogs/menu-view.html" title="View menu"
+        style="position: fixed; inset: 0; z-index: 1400; width: 100vw; height: 100vh; border: 0; background: transparent;"
+        hidden></iframe>
+    <script>
+        (() => {
+            const horizontalMenuFrame = document.getElementById("horizontal-menu-frame");
+            const editMenuFrame = document.getElementById("edit-menu-frame");
+            const menuOverlays = {
+                edit: editMenuFrame,
+                file: document.getElementById("file-menu-frame"),
+                help: document.getElementById("help-menu-frame"),
+                view: document.getElementById("view-menu-frame")
+            };
+            const menuFrame = document.getElementById("vertical-menu-frame");
+            const writeFrame = document.getElementById("write-screen-frame");
+            const playFrame = document.getElementById("play-screen-frame");
+            const setupFrame = document.getElementById("setup-screen-frame");
+            const engraveFrame = document.getElementById("engrave-screen-frame");
+            const rollFrame = document.getElementById("roll-screen-frame");
+            const reviewFrame = document.getElementById("review-screen-frame");
+            const publishFrame = document.getElementById("publish-screen-frame");
+            const screenPanel = document.getElementById("screen-panel");
+            const writeTabSources = {
+                Palettes: "./interfaces/screens/write.html",
+                History: "./interfaces/screens/write-history.html",
+                Properties: "./interfaces/screens/write-properties.html"
+            };
+            const setupTabSources = {
+                Project: "./interfaces/screens/setup-project.html",
+                Instruments: "./interfaces/screens/setup.html",
+                Scores: "./interfaces/screens/setup-scores.html"
+            };
+            const engraveTabSources = {
+                "House Style": "./interfaces/screens/engrave.html",
+                Layouts: "./interfaces/screens/engrave-layouts.html",
+                Properties: "./interfaces/screens/engrave-properties.html"
+            };
+            const tabRoutes = [
+                { frame: writeFrame, type: "write-tab", sources: writeTabSources },
+                { frame: setupFrame, type: "setup-tab", sources: setupTabSources },
+                { frame: engraveFrame, type: "engrave-tab", sources: engraveTabSources }
+            ];
+            const resizeHandle = screenPanel.querySelector('._resize_3cc04_227[data-side="right"]');
+            let resizePointerId = null;
+            let previousCursor = "";
+            let previousUserSelect = "";
+
+            window.addEventListener("message", event => {
+                const message = event.data;
+                if (!message || message.channel !== "viritura-index-new") return;
+
+                if (event.source === horizontalMenuFrame.contentWindow &&
+                    message.type === "menu-open" &&
+                    Object.prototype.hasOwnProperty.call(menuOverlays, message.menu)) {
+                    const activeMenu = menuOverlays[message.menu];
+                    if (!activeMenu.hasAttribute("src")) activeMenu.src = activeMenu.dataset.src;
+                    Object.values(menuOverlays).forEach(frame => { frame.hidden = frame !== activeMenu; });
+                    return;
+                }
+
+                const dismissedMenu = Object.entries(menuOverlays).find(([name, frame]) =>
+                    event.source === frame.contentWindow &&
+                    message.type === "menu-dismiss" && message.menu === name);
+                if (dismissedMenu) {
+                    dismissedMenu[1].hidden = true;
+                    return;
+                }
+
+                const tabRoute = tabRoutes.find(route =>
+                    event.source === route.frame.contentWindow &&
+                    message.type === route.type &&
+                    Object.prototype.hasOwnProperty.call(route.sources, message.tab));
+                if (tabRoute) {
+                    tabRoute.frame.src = tabRoute.sources[message.tab];
+                    tabRoute.frame.title = message.tab + " screen";
+                    return;
+                }
+
+                if (event.source !== menuFrame.contentWindow ||
+                    message.type !== "menu-action" ||
+                    typeof message.wasSelected !== "boolean" ||
+                    !["setup", "write", "engrave", "play", "roll", "review", "publish", "settings"]
+                        .includes(message.activity)) return;
+
+                if (message.wasSelected && !screenPanel.hidden) {
+                    screenPanel.hidden = true;
+                    return;
+                }
+
+                const frames = {
+                    write: writeFrame,
+                    play: playFrame,
+                    setup: setupFrame,
+                    engrave: engraveFrame,
+                    roll: rollFrame,
+                    review: reviewFrame,
+                    publish: publishFrame
+                };
+                const activeFrame = frames[message.activity];
+                if (!activeFrame) return;
+                if (!activeFrame.hasAttribute("src")) activeFrame.src = activeFrame.dataset.src;
+                if (message.activity === "setup" &&
+                    setupFrame.getAttribute("src") !== setupTabSources.Instruments) {
+                    setupFrame.src = setupTabSources.Instruments;
+                    setupFrame.title = "Setup screen";
+                }
+                if (message.activity === "engrave" &&
+                    engraveFrame.getAttribute("src") !== engraveTabSources["House Style"]) {
+                    engraveFrame.src = engraveTabSources["House Style"];
+                    engraveFrame.title = "Engrave screen";
+                }
+                if (message.activity === "write" &&
+                    writeFrame.getAttribute("src") !== writeTabSources.Palettes) {
+                    writeFrame.src = writeTabSources.Palettes;
+                    writeFrame.title = "Write screen";
+                }
+                screenPanel.hidden = false;
+                Object.values(frames).forEach(frame => { frame.hidden = frame !== activeFrame; });
+            });
+
+            document.addEventListener("pointerdown", event => {
+                const activeMenu = Object.values(menuOverlays).find(frame => !frame.hidden);
+                if (activeMenu && event.target !== activeMenu) activeMenu.hidden = true;
+            });
+
+            resizeHandle.addEventListener("pointerdown", event => {
+                event.preventDefault();
+                resizePointerId = event.pointerId;
+                previousCursor = document.documentElement.style.cursor;
+                previousUserSelect = document.documentElement.style.userSelect;
+                document.documentElement.style.cursor = "col-resize";
+                document.documentElement.style.userSelect = "none";
+                resizeHandle.setPointerCapture(event.pointerId);
+            });
+
+            resizeHandle.addEventListener("pointermove", event => {
+                if (event.pointerId !== resizePointerId) return;
+
+                const panelRect = screenPanel.getBoundingClientRect();
+                const parentRect = screenPanel.parentElement.getBoundingClientRect();
+                const minWidth = 220;
+                const maxWidth = Math.max(minWidth, parentRect.right - panelRect.left - 48);
+                const width = Math.min(maxWidth, Math.max(minWidth, event.clientX - panelRect.left));
+                screenPanel.style.width = width + "px";
+            });
+
+            function stopResizing(event) {
+                if (event.pointerId !== resizePointerId) return;
+
+                resizePointerId = null;
+                document.documentElement.style.cursor = previousCursor;
+                document.documentElement.style.userSelect = previousUserSelect;
+                if (resizeHandle.hasPointerCapture(event.pointerId)) {
+                    resizeHandle.releasePointerCapture(event.pointerId);
+                }
+            }
+
+            resizeHandle.addEventListener("pointerup", stopResizing);
+            resizeHandle.addEventListener("pointercancel", stopResizing);
+        })();
+    </script>
+</body>
+
 </html>
