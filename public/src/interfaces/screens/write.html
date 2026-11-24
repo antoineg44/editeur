@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../../assets/notation.css">
   <link rel="stylesheet" href="../../assets/interface.css">
   <link rel="stylesheet" href="../../assets/navigation.css">
+  <script src="../../assets/button-action-list.js"></script>
   <style>
     button[class*="_paletteButton_"][aria-pressed="true"] {
       color: var(--accent);
@@ -1752,11 +1753,12 @@
         }
       }
 
-      document.querySelector('input[aria-label="Search palettes"]')?.addEventListener("input", event => {
+      window.ButtonActionList.add(document.querySelector('input[aria-label="Search palettes"]'), "input",
+        "Filter write palettes", event => {
         filterSections(event.target.value.trim().toLocaleLowerCase());
       });
 
-      document.addEventListener("click", event => {
+      window.ButtonActionList.add(document, "click", "Select write palette or tab", event => {
         if (!(event.target instanceof Element)) return;
 
         const tab = event.target.closest('button[role="tab"][data-ui]');
