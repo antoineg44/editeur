@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./assets/interface.css">
     <link rel="stylesheet" href="./assets/navigation.css">
     <script src="./assets/button-action-list.js"></script>
+    <script src="../build/opensheetmusicdisplay.min.js"></script>
     <script src="./js/file.js"></script>
     <script defer src="./assets/local-frame.js"></script>
 </head>
@@ -39,8 +40,9 @@
                                 <div class="_canvasLayer_14dhm_53">
                                     <div
                                         style="position: relative; display: flex; flex-direction: column; height: 100%;">
-                                        <div class="static-score">
-                                            Partition — aperçu statique
+                                        <div id="static-score" class="static-score">
+                                            <div id="static-score-placeholder">Partition — aperçu statique</div>
+                                            <div id="musicxml-score"></div>
                                         </div>
                                         <div style="position: relative; flex: 1 1 0%;">
                                         </div>
