@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../assets/notation.css">
     <link rel="stylesheet" href="../../assets/interface.css">
+    <script src="../../assets/button-action-list.js"></script>
 </head>
 
 <body id="app" style="background: transparent;display: flex; align-items: center; flex-shrink: 0; height: 48px;">
@@ -275,7 +276,7 @@
         </div>
     </div>
     <script>
-        document.addEventListener("click", event => {
+        window.ButtonActionList.add(document, "click", "Open horizontal menu", event => {
             if (!(event.target instanceof Element)) return;
             const button = event.target.closest('button[data-ui]');
             const menus = { File: "file", Edit: "edit", View: "view", Help: "help" };
