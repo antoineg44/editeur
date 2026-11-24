@@ -66,7 +66,11 @@
             scorePlaceholder.hidden = true;
 
             try {
-                await osmd.load(content);
+                const xmlDocument = new DOMParser().parseFromString(content, "application/xml");
+                if (xmlDocument.querySelector("parsererror")) {
+                    throw new Error("Le contenu de l’éditeur n’est pas un document XML valide.");
+                }
+                await osmd.load(xmlDocument);
                 if (request !== renderRequest) return;
                 osmd.render();
             } catch (error) {
