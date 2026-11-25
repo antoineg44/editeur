@@ -1,17 +1,104 @@
+<!doctype html>
 <!-- Viritura / dots - MIT, Viritura contributors (2026) -->
-<div data-radix-popper-content-wrapper="" style="position: fixed; left: 0px; top: 0px; transform: translate(378px, 48px); min-width: max-content; --radix-popper-transform-origin: 50% 0px; z-index: 100; --radix-popper-available-width: 1130px; --radix-popper-available-height: 670px; --radix-popper-anchor-width: 32px; --radix-popper-anchor-height: 32px;">
-<div data-side="bottom" data-align="center" data-state="open" role="dialog" id="radix-_r_21o_" class="_popup_216cq_32 vi-glass-floating" tabindex="-1" style="--radix-popover-content-transform-origin: var(--radix-popper-transform-origin); --radix-popover-content-available-width: var(--radix-popper-available-width); --radix-popover-content-available-height: var(--radix-popper-available-height); --radix-popover-trigger-width: var(--radix-popper-anchor-width); --radix-popover-trigger-height: var(--radix-popper-anchor-height);">
-<button class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433" aria-label="Single dot" aria-pressed="true" data-active="true" type="button" data-state="closed" data-ui="Single dot">
-<span style="display: inline-block;">1.</span>
-</button>
-<button class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433" aria-label="Double dot" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Double dot">
-<span style="display: inline-block;">2..</span>
-</button>
-<button class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433" aria-label="Triple dot" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Triple dot">
-<span style="display: inline-block;">3...</span>
-</button>
-<button class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433" aria-label="Quadruple dot" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Quadruple dot">
-<span style="display: inline-block;">4....</span>
-</button>
-</div>
-</div>
+<html lang="en" data-theme="light" class="overlay-document">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../assets/notation.css">
+  <link rel="stylesheet" href="../../assets/interface.css">
+  <link rel="stylesheet" href="../../assets/navigation.css">
+  <script src="../../assets/button-action-list.js"></script>
+  <style>
+    #overlays {
+      pointer-events: auto;
+    }
+  </style>
+  <script defer src="../../assets/local-frame.js"></script>
+</head>
+
+<body id="overlays">
+  <div data-radix-popper-content-wrapper="" data-floating-menu
+    style="position: fixed; left: 0; top: 0; z-index: 100;">
+    <div role="dialog" class="_popup_216cq_32 vi-glass-floating" tabindex="-1">
+      <button
+        class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433"
+        aria-label="Single dot" aria-pressed="true" data-active="true" data-dot-count="1" type="button"
+        data-ui="Single dot">
+        <span>1.</span>
+      </button>
+      <button
+        class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433"
+        aria-label="Double dot" aria-pressed="false" data-active="false" data-dot-count="2" type="button"
+        data-ui="Double dot">
+        <span>2..</span>
+      </button>
+      <button
+        class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433"
+        aria-label="Triple dot" aria-pressed="false" data-active="false" data-dot-count="3" type="button"
+        data-ui="Triple dot">
+        <span>3...</span>
+      </button>
+      <button
+        class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433"
+        aria-label="Quadruple dot" aria-pressed="false" data-active="false" data-dot-count="4" type="button"
+        data-ui="Quadruple dot">
+        <span>4....</span>
+      </button>
+    </div>
+  </div>
+  <script>
+    window.ButtonActionList.add(document, "click", "Select augmentation dot count", event => {
+      if (event.target instanceof Element) {
+        const option = event.target.closest("button[data-dot-count]");
+        if (option) {
+          const count = Number(option.dataset.dotCount);
+          document.querySelectorAll("button[data-dot-count]").forEach(button => {
+            const selected = button === option;
+            button.setAttribute("aria-pressed", String(selected));
+            button.dataset.active = String(selected);
+          });
+          window.parent.postMessage({
+            channel: "viritura-index-new",
+            type: "dot-count-selected",
+            count
+          }, "*");
+          return;
+        }
+      }
+
+      window.parent.postMessage({
+        channel: "viritura-index-new",
+        type: "menu-dismiss",
+        menu: "dots"
+      }, "*");
+    });
+
+    window.addEventListener("keydown", event => {
+      if (event.key !== "Escape") return;
+      window.parent.postMessage({
+        channel: "viritura-index-new",
+        type: "toolbar-placement-cancel"
+      }, "*");
+    });
+  </script>
+  <script>
+    const floatingMenu = document.querySelector("[data-floating-menu]");
+    window.addEventListener("message", event => {
+      const message = event.data;
+      if (event.source !== window.parent ||
+          (event.origin !== window.location.origin && event.origin !== "null") ||
+          !message || message.channel !== "viritura-index-new" ||
+          message.type !== "position-menu" ||
+          !Number.isFinite(message.left) || !Number.isFinite(message.top)) {
+        return;
+      }
+
+      const bounds = floatingMenu.getBoundingClientRect();
+      floatingMenu.style.left = `${Math.max(8, Math.min(message.left, window.innerWidth - bounds.width - 8))}px`;
+      floatingMenu.style.top = `${Math.max(8, Math.min(message.top, window.innerHeight - bounds.height - 8))}px`;
+    });
+  </script>
+</body>
+
+</html>
