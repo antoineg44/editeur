@@ -151,9 +151,8 @@
 
             const activity = button.dataset.activity;
             const wasSelected = button.getAttribute("aria-pressed") === "true";
-            const selected = !wasSelected;
             document.querySelectorAll("button[data-activity]").forEach(item => {
-                const active = selected && item === button;
+                const active = item === button;
                 item.setAttribute("aria-pressed", String(active));
                 item.dataset.active = String(active);
             });
