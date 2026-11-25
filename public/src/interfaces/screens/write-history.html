@@ -57,19 +57,14 @@
       <div class="_clipsContainer_1kdxp_11">
         <section class="_section_1kdxp_21 _sectionHistory_1kdxp_27 viritura-scroll">
           <header class="_sectionHeader_1kdxp_40">
-            <span>Undo History</span><span class="_sectionCount_1kdxp_56">1</span>
+            <span>Undo History</span><span class="_sectionCount_1kdxp_56" data-history-count>0</span>
           </header>
-          <div style="display: flex; flex-direction: column; gap: 2px; padding: 4px 10px 8px;">
-            <button type="button" class="_row_67odc_3 _compact_67odc_46 _selected_67odc_34" aria-pressed="true"
-              data-state="closed" data-ui="●Initial stateNOW">
-              <span class="_leading_67odc_56"><span aria-hidden="true"
-                  style="display: inline-flex; align-items: center; justify-content: center; width: 14px; flex-shrink: 0; color: var(--text-muted);">●</span></span><span
-                class="_body_67odc_64"><span
-                  style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Initial
-                  state</span></span><span class="_trailing_67odc_72"><span
-                  style="display: inline-flex; align-items: center; gap: 4px; color: var(--text-muted); font-size: var(--type-eyebrow-size); white-space: nowrap;"><span
-                    style="font-size: var(--type-eyebrow-size); font-weight: var(--type-heading-weight); letter-spacing: 0.08em; color: rgb(var(--accent-rgb, 33, 94, 78)); padding: 2px 6px; border-radius: 999px; background: rgba(var(--accent-rgb, 33, 94, 78), 0.16); border: 1px solid rgba(var(--accent-rgb, 33, 94, 78), 0.30);">NOW</span></span></span>
-            </button>
+          <div data-history-list role="list"
+            style="display: flex; flex-direction: column; gap: 2px; padding: 4px 10px 8px;"></div>
+          <p data-history-empty
+            style="padding: 24px 16px; text-align: center; color: var(--text-muted); font-size: var(--type-eyebrow-size); line-height: 1.6;">
+            Open a MusicXML score to start tracking changes.
+          </p>
           </div>
         </section>
         <section class="_section_1kdxp_21 _sectionClips_1kdxp_35 viritura-scroll">
@@ -85,6 +80,110 @@
     </div>
   </div>
   <script>
+    const historyList = document.querySelector("[data-history-list]");
+    const historyCount = document.querySelector("[data-history-count]");
+    const historyEmpty = document.querySelector("[data-history-empty]");
+
+    function renderHistory(entries) {
+      historyList.replaceChildren();
+      historyCount.textContent = String(entries.length);
+      historyEmpty.hidden = entries.length > 0;
+
+      for (const entry of [...entries].reverse()) {
+        const row = document.createElement("div");
+        row.className = entry.isCurrent
+          ? "_row_67odc_3 _compact_67odc_46 _selected_67odc_34"
+          : "_row_67odc_3 _compact_67odc_46";
+        row.setAttribute("role", "listitem");
+        row.dataset.historyId = String(entry.id);
+        row.setAttribute("aria-current", entry.isCurrent ? "true" : "false");
+        row.tabIndex = 0;
+        row.style.cursor = "pointer";
+
+        const leading = document.createElement("span");
+        leading.className = "_leading_67odc_56";
+        const dot = document.createElement("span");
+        dot.setAttribute("aria-hidden", "true");
+        dot.style.cssText =
+          "display:inline-flex;align-items:center;justify-content:center;width:14px;flex-shrink:0;color:var(--text-muted)";
+        dot.textContent = entry.isCurrent ? "●" : "○";
+        leading.appendChild(dot);
+
+        const body = document.createElement("span");
+        body.className = "_body_67odc_64";
+        const description = document.createElement("span");
+        description.style.cssText =
+          "display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis";
+        description.textContent = entry.description;
+        body.appendChild(description);
+
+        const trailing = document.createElement("span");
+        trailing.className = "_trailing_67odc_72";
+        const metadata = document.createElement("span");
+        metadata.style.cssText =
+          "display:inline-flex;align-items:center;gap:4px;color:var(--text-muted);font-size:var(--type-eyebrow-size);white-space:nowrap";
+        const time = document.createElement("span");
+        time.textContent = new Date(entry.timestamp).toLocaleTimeString();
+        metadata.appendChild(time);
+
+        if (entry.isCurrent) {
+          const current = document.createElement("span");
+          current.style.cssText =
+            "font-size:var(--type-eyebrow-size);font-weight:var(--type-heading-weight);letter-spacing:.08em;color:rgb(var(--accent-rgb,33,94,78));padding:2px 6px;border-radius:999px;background:rgba(var(--accent-rgb,33,94,78),.16);border:1px solid rgba(var(--accent-rgb,33,94,78),.30)";
+          current.textContent = "NOW";
+          metadata.appendChild(current);
+        }
+
+        trailing.appendChild(metadata);
+        row.append(leading, body, trailing);
+        historyList.appendChild(row);
+      }
+    }
+
+    window.addEventListener("message", event => {
+      const message = event.data;
+      if (event.source !== window.parent ||
+          (event.origin !== window.location.origin && event.origin !== "null") ||
+          !message || message.channel !== "viritura-history" ||
+          message.type !== "history-update" ||
+          !Array.isArray(message.entries)) {
+        return;
+      }
+
+      renderHistory(message.entries);
+    });
+
+    function requestHistoryEntry(row) {
+      const entryId = Number(row.dataset.historyId);
+      if (!Number.isSafeInteger(entryId)) return;
+
+      window.parent.postMessage({
+        channel: "viritura-index-new",
+        type: "history-select",
+        entryId
+      }, "*");
+    }
+
+    window.ButtonActionList.add(historyList, "click", "Restore MusicXML history entry", event => {
+      if (!(event.target instanceof Element)) return;
+      const row = event.target.closest("[data-history-id]");
+      if (row && historyList.contains(row)) requestHistoryEntry(row);
+    });
+
+    window.ButtonActionList.add(historyList, "keydown", "Restore MusicXML history entry by keyboard", event => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      if (!(event.target instanceof Element)) return;
+      const row = event.target.closest("[data-history-id]");
+      if (!row || !historyList.contains(row)) return;
+      event.preventDefault();
+      requestHistoryEntry(row);
+    });
+
+    window.parent.postMessage({
+      channel: "viritura-index-new",
+      type: "history-ready"
+    }, "*");
+
     window.ButtonActionList.add(document, "click", "Navigate write tabs", event => {
       if (!(event.target instanceof Element)) return;
       const tab = event.target.closest('button[role="tab"][data-ui]');
