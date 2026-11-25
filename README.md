@@ -43,5 +43,26 @@ Une notation structurée non reconnue est refusée sans modifier le fichier.
 Les textes libres qui ne ressemblent pas à un accord ne sont pas sélectionnés
 automatiquement par la navigation ; ils restent accessibles par double-clic.
 
+Pour ajouter une note, choisissez sa durée dans la barre horizontale, puis
+activez au besoin un point, un silence, un agrément, une altération ou une voix.
+L'aperçu suit le curseur et se cale sur le silence compatible le plus proche.
+Cliquez dans la partition pour insérer l'élément ; le silence est scindé si
+nécessaire afin de conserver la durée de la mesure. Aucune note n'est écrasée :
+s'il n'y a pas de place compatible, rien n'est inséré. Échap ou un clic droit
+dans la partition annule le placement. Téléchargez le MusicXML pour conserver
+les modifications dans un fichier. Sélectionnez un silence existant pour en
+modifier la durée depuis la barre horizontale. Avant une insertion ou un
+changement de durée, l’application propose de compléter les voix incomplètes
+avec des silences ou de supprimer les notes finales excédentaires. Les notes,
+silences, hampes, ligatures et paroles de la voix numérique sélectionnée
+apparaissent en bleu ; « Autre » désactive ce repérage. Le changement de voix
+d'une note sélectionnée est refusé si les deux voix concernées ne restent pas
+complètes, sans chevauchement, ou si leur équilibre ne peut pas être vérifié.
+
 Les tests s'exécutent dans un navigateur :
 [`tests/lyrics.html`](tests/lyrics.html) et [`tests/accords.html`](tests/accords.html).
+
+Dans « Write > Properties », sélectionnez un élément de la partition pour
+consulter ses composants MusicXML. Les champs de texte et attributs affichés
+sont modifiables ; les changements mettent à jour la partition et le MusicXML
+en cours. Téléchargez le MusicXML pour conserver les modifications dans un fichier.
