@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="../../assets/notation.css">
     <link rel="stylesheet" href="../../assets/interface.css">
     <script src="../../assets/button-action-list.js"></script>
+    <style>
+        ._right_18h0f_15[hidden],
+        ._center_18h0f_14[hidden],
+        button[data-extended-accidental][hidden],
+        button[data-extended-duration][hidden] {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body id="app" style="background: transparent;display: flex; align-items: center; flex-shrink: 0; height: 48px;">
@@ -62,9 +70,9 @@
                     </button>
                 </div>
             </div>
-            <div class="_center_18h0f_14">
+            <div class="_center_18h0f_14" hidden>
                 <div class="_toolbar_1rdja_3" role="toolbar" aria-label="Note input toolbar">
-                    <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156" aria-label="Toggle note input (N)"
+                    <!--<button class="_button_4hx0m_4 _defaultVariant_4hx0m_156" aria-label="Toggle note input (N)"
                         aria-pressed="false" data-active="false" data-testid="toolbar-note-input" type="button"
                         data-state="closed" data-ui="Toggle note input (N)">
                         N
@@ -74,7 +82,7 @@
                         data-state="closed" data-ui="Chord mode">
                         <span aria-hidden="true"
                             style="display: inline-flex; flex-direction: column; align-items: center; justify-content: center; font-family: Bravura; font-size: 18px; line-height: 4.4px; height: 20px; transform: translateY(-6px);"><span></span><span></span><span></span></span>
-                    </button>
+                    </button>-->
                     <div class="_vertical_7ojyi_1" role="separator">
                     </div>
                     <button type="button" class="_trigger_wnkfr_1 _iconButton_wnkfr_27"
@@ -93,7 +101,17 @@
                                 </svg></span></span><span class="_corner_wnkfr_102" data-select-corner="true"
                             aria-hidden="true"></span>
                     </button>
-                    <div class="_group_1rdja_36" role="group" aria-label="Duration">
+                    <div class="_group_1rdja_36" id="duration-controls" role="group" aria-label="Duration">
+                        <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433"
+                            aria-label="64th note (1)" aria-pressed="false" data-active="false"
+                            data-testid="toolbar-duration-64" data-extended-duration type="button" data-state="closed"
+                            hidden><span
+                                style="display: inline-block; transform: translateY(2.6592px);"></span></button>
+                        <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433"
+                            aria-label="32nd note (2)" aria-pressed="false" data-active="false"
+                            data-testid="toolbar-duration-32" data-extended-duration type="button" data-state="closed"
+                            hidden><span
+                                style="display: inline-block; transform: translateY(0.9792px);"></span></button>
                         <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433"
                             aria-label="16th note (3)" aria-pressed="false" data-active="false"
                             data-testid="toolbar-duration-16" type="button" data-state="closed" data-ui="16th note (3)">
@@ -121,9 +139,15 @@
                             data-testid="toolbar-duration-1" type="button" data-state="closed" data-ui="Whole note (7)">
                             <span style="display: inline-block; transform: translateY(-6.528px);"></span>
                         </button>
+                        <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433"
+                            aria-label="Breve (double whole) (8)" aria-pressed="false" data-active="false"
+                            data-testid="toolbar-duration-breve" data-extended-duration type="button"
+                            data-state="closed" hidden><span
+                                style="display: inline-block; transform: translateY(-6.528px);"></span></button>
                         <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156" aria-label="Toggle extended durations"
-                            aria-pressed="false" data-active="false" type="button" data-state="closed"
-                            data-ui="Toggle extended durations">
+                            aria-pressed="false" data-active="false" aria-expanded="false"
+                            aria-controls="duration-controls" data-testid="toggle-extended-durations"
+                            type="button" data-state="closed" data-ui="Toggle extended durations">
                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="lucide lucide-chevrons-right" aria-hidden="true">
@@ -140,7 +164,7 @@
                         aria-haspopup="menu" aria-expanded="false" data-state="closed"
                         data-ui="Augmentation dot — 1 dot (click to apply, right-click for options)">
                         <span style="display: inline-flex; align-items: center; gap: 3px;"><span></span><span
-                                style="letter-spacing: 2px;"></span></span><span class="_caret_216cq_11"
+                                data-testid="toolbar-dot-count" style="letter-spacing: 2px;"></span></span><span class="_caret_216cq_11"
                             aria-hidden="true"></span>
                     </button>
                     <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433" aria-label="Rest (0)"
@@ -153,11 +177,22 @@
                         data-active="false" data-testid="toolbar-grace" type="button" aria-haspopup="menu"
                         aria-expanded="false" data-state="closed"
                         data-ui="Grace note (click to toggle, right-click for options)">
-                        <span></span><span class="_caret_216cq_11" aria-hidden="true"></span>
+                        <span data-testid="toolbar-grace-icon"></span><span class="_caret_216cq_11"
+                            aria-hidden="true"></span>
                     </button>
                     <div class="_vertical_7ojyi_1" role="separator">
                     </div>
-                    <div class="_group_1rdja_36" role="group" aria-label="Accidentals">
+                    <div class="_group_1rdja_36" id="extended-accidentals" role="group" aria-label="Accidentals">
+                        <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433"
+                            aria-label="Triple flat" aria-pressed="false" data-active="false"
+                            data-testid="toolbar-accidental-triple-flat" data-extended-accidental type="button"
+                            data-state="closed" hidden><span
+                                style="display: inline-block; font-size: 1.55rem; transform: translateY(-5.1584px);"></span></button>
+                        <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433"
+                            aria-label="Double flat (Z)" aria-pressed="false" data-active="false"
+                            data-testid="toolbar-accidental-double-flat" data-extended-accidental type="button"
+                            data-state="closed" hidden><span
+                                style="display: inline-block; font-size: 1.55rem; transform: translateY(-5.1832px);"></span></button>
                         <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433"
                             aria-label="Flat (−)" aria-pressed="false" data-active="false"
                             data-testid="toolbar-accidental-flat" type="button" data-state="closed" data-ui="Flat (−)">
@@ -178,9 +213,21 @@
                             <span
                                 style="display: inline-block; font-size: 1.55rem; transform: translateY(-8.4072px);"></span>
                         </button>
+                        <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433"
+                            aria-label="Double sharp (X)" aria-pressed="false" data-active="false"
+                            data-testid="toolbar-accidental-double-sharp" data-extended-accidental type="button"
+                            data-state="closed" hidden><span
+                                style="display: inline-block; font-size: 1.55rem; transform: translateY(-8.4072px);"></span></button>
+                        <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _bravura_4hx0m_433"
+                            aria-label="Triple sharp" aria-pressed="false" data-active="false"
+                            data-testid="toolbar-accidental-triple-sharp" data-extended-accidental type="button"
+                            data-state="closed" hidden><span
+                                style="display: inline-block; font-size: 1.55rem; transform: translateY(-8.4072px);"></span></button>
                         <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156"
                             aria-label="Toggle extended accidentals" aria-pressed="false" data-active="false"
-                            type="button" data-state="closed" data-ui="Toggle extended accidentals">
+                            aria-expanded="false" aria-controls="extended-accidentals" type="button"
+                            data-testid="toggle-extended-accidentals" data-state="closed"
+                            data-ui="Toggle extended accidentals">
                             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="lucide lucide-chevrons-right" aria-hidden="true">
@@ -194,16 +241,17 @@
                     <button type="button" class="_trigger_wnkfr_1 _iconButton_wnkfr_27" aria-label="Voice"
                         data-testid="toolbar-voice" role="combobox" aria-expanded="false" aria-autocomplete="none"
                         dir="ltr" data-state="closed" data-ui="Voice">
-                        <span class="_triggerInner_wnkfr_80"><span style="pointer-events: none;">↑1</span></span><span
+                        <span class="_triggerInner_wnkfr_80"><span data-testid="toolbar-voice-label"
+                                style="pointer-events: none; color: #1677ff;">↑1</span></span><span
                             class="_corner_wnkfr_102" data-select-corner="true" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
-            <div class="_right_18h0f_15">
+            <div class="_right_18h0f_15" hidden>
                 <div
                     style="display: flex; align-items: center; gap: 8px; padding: 0px 12px; height: 100%; margin-left: auto; flex-shrink: 0;">
                     <div style="display: flex; align-items: center; gap: 4px;">
-                        <button aria-label="Back to start" data-state="closed"
+                        <button aria-label="Back to start" data-state="closed" data-playback-action="rewind" disabled
                             style="width: 36px; height: 36px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; background: var(--surface-raised); box-shadow: var(--elevation-0); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, opacity 0.15s; opacity: 0.5;"
                             data-ui="Back to start">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -215,7 +263,7 @@
                                 <path d="M3 20V4"></path>
                             </svg>
                         </button>
-                        <button aria-label="Play" data-state="closed"
+                        <button aria-label="Play" data-state="closed" data-playback-action="toggle" disabled
                             style="width: 36px; height: 36px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; background: var(--accent); box-shadow: var(--elevation-1); color: rgb(255, 255, 255); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, opacity 0.15s;"
                             data-ui="Play">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -226,7 +274,7 @@
                                 </path>
                             </svg>
                         </button>
-                        <button disabled="" aria-label="Stop" data-state="closed"
+                        <button disabled="" aria-label="Stop" data-state="closed" data-playback-action="stop"
                             style="width: 36px; height: 36px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 8px; background: var(--surface-raised); box-shadow: var(--elevation-0); color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, opacity 0.15s; opacity: 0.5;"
                             data-ui="Stop">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -239,6 +287,7 @@
                     <span aria-live="polite"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px;"></span>
                     <button type="button" aria-label="Showing time — click for measure:beat" data-state="closed"
+                        data-playback-action="toggle-time-display"
                         style="display: flex; align-items: center; gap: 4px; padding: 4px 10px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; background: var(--surface-raised); box-shadow: var(--inset-soft); font-family: monospace; font-size: 0.85rem; user-select: none; cursor: pointer;"
                         data-ui="Showing time — click for measure:beat">
                         <span
@@ -247,6 +296,7 @@
                             style="color: var(--text-muted); min-width: 32px;">0:16</span>
                     </button>
                     <button aria-label="Follow playhead on" aria-pressed="true" data-state="closed"
+                        data-playback-action="toggle-follow"
                         style="width: 30px; height: 30px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; background: var(--accent); box-shadow: var(--inset-soft); color: rgb(255, 255, 255); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, color 0.15s, background 0.15s;"
                         data-ui="Follow playhead on">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -258,6 +308,7 @@
                         </svg>
                     </button>
                     <button aria-label="Metronome off" aria-pressed="false" data-state="closed"
+                        data-playback-action="toggle-metronome"
                         style="width: 30px; height: 30px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 6px; background: var(--surface-raised); box-shadow: var(--elevation-0); color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: box-shadow 0.15s, color 0.15s, background 0.15s;"
                         data-ui="Metronome off">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -276,6 +327,436 @@
         </div>
     </div>
     <script>
+        let selectedDotCount = 1;
+        let selectedGraceType = "acciaccatura";
+        let selectedVoice = "1";
+        let placementArmed = false;
+
+        function sendNoteEdit(property, value) {
+            window.parent.postMessage({
+                channel: "viritura-index-new",
+                type: "toolbar-note-edit",
+                property,
+                value: String(value)
+            }, "*");
+        }
+
+        function getPlacementSettings() {
+            const durationTypes = new Map([
+                ["toolbar-duration-64", "64th"],
+                ["toolbar-duration-32", "32nd"],
+                ["toolbar-duration-16", "16th"],
+                ["toolbar-duration-8", "eighth"],
+                ["toolbar-duration-4", "quarter"],
+                ["toolbar-duration-2", "half"],
+                ["toolbar-duration-1", "whole"],
+                ["toolbar-duration-breve", "breve"]
+            ]);
+            const selectedDuration = document.querySelector(
+                '#duration-controls button[data-testid^="toolbar-duration-"][aria-pressed="true"]'
+            );
+            const selectedAccidental = document.querySelector(
+                '[data-testid^="toolbar-accidental-"][aria-pressed="true"]'
+            );
+            const graceButton = document.querySelector('[data-testid="toolbar-grace"]');
+            const dotButton = document.querySelector('[data-testid="toolbar-dot"]');
+            const restButton = document.querySelector('[data-testid="toolbar-rest"]');
+
+            return {
+                duration: durationTypes.get(selectedDuration?.dataset.testid) || "quarter",
+                dotCount: dotButton.getAttribute("aria-pressed") === "true"
+                    ? selectedDotCount
+                    : 0,
+                rest: restButton.getAttribute("aria-pressed") === "true",
+                graceType: graceButton.getAttribute("aria-pressed") === "true"
+                    ? selectedGraceType
+                    : "",
+                accidental: selectedAccidental
+                    ? selectedAccidental.dataset.testid.slice("toolbar-accidental-".length)
+                    : "",
+                voice: selectedVoice
+            };
+        }
+
+        function sendToolbarPlacement(action, event, clientX, clientY) {
+            const settings = getPlacementSettings();
+            const x = Number.isFinite(clientX)
+                ? clientX
+                : Number.isFinite(event?.clientX) ? event.clientX : -1;
+            const y = Number.isFinite(clientY)
+                ? clientY
+                : Number.isFinite(event?.clientY) ? event.clientY : -1;
+            window.parent.postMessage({
+                channel: "viritura-index-new",
+                type: "toolbar-placement",
+                action,
+                ...settings,
+                clientX: x,
+                clientY: y
+            }, "*");
+        }
+
+        function startToolbarPlacement(event, clientX, clientY) {
+            placementArmed = true;
+            sendToolbarPlacement("start", event, clientX, clientY);
+        }
+
+        function updateToolbarPlacement() {
+            if (placementArmed) sendToolbarPlacement("update");
+        }
+
+        function cancelToolbarPlacement() {
+            if (!placementArmed) return;
+            placementArmed = false;
+            sendToolbarPlacement("cancel");
+        }
+
+        function setToolbarButtonActive(button, active) {
+            if (!button) return;
+            button.setAttribute("aria-pressed", String(active));
+            button.dataset.active = String(active);
+        }
+
+        function clearToolbarActiveButtons() {
+            const buttons = document.querySelectorAll(
+                '[role="toolbar"][aria-label="Note input toolbar"] button'
+            );
+            buttons.forEach(button => {
+                button.disabled = false;
+                if (button.hasAttribute("aria-pressed")) setToolbarButtonActive(button, false);
+            });
+            setExtendedToggleState(
+                document.querySelector('[data-testid="toggle-extended-durations"]'),
+                false
+            );
+            setExtendedToggleState(
+                document.querySelector('[data-testid="toggle-extended-accidentals"]'),
+                false
+            );
+        }
+
+        function setExtendedToggleState(button, expanded) {
+            button.setAttribute("aria-expanded", String(expanded));
+            setToolbarButtonActive(button, expanded);
+            button.querySelector("svg").style.transform = expanded ? "scaleX(-1)" : "";
+
+            const controls = document.getElementById(button.getAttribute("aria-controls"));
+            const attribute = button.dataset.testid === "toggle-extended-durations"
+                ? "data-extended-duration"
+                : "data-extended-accidental";
+            controls.querySelectorAll(`[${attribute}]`).forEach(control => {
+                control.hidden = !expanded;
+            });
+        }
+
+        function applyVoiceSelection(voice) {
+            const voices = new Map([
+                ["1", { label: "Voice 1", display: "↑1" }],
+                ["2", { label: "Voice 2", display: "↑2" }],
+                ["3", { label: "Voice 3", display: "↑3" }],
+                ["other", { label: "Voice: Autre", display: "Autre" }]
+            ]);
+            const selection = voices.get(voice);
+            if (!selection) return;
+            selectedVoice = voice;
+
+            const button = document.querySelector('[data-testid="toolbar-voice"]');
+            button.querySelector('[data-testid="toolbar-voice-label"]').textContent = selection.display;
+            button.setAttribute("aria-label", selection.label);
+            button.dataset.ui = selection.label;
+            window.parent.postMessage({
+                channel: "viritura-index-new",
+                type: "toolbar-voice-highlight",
+                voice
+            }, "*");
+        }
+
+        function applyGraceType(graceType) {
+            const graceOptions = new Map([
+                ["acciaccatura", { glyph: "", label: "Acciaccatura (slashed)" }],
+                ["appoggiatura", { glyph: "", label: "Appoggiatura (unslashed)" }]
+            ]);
+            const selection = graceOptions.get(graceType);
+            if (!selection) return;
+            selectedGraceType = graceType;
+
+            const button = document.querySelector('[data-testid="toolbar-grace"]');
+            button.querySelector('[data-testid="toolbar-grace-icon"]').textContent = selection.glyph;
+            button.setAttribute("aria-label",
+                `Grace note — ${selection.label} (click to toggle, right-click for options)`);
+            button.dataset.ui =
+                `Grace note — ${selection.label} (click to toggle, right-click for options)`;
+        }
+
+        function applyDotCount(count) {
+            if (!Number.isInteger(count) || count < 1 || count > 4) return;
+            selectedDotCount = count;
+
+            const button = document.querySelector('[data-testid="toolbar-dot"]');
+            const label = count === 1 ? "1 dot" : `${count} dots`;
+            button.querySelector('[data-testid="toolbar-dot-count"]').textContent = "".repeat(count);
+            button.setAttribute("aria-label",
+                `Augmentation dot — ${label} (click to apply, right-click for options)`);
+            button.dataset.ui = `Augmentation dot — ${label} (click to apply, right-click for options)`;
+        }
+
+        function setDurationSelection(durationType) {
+            const durationButtons = new Map([
+                ["64th", "64"],
+                ["32nd", "32"],
+                ["16th", "16"],
+                ["eighth", "8"],
+                ["quarter", "4"],
+                ["half", "2"],
+                ["whole", "1"],
+                ["breve", "breve"]
+            ]);
+            const durationTestId = durationButtons.get(durationType);
+            const testId = durationTestId
+                ? `toolbar-duration-${durationTestId}`
+                : "";
+            const selectedButton = testId
+                ? document.querySelector(`[data-testid="${testId}"]`)
+                : null;
+
+            if (selectedButton?.hasAttribute("data-extended-duration") &&
+                selectedButton.hidden) {
+                setExtendedToggleState(
+                    document.querySelector('[data-testid="toggle-extended-durations"]'),
+                    true
+                );
+            }
+
+            document.querySelectorAll(
+                '#duration-controls button[data-testid^="toolbar-duration-"]'
+            ).forEach(button => {
+                setToolbarButtonActive(button, button === selectedButton);
+            });
+        }
+
+        function setAccidentalSelection(accidental) {
+            const supportedAccidentals = new Set([
+                "triple-flat", "double-flat", "flat", "natural", "sharp",
+                "double-sharp", "triple-sharp"
+            ]);
+            const button = supportedAccidentals.has(accidental)
+                ? document.querySelector(`[data-testid="toolbar-accidental-${accidental}"]`)
+                : null;
+            if (button?.hasAttribute("data-extended-accidental") && button.hidden) {
+                setExtendedToggleState(
+                    document.querySelector('[data-testid="toggle-extended-accidentals"]'),
+                    true
+                );
+            }
+            document.querySelectorAll('[data-testid^="toolbar-accidental-"]').forEach(item => {
+                setToolbarButtonActive(item, item === button);
+            });
+        }
+
+        window.ButtonActionList.addMessages(window, "viritura-index-new", [
+            {
+                message: "horizontal-toolbar-state",
+                source: window.parent,
+                types: { showPlayControls: "boolean", showWriteControls: "boolean" },
+                handler: "syncHorizontalToolbar"
+            },
+            {
+                message: "selected-note-state",
+                source: window.parent,
+                types: {
+                    selected: "boolean",
+                    clearToolbarSelection: "boolean",
+                    duration: "string",
+                    dotCount: "number",
+                    rest: "boolean",
+                    graceType: "string",
+                    accidental: "string",
+                    voice: "string"
+                },
+                handler: "syncSelectedNoteState"
+            },
+            {
+                message: "playback-state",
+                source: window.parent,
+                types: {
+                    loaded: "boolean",
+                    playing: "boolean",
+                    canStop: "boolean",
+                    elapsedSeconds: "number",
+                    totalSeconds: "number",
+                    elapsedDisplay: "string",
+                    totalDisplay: "string",
+                    showMeasureBeat: "boolean",
+                    followEnabled: "boolean",
+                    metronomeEnabled: "boolean"
+                },
+                handler: "syncPlaybackState"
+            },
+            {
+                message: "voice-menu-state",
+                source: window.parent,
+                types: { expanded: "boolean" },
+                handler: "syncVoiceMenuState"
+            },
+            {
+                message: "dot-count-state",
+                source: window.parent,
+                types: {
+                    count: "number",
+                    startPlacement: "boolean",
+                    clientX: "number",
+                    clientY: "number"
+                },
+                handler: "syncDotCount"
+            },
+            {
+                message: "grace-type-state",
+                source: window.parent,
+                types: {
+                    graceType: "string",
+                    startPlacement: "boolean",
+                    clientX: "number",
+                    clientY: "number"
+                },
+                handler: "syncGraceType"
+            },
+            {
+                message: "voice-selection-state",
+                source: window.parent,
+                types: {
+                    voice: "string",
+                    startPlacement: "boolean",
+                    clientX: "number",
+                    clientY: "number"
+                },
+                handler: "syncVoiceSelection"
+            }
+        ], {
+            syncVoiceSelection: function syncVoiceSelection(event, message) {
+                applyVoiceSelection(message.voice);
+                if (message.startPlacement) {
+                    startToolbarPlacement(null, message.clientX, message.clientY);
+                } else {
+                    updateToolbarPlacement();
+                }
+            },
+            syncGraceType: function syncGraceType(event, message) {
+                applyGraceType(message.graceType);
+                if (message.startPlacement) {
+                    startToolbarPlacement(null, message.clientX, message.clientY);
+                } else {
+                    updateToolbarPlacement();
+                }
+            },
+            syncDotCount: function syncDotCount(event, message) {
+                applyDotCount(message.count);
+                if (message.startPlacement) {
+                    startToolbarPlacement(null, message.clientX, message.clientY);
+                } else {
+                    updateToolbarPlacement();
+                }
+            },
+            syncSelectedNoteState: function syncSelectedNoteState(event, message) {
+                if (message.clearToolbarSelection) {
+                    clearToolbarActiveButtons();
+                    applyDotCount(1);
+                    applyGraceType("acciaccatura");
+                    applyVoiceSelection("1");
+                    return;
+                }
+
+                setDurationSelection(message.selected ? message.duration : "quarter");
+
+                const dotButton = document.querySelector('[data-testid="toolbar-dot"]');
+                const hasSupportedDotCount = message.selected &&
+                    Number.isInteger(message.dotCount) && message.dotCount > 0 &&
+                    message.dotCount <= 4;
+                const dotCount = hasSupportedDotCount ? message.dotCount : 1;
+                applyDotCount(dotCount);
+                setToolbarButtonActive(dotButton, hasSupportedDotCount);
+
+                setToolbarButtonActive(
+                    document.querySelector('[data-testid="toolbar-rest"]'),
+                    message.selected && message.rest
+                );
+                setToolbarButtonActive(
+                    document.querySelector('[data-testid="toolbar-grace"]'),
+                    message.selected && Boolean(message.graceType)
+                );
+                applyGraceType(message.graceType || "acciaccatura");
+
+                setAccidentalSelection(message.selected ? message.accidental : "");
+                applyVoiceSelection(message.selected ? message.voice : "1");
+            },
+            syncVoiceMenuState: function syncVoiceMenuState(event, message) {
+                document.querySelector('[data-testid="toolbar-voice"]')
+                    .setAttribute("aria-expanded", String(message.expanded));
+            },
+            syncHorizontalToolbar: function syncHorizontalToolbar(event, message) {
+                document.querySelector("._right_18h0f_15").hidden = !message.showPlayControls;
+                document.querySelector("._center_18h0f_14").hidden = !message.showWriteControls;
+            },
+            syncPlaybackState: function syncPlaybackState(event, message) {
+                const rewindButton = document.querySelector('[data-playback-action="rewind"]');
+                const playButton = document.querySelector('[data-playback-action="toggle"]');
+                const stopButton = document.querySelector('[data-playback-action="stop"]');
+                const followButton = document.querySelector('[data-playback-action="toggle-follow"]');
+                const metronomeButton = document.querySelector('[data-playback-action="toggle-metronome"]');
+
+                rewindButton.disabled = !message.loaded;
+                playButton.disabled = !message.loaded;
+                stopButton.disabled = !message.canStop;
+                playButton.setAttribute("aria-label", message.playing ? "Pause" : "Play");
+                playButton.dataset.ui = message.playing ? "Pause" : "Play";
+                playButton.querySelector("svg").innerHTML = message.playing
+                    ? '<path d="M6 4h4v16H6z"></path><path d="M14 4h4v16h-4z"></path>'
+                    : '<path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path>';
+                followButton.setAttribute("aria-pressed", String(message.followEnabled));
+                followButton.setAttribute("aria-label",
+                    message.followEnabled ? "Follow playhead on" : "Follow playhead off");
+                followButton.style.background = message.followEnabled
+                    ? "var(--accent)"
+                    : "var(--surface-raised)";
+                followButton.style.color = message.followEnabled ? "#fff" : "var(--text-muted)";
+                metronomeButton.setAttribute("aria-pressed", String(message.metronomeEnabled));
+                metronomeButton.setAttribute("aria-label",
+                    message.metronomeEnabled ? "Metronome on" : "Metronome off");
+                metronomeButton.style.background = message.metronomeEnabled
+                    ? "var(--accent)"
+                    : "var(--surface-raised)";
+                metronomeButton.style.color = message.metronomeEnabled ? "#fff" : "var(--text-muted)";
+
+                const timeDisplay = document.querySelector('[data-ui^="Showing time"]');
+                const timeParts = timeDisplay.querySelectorAll("span");
+                timeParts[0].textContent = message.elapsedDisplay;
+                timeParts[2].textContent = message.totalDisplay;
+                timeDisplay.setAttribute("aria-label", message.showMeasureBeat
+                    ? "Showing measure:beat — click for time"
+                    : "Showing time — click for measure:beat");
+            }
+        });
+
+        window.parent.postMessage({
+            channel: "viritura-index-new",
+            type: "horizontal-toolbar-ready"
+        }, "*");
+        window.parent.postMessage({
+            channel: "viritura-index-new",
+            type: "playback-controls-ready"
+        }, "*");
+
+        window.ButtonActionList.add(document, "click", "Control score playback", event => {
+            if (!(event.target instanceof Element)) return;
+            const button = event.target.closest("button[data-playback-action]");
+            if (!button) return;
+
+            window.parent.postMessage({
+                channel: "viritura-index-new",
+                type: "playback-control",
+                action: button.dataset.playbackAction
+            }, "*");
+        });
+
         window.ButtonActionList.add(document, "click", "Open horizontal menu", event => {
             if (!(event.target instanceof Element)) return;
             const button = event.target.closest('button[data-ui]');
@@ -288,6 +769,162 @@
                 type: "menu-open",
                 menu
             }, "*");
+        });
+
+        window.ButtonActionList.add(document, "contextmenu", "Open toolbar options", event => {
+            if (!(event.target instanceof Element)) return;
+            const button = event.target.closest('button[data-testid="toolbar-dot"], button[data-testid="toolbar-grace"]');
+            if (!button) return;
+
+            event.preventDefault();
+            const bounds = button.getBoundingClientRect();
+            window.parent.postMessage({
+                channel: "viritura-index-new",
+                type: "menu-open",
+                menu: button.dataset.testid === "toolbar-dot" ? "dots" : "grace",
+                left: bounds.left,
+                top: bounds.bottom
+            }, "*");
+        });
+
+        window.ButtonActionList.add(document, "click", "Open voice options", event => {
+            if (!(event.target instanceof Element)) return;
+            const button = event.target.closest('button[data-testid="toolbar-voice"]');
+            if (!button) return;
+
+            const bounds = button.getBoundingClientRect();
+            window.parent.postMessage({
+                channel: "viritura-index-new",
+                type: "menu-open",
+                menu: "voice",
+                left: bounds.left,
+                top: bounds.bottom
+            }, "*");
+        });
+
+        window.ButtonActionList.add(document, "click", "Toggle extended accidentals", event => {
+            if (!(event.target instanceof Element)) return;
+            const button = event.target.closest('[data-testid="toggle-extended-accidentals"]');
+            if (!button) return;
+
+            const expanded = button.getAttribute("aria-expanded") !== "true";
+            button.setAttribute("aria-expanded", String(expanded));
+            button.setAttribute("aria-pressed", String(expanded));
+            button.dataset.active = String(expanded);
+            document.querySelectorAll("[data-extended-accidental]").forEach(accidental => {
+                accidental.hidden = !expanded;
+            });
+            button.querySelector("svg").style.transform = expanded ? "scaleX(-1)" : "";
+        });
+
+        window.ButtonActionList.add(document, "click", "Toggle extended durations", event => {
+            if (!(event.target instanceof Element)) return;
+            const button = event.target.closest('[data-testid="toggle-extended-durations"]');
+            if (!button) return;
+
+            const expanded = button.getAttribute("aria-expanded") !== "true";
+            button.setAttribute("aria-expanded", String(expanded));
+            button.setAttribute("aria-pressed", String(expanded));
+            button.dataset.active = String(expanded);
+            document.querySelectorAll("[data-extended-duration]").forEach(duration => {
+                duration.hidden = !expanded;
+            });
+            button.querySelector("svg").style.transform = expanded ? "scaleX(-1)" : "";
+        });
+
+        window.ButtonActionList.add(document, "click", "Select note duration", event => {
+            if (!(event.target instanceof Element)) return;
+            const button = event.target.closest('#duration-controls button[data-testid^="toolbar-duration-"]');
+            if (!button || button.hidden) return;
+
+            document.querySelectorAll('#duration-controls button[data-testid^="toolbar-duration-"]')
+                .forEach(duration => {
+                    const selected = duration === button;
+                    duration.setAttribute("aria-pressed", String(selected));
+                    duration.dataset.active = String(selected);
+                });
+
+            const durationTypes = new Map([
+                ["toolbar-duration-64", "64th"],
+                ["toolbar-duration-32", "32nd"],
+                ["toolbar-duration-16", "16th"],
+                ["toolbar-duration-8", "eighth"],
+                ["toolbar-duration-4", "quarter"],
+                ["toolbar-duration-2", "half"],
+                ["toolbar-duration-1", "whole"],
+                ["toolbar-duration-breve", "breve"]
+            ]);
+            const durationType = durationTypes.get(button.dataset.testid);
+            if (durationType) {
+                sendNoteEdit("duration", durationType);
+                startToolbarPlacement(event);
+            }
+        });
+
+        window.ButtonActionList.add(document, "click", "Select toolbar modifiers", event => {
+            if (!(event.target instanceof Element)) return;
+            const button = event.target.closest(
+                '[data-testid="toolbar-dot"], [data-testid="toolbar-rest"], ' +
+                '[data-testid="toolbar-grace"], [data-testid^="toolbar-accidental-"]'
+            );
+            if (!button || button.hidden) return;
+
+            const isSelected = button.getAttribute("aria-pressed") === "true";
+            const isAccidental = button.matches('[data-testid^="toolbar-accidental-"]');
+            if (isSelected) {
+                setToolbarButtonActive(button, false);
+            } else {
+                if (isAccidental) {
+                    document.querySelectorAll('[data-testid^="toolbar-accidental-"]')
+                        .forEach(accidental => setToolbarButtonActive(accidental, false));
+                }
+                setToolbarButtonActive(button, true);
+            }
+
+            if (button.matches('[data-testid="toolbar-dot"]')) {
+                sendNoteEdit("dots", button.getAttribute("aria-pressed") === "true"
+                    ? selectedDotCount
+                    : 0);
+            } else if (button.matches('[data-testid="toolbar-rest"]')) {
+                sendNoteEdit("rest", button.getAttribute("aria-pressed") === "true");
+            } else if (button.matches('[data-testid="toolbar-grace"]')) {
+                sendNoteEdit("grace", button.getAttribute("aria-pressed") === "true"
+                    ? selectedGraceType
+                    : "");
+            } else if (isAccidental) {
+                const accidental = button.getAttribute("aria-pressed") === "true"
+                    ? button.dataset.testid.slice("toolbar-accidental-".length)
+                    : "";
+                sendNoteEdit("accidental", accidental);
+            }
+            startToolbarPlacement(event);
+        });
+
+        window.addEventListener("pointermove", event => {
+            if (!placementArmed) return;
+            window.parent.postMessage({
+                channel: "viritura-index-new",
+                type: "toolbar-placement-pointer",
+                clientX: event.clientX,
+                clientY: event.clientY
+            }, "*");
+        });
+
+        window.addEventListener("keydown", event => {
+            if (event.key !== "Escape" || !placementArmed) return;
+            event.preventDefault();
+            cancelToolbarPlacement();
+        });
+
+        window.addEventListener("message", event => {
+            const message = event.data;
+            if (event.source !== window.parent ||
+                (event.origin !== window.location.origin && event.origin !== "null") ||
+                !message || message.channel !== "viritura-index-new" ||
+                message.type !== "toolbar-placement-cancelled") {
+                return;
+            }
+            placementArmed = false;
         });
     </script>
 </body>
