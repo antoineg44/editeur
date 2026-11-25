@@ -10,7 +10,17 @@
     <link rel="stylesheet" href="./assets/navigation.css">
     <script src="./assets/button-action-list.js"></script>
     <script src="../build/opensheetmusicdisplay.min.js"></script>
+    <script src="./js/click-partition.js"></script>
+    <script src="./js/selection.js"></script>
+    <script src="./js/menu.js"></script>
+    <script src="./js/play.js"></script>
+    <script src="./js/history.js"></script>
     <script src="./js/file.js"></script>
+    <script src="./js/transpose.js"></script>
+    <script src="./js/delete.js"></script>
+    <script src="./js/note-edit.js"></script>
+    <script src="./js/lyrics.js"></script>
+    <script src="./js/note-placement.js"></script>
     <script defer src="./assets/local-frame.js"></script>
 </head>
 
@@ -183,6 +193,15 @@
     <iframe id="view-menu-frame" data-src="./interfaces/dialogs/menu-view.html" title="View menu"
         style="position: fixed; inset: 0; z-index: 1400; width: 100vw; height: 100vh; border: 0; background: transparent;"
         hidden></iframe>
+    <iframe id="dots-menu-frame" data-src="./interfaces/dialogs/dots.html" title="Augmentation dot options"
+        style="position: fixed; inset: 0; z-index: 1400; width: 100vw; height: 100vh; border: 0; background: transparent;"
+        hidden></iframe>
+    <iframe id="grace-menu-frame" data-src="./interfaces/dialogs/grace.html" title="Grace note options"
+        style="position: fixed; inset: 0; z-index: 1400; width: 100vw; height: 100vh; border: 0; background: transparent;"
+        hidden></iframe>
+    <iframe id="voice-menu-frame" data-src="./interfaces/dialogs/voice.html" title="Voice options"
+        style="position: fixed; inset: 0; z-index: 1400; width: 100vw; height: 100vh; border: 0; background: transparent;"
+        hidden></iframe>
     <script>
         (() => {
             const horizontalMenuFrame = document.getElementById("horizontal-menu-frame");
@@ -191,7 +210,10 @@
                 edit: editMenuFrame,
                 file: document.getElementById("file-menu-frame"),
                 help: document.getElementById("help-menu-frame"),
-                view: document.getElementById("view-menu-frame")
+                view: document.getElementById("view-menu-frame"),
+                dots: document.getElementById("dots-menu-frame"),
+                grace: document.getElementById("grace-menu-frame"),
+                voice: document.getElementById("voice-menu-frame")
             };
             const menuFrame = document.getElementById("vertical-menu-frame");
             const writeFrame = document.getElementById("write-screen-frame");
@@ -219,11 +241,124 @@
                 Properties: "./interfaces/screens/engrave-properties.html"
             };
             const resizeHandle = screenPanel.querySelector('._resize_3cc04_227[data-side="right"]');
+            const toolbarMenuPositions = new WeakMap();
+            const loadedToolbarMenuFrames = new WeakSet();
             let resizePointerId = null;
             let previousCursor = "";
             let previousUserSelect = "";
 
+            function openToolbarOptions(menu, message) {
+                const frame = menuOverlays[menu];
+                toolbarMenuPositions.set(frame, {
+                    left: horizontalMenuFrame.getBoundingClientRect().left + message.left,
+                    top: horizontalMenuFrame.getBoundingClientRect().top + message.top
+                });
+                const sendPosition = function sendPosition() {
+                    const position = toolbarMenuPositions.get(frame);
+                    frame.contentWindow.postMessage({
+                        channel: "viritura-index-new",
+                        type: "position-menu",
+                        ...position
+                    }, "*");
+                };
+
+                frame.hidden = false;
+                if (!frame.hasAttribute("src")) {
+                    frame.addEventListener("load", () => {
+                        loadedToolbarMenuFrames.add(frame);
+                        sendPosition();
+                    }, { once: true });
+                    frame.src = frame.dataset.src;
+                } else if (loadedToolbarMenuFrames.has(frame)) {
+                    window.requestAnimationFrame(sendPosition);
+                }
+            }
+
+            function setVoiceMenuExpanded(expanded) {
+                horizontalMenuFrame.contentWindow.postMessage({
+                    channel: "viritura-index-new",
+                    type: "voice-menu-state",
+                    expanded
+                }, "*");
+            }
+
+            function applyToolbarOptionToSelectedNote(property, value) {
+                if (window.SelectionActions.getSelectedNotes().length === 0) return false;
+                window.NoteEditActions.applySelectedNoteUpdate(property, String(value));
+                return true;
+            }
+
+            function getToolbarLocalPosition(source, clientX, clientY) {
+                if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) return null;
+                const sourceFrame = [
+                    horizontalMenuFrame,
+                    ...Object.values(menuOverlays)
+                ].find(frame => frame.contentWindow === source);
+                if (!sourceFrame) return null;
+
+                const sourceBounds = sourceFrame.getBoundingClientRect();
+                const toolbarBounds = horizontalMenuFrame.getBoundingClientRect();
+                return {
+                    clientX: sourceBounds.left + clientX - toolbarBounds.left,
+                    clientY: sourceBounds.top + clientY - toolbarBounds.top
+                };
+            }
+
+            function cancelToolbarPlacement() {
+                window.NotePlacementActions.cancel();
+                horizontalMenuFrame.contentWindow.postMessage({
+                    channel: "viritura-index-new",
+                    type: "toolbar-placement-cancelled"
+                }, "*");
+            }
+
+            function setToolbarPlacement(event, message) {
+                if (message.action === "cancel") {
+                    cancelToolbarPlacement();
+                    return;
+                }
+                if (window.SelectionActions.getSelectedNotes().length) {
+                    cancelToolbarPlacement();
+                    return;
+                }
+
+                const position = message.clientX >= 0 && message.clientY >= 0
+                    ? getToolbarLocalPosition(event.source, message.clientX, message.clientY)
+                    : null;
+                const bounds = horizontalMenuFrame.getBoundingClientRect();
+                window.NotePlacementActions.start({
+                    duration: message.duration,
+                    dotCount: message.dotCount,
+                    rest: message.rest,
+                    graceType: message.graceType,
+                    accidental: message.accidental,
+                    voice: message.voice
+                }, position ? bounds.left + position.clientX : undefined,
+                position ? bounds.top + position.clientY : undefined);
+            }
+
+            function moveToolbarPlacementPointer(event, message) {
+                const bounds = horizontalMenuFrame.getBoundingClientRect();
+                window.NotePlacementActions.updatePointerPosition(
+                    bounds.left + message.clientX,
+                    bounds.top + message.clientY
+                );
+            }
+
             const messageActionHandlers = {
+                setVoiceHighlight: function setVoiceHighlightAction(event, message) {
+                    if (!["1", "2", "3", "other"].includes(message.voice)) return;
+                    window.SelectionActions.setActiveVoice(message.voice);
+                },
+                setToolbarPlacement: function setToolbarPlacementAction(event, message) {
+                    setToolbarPlacement(event, message);
+                },
+                moveToolbarPlacementPointer: function moveToolbarPlacementPointerAction(event, message) {
+                    moveToolbarPlacementPointer(event, message);
+                },
+                cancelToolbarPlacement: function cancelToolbarPlacementAction() {
+                    cancelToolbarPlacement();
+                },
                 openFileMenu: function openFileMenu() {
                     if (!menuOverlays.file.hasAttribute("src")) {
                         menuOverlays.file.src = menuOverlays.file.dataset.src;
@@ -232,6 +367,10 @@
                     menuOverlays.edit.hidden = true;
                     menuOverlays.help.hidden = true;
                     menuOverlays.view.hidden = true;
+                    menuOverlays.dots.hidden = true;
+                    menuOverlays.grace.hidden = true;
+                    menuOverlays.voice.hidden = true;
+                    setVoiceMenuExpanded(false);
                 },
                 openEditMenu: function openEditMenu() {
                     if (!menuOverlays.edit.hasAttribute("src")) {
@@ -241,6 +380,10 @@
                     menuOverlays.edit.hidden = false;
                     menuOverlays.help.hidden = true;
                     menuOverlays.view.hidden = true;
+                    menuOverlays.dots.hidden = true;
+                    menuOverlays.grace.hidden = true;
+                    menuOverlays.voice.hidden = true;
+                    setVoiceMenuExpanded(false);
                 },
                 openViewMenu: function openViewMenu() {
                     if (!menuOverlays.view.hasAttribute("src")) {
@@ -250,6 +393,10 @@
                     menuOverlays.edit.hidden = true;
                     menuOverlays.help.hidden = true;
                     menuOverlays.view.hidden = false;
+                    menuOverlays.dots.hidden = true;
+                    menuOverlays.grace.hidden = true;
+                    menuOverlays.voice.hidden = true;
+                    setVoiceMenuExpanded(false);
                 },
                 openHelpMenu: function openHelpMenu() {
                     if (!menuOverlays.help.hasAttribute("src")) {
@@ -259,6 +406,40 @@
                     menuOverlays.edit.hidden = true;
                     menuOverlays.help.hidden = false;
                     menuOverlays.view.hidden = true;
+                    menuOverlays.dots.hidden = true;
+                    menuOverlays.grace.hidden = true;
+                    menuOverlays.voice.hidden = true;
+                    setVoiceMenuExpanded(false);
+                },
+                openDotsMenu: function openDotsMenu(event, message) {
+                    menuOverlays.file.hidden = true;
+                    menuOverlays.edit.hidden = true;
+                    menuOverlays.help.hidden = true;
+                    menuOverlays.view.hidden = true;
+                    menuOverlays.grace.hidden = true;
+                    menuOverlays.voice.hidden = true;
+                    setVoiceMenuExpanded(false);
+                    openToolbarOptions("dots", message);
+                },
+                openGraceMenu: function openGraceMenu(event, message) {
+                    menuOverlays.file.hidden = true;
+                    menuOverlays.edit.hidden = true;
+                    menuOverlays.help.hidden = true;
+                    menuOverlays.view.hidden = true;
+                    menuOverlays.dots.hidden = true;
+                    menuOverlays.voice.hidden = true;
+                    setVoiceMenuExpanded(false);
+                    openToolbarOptions("grace", message);
+                },
+                openVoiceMenu: function openVoiceMenu(event, message) {
+                    menuOverlays.file.hidden = true;
+                    menuOverlays.edit.hidden = true;
+                    menuOverlays.help.hidden = true;
+                    menuOverlays.view.hidden = true;
+                    menuOverlays.dots.hidden = true;
+                    menuOverlays.grace.hidden = true;
+                    setVoiceMenuExpanded(true);
+                    openToolbarOptions("voice", message);
                 },
                 closeFileMenu: function closeFileMenu() {
                     menuOverlays.file.hidden = true;
@@ -272,6 +453,96 @@
                 closeHelpMenu: function closeHelpMenu() {
                     menuOverlays.help.hidden = true;
                 },
+                closeDotsMenu: function closeDotsMenu() {
+                    menuOverlays.dots.hidden = true;
+                },
+                selectDotCount: function selectDotCount(event, message) {
+                    if (!Number.isInteger(message.count) || message.count < 1 || message.count > 4) return;
+
+                    if (!applyToolbarOptionToSelectedNote("dots", message.count)) {
+                        horizontalMenuFrame.contentWindow.postMessage({
+                            channel: "viritura-index-new",
+                            type: "dot-count-state",
+                            count: message.count,
+                            startPlacement: false,
+                            clientX: -1,
+                            clientY: -1
+                        }, "*");
+                    }
+                    menuOverlays.dots.hidden = true;
+                },
+                selectGraceType: function selectGraceType(event, message) {
+                    if (message.graceType !== "acciaccatura" &&
+                        message.graceType !== "appoggiatura") return;
+
+                    if (!applyToolbarOptionToSelectedNote("grace", message.graceType)) {
+                        horizontalMenuFrame.contentWindow.postMessage({
+                            channel: "viritura-index-new",
+                            type: "grace-type-state",
+                            graceType: message.graceType,
+                            startPlacement: false,
+                            clientX: -1,
+                            clientY: -1
+                        }, "*");
+                    }
+                    menuOverlays.grace.hidden = true;
+                },
+                selectVoice: function selectVoice(event, message) {
+                    if (!["1", "2", "3", "other"].includes(message.voice)) return;
+
+                    if (!applyToolbarOptionToSelectedNote("voice", message.voice)) {
+                        horizontalMenuFrame.contentWindow.postMessage({
+                            channel: "viritura-index-new",
+                            type: "voice-selection-state",
+                            voice: message.voice,
+                            startPlacement: false,
+                            clientX: -1,
+                            clientY: -1
+                        }, "*");
+                    }
+                    menuOverlays.voice.hidden = true;
+                    setVoiceMenuExpanded(false);
+                },
+                editSelectedNote: function editSelectedNote(event, message) {
+                    window.NoteEditActions.applySelectedNoteUpdate(
+                        message.property,
+                        message.value
+                    );
+                },
+                editSelectedXmlComponent: function editSelectedXmlComponent(event, message) {
+                    let path;
+                    try {
+                        path = JSON.parse(message.path);
+                    } catch (error) {
+                        console.error("Could not parse the selected MusicXML component path.", error);
+                        window.alert("Impossible de modifier ce composant MusicXML.");
+                        return;
+                    }
+                    if (!Array.isArray(path) || path.some(index =>
+                        !Number.isInteger(index) || index < 0
+                    )) {
+                        window.alert("Le chemin du composant MusicXML est invalide.");
+                        return;
+                    }
+                    window.NoteEditActions.applySelectedXmlComponentUpdate(
+                        path,
+                        message.value,
+                        message.attribute
+                    ).then(success => {
+                        writeFrame.contentWindow.postMessage({
+                            channel: "viritura-index-new",
+                            type: "write-component-update-result",
+                            success
+                        }, "*");
+                    });
+                },
+                closeGraceMenu: function closeGraceMenu() {
+                    menuOverlays.grace.hidden = true;
+                },
+                closeVoiceMenu: function closeVoiceMenu() {
+                    menuOverlays.voice.hidden = true;
+                    setVoiceMenuExpanded(false);
+                },
                 showWritePalettes: function showWritePalettes() {
                     writeFrame.src = writeTabSources.Palettes;
                     writeFrame.title = "Palettes screen";
@@ -281,8 +552,12 @@
                     writeFrame.title = "History screen";
                 },
                 showWriteProperties: function showWriteProperties() {
+                    writeFrame.addEventListener("load", function refreshInspectorSelection() {
+                        window.SelectionActions.refreshToolbarSelection();
+                    }, { once: true });
                     writeFrame.src = writeTabSources.Properties;
                     writeFrame.title = "Properties screen";
+                    window.setTimeout(() => window.SelectionActions.refreshToolbarSelection(), 0);
                 },
                 showSetupProject: function showSetupProject() {
                     setupFrame.src = setupTabSources.Project;
@@ -452,6 +727,17 @@
                     if (message.wasSelected && !screenPanel.hidden) {
                         screenPanel.hidden = true;
                     }
+                },
+                selectHistoryEntry: function selectHistoryEntry(event, message) {
+                    const content = window.HistoryActions.getEntryContent(message.entryId);
+                    if (content === null) return;
+
+                    window.FileActions.restoreMusicXml(content).then(restored => {
+                        if (restored) window.HistoryActions.setCurrentEntry(message.entryId);
+                    }).catch(error => {
+                        console.error("Could not restore the selected MusicXML history entry.", error);
+                        window.alert("Impossible de restaurer cette version MusicXML.");
+                    });
                 }
             };
 
@@ -460,13 +746,34 @@
                 { message: "menu-open", data: { menu: "edit" }, source: horizontalMenuFrame.contentWindow, handler: "openEditMenu" },
                 { message: "menu-open", data: { menu: "view" }, source: horizontalMenuFrame.contentWindow, handler: "openViewMenu" },
                 { message: "menu-open", data: { menu: "help" }, source: horizontalMenuFrame.contentWindow, handler: "openHelpMenu" },
+                { message: "toolbar-voice-highlight", types: { voice: "string" }, source: horizontalMenuFrame.contentWindow, handler: "setVoiceHighlight" },
+                { message: "toolbar-note-edit", types: { property: "string", value: "string" }, source: horizontalMenuFrame.contentWindow, handler: "editSelectedNote" },
+                { message: "write-component-update", types: { path: "string", value: "string", attribute: "string" }, source: writeFrame.contentWindow, handler: "editSelectedXmlComponent" },
+                { message: "toolbar-placement", types: { action: "string", duration: "string", dotCount: "number", rest: "boolean", graceType: "string", accidental: "string", voice: "string", clientX: "number", clientY: "number" }, source: horizontalMenuFrame.contentWindow, handler: "setToolbarPlacement" },
+                { message: "toolbar-placement-pointer", types: { clientX: "number", clientY: "number" }, source: horizontalMenuFrame.contentWindow, handler: "moveToolbarPlacementPointer" },
+                { message: "toolbar-placement-cancel", source: menuOverlays.dots.contentWindow, handler: "cancelToolbarPlacement" },
+                { message: "toolbar-placement-cancel", source: menuOverlays.grace.contentWindow, handler: "cancelToolbarPlacement" },
+                { message: "toolbar-placement-cancel", source: menuOverlays.voice.contentWindow, handler: "cancelToolbarPlacement" },
+                { message: "menu-open", data: { menu: "dots" }, source: horizontalMenuFrame.contentWindow, handler: "openDotsMenu" },
+                { message: "menu-open", data: { menu: "grace" }, source: horizontalMenuFrame.contentWindow, handler: "openGraceMenu" },
+                { message: "menu-open", data: { menu: "voice" }, source: horizontalMenuFrame.contentWindow, handler: "openVoiceMenu" },
                 { message: "menu-dismiss", data: { menu: "file" }, source: menuOverlays.file.contentWindow, handler: "closeFileMenu" },
                 { message: "menu-dismiss", data: { menu: "edit" }, source: menuOverlays.edit.contentWindow, handler: "closeEditMenu" },
                 { message: "menu-dismiss", data: { menu: "view" }, source: menuOverlays.view.contentWindow, handler: "closeViewMenu" },
                 { message: "menu-dismiss", data: { menu: "help" }, source: menuOverlays.help.contentWindow, handler: "closeHelpMenu" },
+                { message: "menu-dismiss", data: { menu: "dots" }, source: menuOverlays.dots.contentWindow, handler: "closeDotsMenu" },
+                { message: "dot-count-selected", types: { count: "number" }, source: menuOverlays.dots.contentWindow, handler: "selectDotCount" },
+                { message: "menu-dismiss", data: { menu: "grace" }, source: menuOverlays.grace.contentWindow, handler: "closeGraceMenu" },
+                { message: "grace-type-selected", types: { graceType: "string" }, source: menuOverlays.grace.contentWindow, handler: "selectGraceType" },
+                { message: "menu-dismiss", data: { menu: "voice" }, source: menuOverlays.voice.contentWindow, handler: "closeVoiceMenu" },
+                { message: "voice-selected", types: { voice: "string" }, source: menuOverlays.voice.contentWindow, handler: "selectVoice" },
+                { message: "toolbar-placement-cancel", source: menuOverlays.dots.contentWindow, handler: "cancelToolbarPlacement" },
+                { message: "toolbar-placement-cancel", source: menuOverlays.grace.contentWindow, handler: "cancelToolbarPlacement" },
+                { message: "toolbar-placement-cancel", source: menuOverlays.voice.contentWindow, handler: "cancelToolbarPlacement" },
                 { message: "write-tab", data: { tab: "Palettes" }, source: writeFrame.contentWindow, handler: "showWritePalettes" },
                 { message: "write-tab", data: { tab: "History" }, source: writeFrame.contentWindow, handler: "showWriteHistory" },
                 { message: "write-tab", data: { tab: "Properties" }, source: writeFrame.contentWindow, handler: "showWriteProperties" },
+                { message: "history-select", types: { entryId: "number" }, source: writeFrame.contentWindow, handler: "selectHistoryEntry" },
                 { message: "setup-tab", data: { tab: "Project" }, source: setupFrame.contentWindow, handler: "showSetupProject" },
                 { message: "setup-tab", data: { tab: "Instruments" }, source: setupFrame.contentWindow, handler: "showSetupInstruments" },
                 { message: "setup-tab", data: { tab: "Scores" }, source: setupFrame.contentWindow, handler: "showSetupScores" },
@@ -489,13 +796,22 @@
                 messageActions,
                 messageActionHandlers
             );
+            window.MenuActions.initialize(menuFrame.contentWindow, horizontalMenuFrame.contentWindow);
+            window.SelectionActions.initialize(
+                document.getElementById("musicxml-score"),
+                horizontalMenuFrame.contentWindow
+            );
+            window.NotePlacementActions.initialize(horizontalMenuFrame.contentWindow);
+            window.HistoryActions.initialize(writeFrame.contentWindow);
             window.FileActions.initialize({
                 fileMenuWindow: menuOverlays.file.contentWindow,
                 editorWindow: editFrame.contentWindow,
+                horizontalMenuWindow: horizontalMenuFrame.contentWindow,
                 selectEditActivity: function selectEditActivity() {
                     messageActionHandlers.selectEditActivity(null, { wasSelected: false });
                 },
                 syncMenuActivity: function syncMenuActivity() {
+                    window.MenuActions.setSelectedMenu("edit");
                     menuFrame.contentWindow.postMessage({
                         channel: "viritura-index-new",
                         type: "sync-activity",
@@ -503,6 +819,11 @@
                     }, "*");
                 }
             });
+            window.LyricEditActions.initialize(
+                document.getElementById("musicxml-score")
+            );
+            window.TransposeActions.initialize();
+            window.DeleteActions.initialize();
 
             window.ButtonActionList.add(document, "pointerdown", "Dismiss menu on outside click", event => {
                 const activeMenu = Object.values(menuOverlays).find(frame => !frame.hidden);
