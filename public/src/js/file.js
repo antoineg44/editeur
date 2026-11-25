@@ -1,6 +1,9 @@
 "use strict";
 
 (() => {
+    let updateCurrentMusicXml = null;
+    let restoreCurrentMusicXml = null;
+
     function installMenuFilePicker() {
         const scorePicker = document.createElement("input");
         scorePicker.type = "file";
@@ -45,6 +48,7 @@
         let pendingMusicXml = null;
         let isEditorReady = false;
         let renderRequest = 0;
+        let currentMusicXmlName = "score.musicxml";
         const scoreElement = document.getElementById("static-score");
         const scorePlaceholder = document.getElementById("static-score-placeholder");
         const scoreContainer = document.getElementById("musicxml-score");
@@ -56,32 +60,90 @@
             drawComposer: true,
             pageFormat: "A4_P",
             pageBackgroundColor: "#FFFFFF",
-            drawPartNames: true
+            drawPartNames: true,
+            cursorsOptions: [
+                { type: 0, color: "#FF0000", alpha: 0.35, follow: false }
+            ]
         });
+        window.PartitionClick.initialize(osmd, scoreContainer);
+        window.PlayActions.initialize(osmd, dependencies.horizontalMenuWindow);
 
-        async function renderMusicXml(content) {
+        async function renderMusicXmlDocument(xmlDocument, preserveScrollPosition = false) {
             const request = ++renderRequest;
+            const scrollPosition = preserveScrollPosition
+                ? { left: scoreElement.scrollLeft, top: scoreElement.scrollTop }
+                : null;
+            window.PlayActions.onScoreLoading();
+            window.SelectionActions.replaceSelectedNotes([]);
             scoreContainer.replaceChildren();
             scoreElement.classList.add("static-score--loaded");
             scorePlaceholder.hidden = true;
 
             try {
-                const xmlDocument = new DOMParser().parseFromString(content, "application/xml");
                 if (xmlDocument.querySelector("parsererror")) {
                     throw new Error("Le contenu de l’éditeur n’est pas un document XML valide.");
                 }
+                window.PartitionClick.setMusicXmlDocument(xmlDocument);
                 await osmd.load(xmlDocument);
-                if (request !== renderRequest) return;
+                if (request !== renderRequest) return false;
                 osmd.render();
+                window.SelectionActions.refreshVoiceHighlight();
+                window.PlayActions.onScoreRendered();
+                if (scrollPosition) {
+                    scoreElement.scrollLeft = scrollPosition.left;
+                    scoreElement.scrollTop = scrollPosition.top;
+                }
+                return true;
             } catch (error) {
-                if (request !== renderRequest) return;
+                if (request !== renderRequest) return false;
                 console.error("Could not render the MusicXML score.", error);
                 scoreContainer.replaceChildren();
                 scoreElement.classList.remove("static-score--loaded");
                 scorePlaceholder.textContent = "Impossible d’afficher cette partition.";
                 scorePlaceholder.hidden = false;
+                return false;
             }
         }
+
+        function renderMusicXml(content, historyDescription = null) {
+            const xmlDocument = new DOMParser().parseFromString(content, "application/xml");
+            if (historyDescription && !xmlDocument.querySelector("parsererror")) {
+                window.HistoryActions.recordChange(historyDescription, content);
+            }
+            return renderMusicXmlDocument(xmlDocument);
+        }
+
+        async function applyMusicXmlDocument(xmlDocument, content, description) {
+            if (description) window.HistoryActions.recordChange(description, content);
+            if (isEditorReady) {
+                dependencies.editorWindow.postMessage({
+                    channel: "viritura-editor",
+                    type: "update-musicxml",
+                    name: currentMusicXmlName,
+                    content
+                }, "*");
+            } else {
+                pendingMusicXml = { name: currentMusicXmlName, content };
+            }
+
+            return renderMusicXmlDocument(xmlDocument, true);
+        }
+
+        function updateMusicXmlDocument(xmlDocument, description) {
+            const content = new XMLSerializer().serializeToString(xmlDocument);
+            return applyMusicXmlDocument(xmlDocument, content, description);
+        }
+
+        function restoreMusicXmlDocument(content) {
+            const xmlDocument = new DOMParser().parseFromString(content, "application/xml");
+            if (xmlDocument.querySelector("parsererror")) {
+                throw new Error("The selected history entry is not valid MusicXML.");
+            }
+            return applyMusicXmlDocument(xmlDocument, content, null);
+        }
+
+        updateCurrentMusicXml = updateMusicXmlDocument;
+        restoreCurrentMusicXml = restoreMusicXmlDocument;
 
         function deliverPendingMusicXml() {
             if (!pendingMusicXml || !isEditorReady) return;
@@ -96,7 +158,9 @@
         }
 
         function openMusicXmlInEditor(event, message) {
+            currentMusicXmlName = message.name;
             pendingMusicXml = { name: message.name, content: message.content };
+            window.HistoryActions.startSession(message.name, message.content);
             dependencies.selectEditActivity();
             dependencies.syncMenuActivity();
             renderMusicXml(message.content);
@@ -109,7 +173,13 @@
         }
 
         function refreshMusicXml(event, message) {
-            renderMusicXml(message.content);
+            renderMusicXml(message.content, "Edited MusicXML");
+        }
+
+        function recordEditorChange(event, message) {
+            const xmlDocument = new DOMParser().parseFromString(message.content, "application/xml");
+            if (xmlDocument.querySelector("parsererror")) return;
+            window.HistoryActions.recordChange("Edited MusicXML", message.content);
         }
 
         window.ButtonActionList.addMessages(window, "viritura-index-new", [
@@ -129,15 +199,42 @@
                 source: dependencies.editorWindow,
                 types: { content: "string" },
                 handler: "refreshMusicXml"
+            },
+            {
+                message: "musicxml-changed",
+                source: dependencies.editorWindow,
+                types: { content: "string" },
+                handler: "recordEditorChange"
             }
         ], {
             openMusicXmlInEditor,
             markEditorFrameReady,
-            refreshMusicXml
+            refreshMusicXml,
+            recordEditorChange
         });
     }
 
-    window.FileActions = Object.freeze({ initialize });
+    window.FileActions = Object.freeze({
+        initialize,
+        updateMusicXml(xmlDocument, description) {
+            if (!xmlDocument || typeof xmlDocument.querySelector !== "function") {
+                throw new TypeError("FileActions.updateMusicXml requires an XML document.");
+            }
+            if (!updateCurrentMusicXml) {
+                throw new Error("FileActions must be initialized before updating MusicXML.");
+            }
+            return updateCurrentMusicXml(xmlDocument, description);
+        },
+        restoreMusicXml(content) {
+            if (typeof content !== "string") {
+                throw new TypeError("FileActions.restoreMusicXml requires MusicXML text.");
+            }
+            if (!restoreCurrentMusicXml) {
+                throw new Error("FileActions must be initialized before restoring MusicXML.");
+            }
+            return restoreCurrentMusicXml(content);
+        }
+    });
 
     if (window.parent !== window &&
         document.querySelector('[data-ui^="Open MNX Score"]')) {
