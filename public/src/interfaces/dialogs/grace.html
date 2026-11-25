@@ -1,11 +1,91 @@
+<!doctype html>
 <!-- Viritura / grace - MIT, Viritura contributors (2026) -->
-<div data-radix-popper-content-wrapper="" style="position: fixed; left: 0px; top: 0px; transform: translate(498px, 48px); min-width: max-content; --radix-popper-transform-origin: 50% 0px; z-index: 100; --radix-popper-available-width: 1130px; --radix-popper-available-height: 670px; --radix-popper-anchor-width: 32px; --radix-popper-anchor-height: 32px;">
-<div data-side="bottom" data-align="center" data-state="open" role="dialog" id="radix-_r_21t_" class="_popup_216cq_32 vi-glass-floating" tabindex="-1" style="--radix-popover-content-transform-origin: var(--radix-popper-transform-origin); --radix-popover-content-available-width: var(--radix-popper-available-width); --radix-popover-content-available-height: var(--radix-popper-available-height); --radix-popover-trigger-width: var(--radix-popper-anchor-width); --radix-popover-trigger-height: var(--radix-popper-anchor-height);">
-<button class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433" aria-label="Acciaccatura (slashed)" aria-pressed="true" data-active="true" type="button" data-state="closed" data-ui="Acciaccatura (slashed)">
-<span style="display: inline-block;"></span>
-</button>
-<button class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433" aria-label="Appoggiatura (unslashed)" aria-pressed="false" data-active="false" type="button" data-state="closed" data-ui="Appoggiatura (unslashed)">
-<span style="display: inline-block;"></span>
-</button>
-</div>
-</div>
+<html lang="en" data-theme="light" class="overlay-document">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../assets/notation.css">
+  <link rel="stylesheet" href="../../assets/interface.css">
+  <link rel="stylesheet" href="../../assets/navigation.css">
+  <script src="../../assets/button-action-list.js"></script>
+  <style>
+    #overlays {
+      pointer-events: auto;
+    }
+  </style>
+  <script defer src="../../assets/local-frame.js"></script>
+</head>
+
+<body id="overlays">
+  <div data-radix-popper-content-wrapper="" data-floating-menu
+    style="position: fixed; left: 0; top: 0; z-index: 100;">
+    <div role="dialog" class="_popup_216cq_32 vi-glass-floating" tabindex="-1">
+      <button
+        class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433"
+        aria-label="Acciaccatura (slashed)" aria-pressed="true" data-active="true" type="button"
+        data-grace-type="acciaccatura" data-ui="Acciaccatura (slashed)">
+        <span style="display: inline-block;"></span>
+      </button>
+      <button
+        class="_button_4hx0m_4 _lg_4hx0m_93 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112 _bravura_4hx0m_433"
+        aria-label="Appoggiatura (unslashed)" aria-pressed="false" data-active="false" type="button"
+        data-grace-type="appoggiatura" data-ui="Appoggiatura (unslashed)">
+        <span style="display: inline-block;"></span>
+      </button>
+    </div>
+  </div>
+  <script>
+    window.ButtonActionList.add(document, "click", "Select grace note type", event => {
+      if (event.target instanceof Element) {
+        const option = event.target.closest("button[data-grace-type]");
+        if (option) {
+          document.querySelectorAll("button[data-grace-type]").forEach(button => {
+            const selected = button === option;
+            button.setAttribute("aria-pressed", String(selected));
+            button.dataset.active = String(selected);
+          });
+          window.parent.postMessage({
+            channel: "viritura-index-new",
+            type: "grace-type-selected",
+            graceType: option.dataset.graceType
+          }, "*");
+          return;
+        }
+      }
+
+      window.parent.postMessage({
+        channel: "viritura-index-new",
+        type: "menu-dismiss",
+        menu: "grace"
+      }, "*");
+    });
+
+    window.addEventListener("keydown", event => {
+      if (event.key !== "Escape") return;
+      window.parent.postMessage({
+        channel: "viritura-index-new",
+        type: "toolbar-placement-cancel"
+      }, "*");
+    });
+  </script>
+  <script>
+    const floatingMenu = document.querySelector("[data-floating-menu]");
+    window.addEventListener("message", event => {
+      const message = event.data;
+      if (event.source !== window.parent ||
+          (event.origin !== window.location.origin && event.origin !== "null") ||
+          !message || message.channel !== "viritura-index-new" ||
+          message.type !== "position-menu" ||
+          !Number.isFinite(message.left) || !Number.isFinite(message.top)) {
+        return;
+      }
+
+      const bounds = floatingMenu.getBoundingClientRect();
+      floatingMenu.style.left = `${Math.max(8, Math.min(message.left, window.innerWidth - bounds.width - 8))}px`;
+      floatingMenu.style.top = `${Math.max(8, Math.min(message.top, window.innerHeight - bounds.height - 8))}px`;
+    });
+  </script>
+</body>
+
+</html>
