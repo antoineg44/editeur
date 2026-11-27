@@ -5,6 +5,7 @@
     const selectionState = document.getElementById("inspector-selection");
     const selectionTitle = document.getElementById("inspector-selection-title");
     const status = document.getElementById("inspector-status");
+    const actions = document.getElementById("inspector-actions");
     const tree = document.getElementById("inspector-tree");
     const maxNodes = 400;
     let nodeCount = 0;
@@ -91,6 +92,8 @@
 
     function showSelection(message) {
         tree.replaceChildren();
+        actions.replaceChildren();
+        actions.hidden = true;
         status.textContent = "";
         emptyState.hidden = Boolean(message.selected);
         selectionState.hidden = !message.selected;
@@ -119,6 +122,24 @@
             `Élément sélectionné : <${message.tag || "élément"}>` +
             (message.parentTag ? ` dans <${message.parentTag}>` : "");
 
+        if (["words", "rehearsal"].includes(message.tag) &&
+            message.parentTag === "direction-type") {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "_button_4hx0m_4 _sm_4hx0m_85 _ghost_4hx0m_186";
+            button.textContent = "Convertir en symbole d’accord";
+            button.addEventListener("click", () => {
+                button.disabled = true;
+                status.textContent = "Conversion…";
+                window.parent.postMessage({
+                    channel: "viritura-index-new",
+                    type: "write-convert-text-to-chord"
+                }, "*");
+            });
+            actions.appendChild(button);
+            actions.hidden = false;
+        }
+
         const parsed = new DOMParser().parseFromString(
             `<inspector-root>${message.xml}</inspector-root>`,
             "application/xml"
@@ -146,7 +167,7 @@
         } else if (event.data.type === "write-component-update-result") {
             status.textContent = event.data.success
                 ? "Modification enregistrée dans la partition et le MusicXML."
-                : "La modification n’a pas été appliquée.";
+                : event.data.error || "La modification n’a pas été appliquée.";
             tree.querySelectorAll("button").forEach(button => {
                 button.disabled = false;
             });
