@@ -66,6 +66,7 @@
             ]
         });
         window.PartitionClick.initialize(osmd, scoreContainer);
+        window.ChordEditActions.initialize(osmd, scoreContainer);
         window.PlayActions.initialize(osmd, dependencies.horizontalMenuWindow);
 
         async function renderMusicXmlDocument(xmlDocument, preserveScrollPosition = false) {
@@ -159,11 +160,17 @@
 
         function openMusicXmlInEditor(event, message) {
             currentMusicXmlName = message.name;
-            pendingMusicXml = { name: message.name, content: message.content };
-            window.HistoryActions.startSession(message.name, message.content);
+            const xmlDocument = new DOMParser().parseFromString(message.content, "application/xml");
+            let content = message.content;
+            if (!xmlDocument.querySelector("parsererror")) {
+                window.ConfigFileActions.prepareScoreCredits(xmlDocument);
+                content = new XMLSerializer().serializeToString(xmlDocument);
+            }
+            pendingMusicXml = { name: message.name, content };
+            window.HistoryActions.startSession(message.name, content);
             dependencies.selectEditActivity();
             dependencies.syncMenuActivity();
-            renderMusicXml(message.content);
+            renderMusicXml(content);
             deliverPendingMusicXml();
         }
 
