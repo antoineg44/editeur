@@ -839,12 +839,12 @@
     function getStaffStreams(rhythm, staff, voice, knownVoices = []) {
         const streams = Array.from(rhythm.streams.values())
             .filter(stream => stream.staff === staff);
-        for (const knownVoice of knownVoices) {
+        for (const knownVoice of new Set([...knownVoices, voice])) {
             if (!streams.some(stream => stream.voice === knownVoice)) {
                 streams.push({ staff, voice: knownVoice, end: 0 });
             }
         }
-        return streams.length ? streams : [{ staff, voice, end: 0 }];
+        return streams;
     }
 
     function getRemovableTrailingGroup(measure, rhythm, capacity, staff, protectedNote) {
@@ -909,6 +909,8 @@
         if (!capacity) return { accepted: true, changed: false };
 
         let rhythm = getMeasureRhythm(part, measure);
+        const targetVoiceWasMissing = !rhythm.streams.has(`${staff}|${voice}`);
+        let targetVoiceCreated = false;
         const knownVoices = Array.from(rhythm.streams.values())
             .filter(stream => stream.staff === staff)
             .map(stream => stream.voice);
@@ -917,6 +919,29 @@
         let underfullStreams = streams.filter(stream => stream.end < capacity - 1e-8);
         if (!overfullStreams.length && !underfullStreams.length) {
             return { accepted: true, changed: false };
+        }
+
+        if (!overfullStreams.length && targetVoiceWasMissing) {
+            const targetStream = streams.find(stream => stream.staff === staff &&
+                stream.voice === voice);
+            if (targetStream && targetStream.end < capacity - 1e-8) {
+                addRestsToMeasureStream(
+                    document,
+                    measure,
+                    rhythm,
+                    staff,
+                    voice,
+                    capacity - targetStream.end
+                );
+                targetVoiceCreated = true;
+                rhythm = getMeasureRhythm(part, measure);
+                streams = getStaffStreams(rhythm, staff, voice, knownVoices);
+                overfullStreams = streams.filter(stream => stream.end > capacity + 1e-8);
+                underfullStreams = streams.filter(stream => stream.end < capacity - 1e-8);
+            }
+        }
+        if (!overfullStreams.length && !underfullStreams.length) {
+            return { accepted: true, changed: true, targetVoiceCreated };
         }
 
         const difference = overfullStreams.length
@@ -938,6 +963,10 @@
                     stream.voice,
                     capacity - stream.end
                 );
+                if (targetVoiceWasMissing && stream.staff === staff &&
+                    stream.voice === voice) {
+                    targetVoiceCreated = true;
+                }
                 rhythm = getMeasureRhythm(part, measure);
             }
         } else {
@@ -995,7 +1024,7 @@
         if (streams.some(stream => Math.abs(stream.end - capacity) > 1e-8)) {
             throw new Error("La mesure n’a pas pu être complétée automatiquement.");
         }
-        return { accepted: true, changed: true };
+        return { accepted: true, changed: true, targetVoiceCreated };
     }
 
     function getPartAtIndex(document, partIndex) {
@@ -1106,6 +1135,42 @@
         return slots[0] || null;
     }
 
+    function positionGeneratedVoiceSlot(candidate, location, settings, document) {
+        if (candidate.duration <= 1e-8) return candidate;
+
+        const totalDuration = candidate.duration + candidate.remainingDuration;
+        const targetTime = location.timeInMeasure.fraction * 4 * candidate.divisions;
+        const start = Math.min(
+            totalDuration - candidate.duration,
+            Math.max(0, Math.round(targetTime - candidate.start))
+        );
+        const leadingComponents = start > 1e-8
+            ? getRestComponents(start, candidate.divisions)
+            : [];
+        const remainingDuration = totalDuration - start - candidate.duration;
+        const remainingComponents = remainingDuration > 1e-8
+            ? getRestComponents(remainingDuration, candidate.divisions)
+            : [];
+        const parent = candidate.note.parentNode;
+
+        for (const component of leadingComponents) {
+            parent.insertBefore(
+                createCompensatingRest(candidate.note, component, document),
+                candidate.note
+            );
+        }
+        setDuration(candidate.note, candidate.duration, document);
+        setNoteTypeAndDots(
+            candidate.note,
+            settings.duration,
+            Number(settings.dotCount),
+            document
+        );
+        candidate.remainingDuration = remainingDuration;
+        candidate.remainingComponents = remainingComponents;
+        return candidate;
+    }
+
     function createCompensatingRest(template, component, document) {
         const note = createXmlElement(document, template, "note");
         insertXmlElement(note, createXmlElement(document, note, "rest"), "rest");
@@ -1115,6 +1180,115 @@
         if (staff) ensureXmlChild(document, note, "staff").textContent = staff;
         setNoteTypeAndDots(note, component.type, component.dotCount, document);
         return note;
+    }
+
+    function coalesceAdjacentRests(measure, targetNotes) {
+        const part = measure?.parentElement;
+        if (getLocalName(measure) !== "measure" || getLocalName(part) !== "part" ||
+            !Array.isArray(targetNotes)) {
+            throw new TypeError("Adjacent-rest consolidation requires a measure and note list.");
+        }
+
+        const targets = new Set(targetNotes);
+        const children = Array.from(measure.children);
+        const restRuns = [];
+        const restEngravingElements = new Set(["stem", "notehead", "beam"]);
+        const isSimpleRest = note => {
+            const rest = getDirectChild(note, "rest");
+            if (!rest || rest.attributes.length ||
+                getDirectChild(note, "chord") || getDirectChild(note, "grace") ||
+                getDirectChild(note, "time-modification") || hasTie(note)) {
+                return false;
+            }
+            return Array.from(note.children).every(child =>
+                ["rest", "duration", "voice", "type", "dot", "staff"]
+                    .includes(getLocalName(child)) ||
+                restEngravingElements.has(getLocalName(child))
+            );
+        };
+        const getAttributeSignature = element => Array.from(element.attributes)
+            .map(attribute => [attribute.name, attribute.value])
+            .sort(([left], [right]) => left.localeCompare(right))
+            .map(([name, value]) => `${name}=${value}`)
+            .join("|");
+
+        for (let index = 0; index < children.length; index++) {
+            const first = children[index];
+            if (getLocalName(first) !== "note" || !isSimpleRest(first)) continue;
+
+            const run = [first];
+            let nextIndex = index + 1;
+            while (nextIndex < children.length) {
+                const next = children[nextIndex];
+                if (getLocalName(next) !== "note" || !isSimpleRest(next) ||
+                    getVoice(next) !== getVoice(first) ||
+                    getStaffNumber(next) !== getStaffNumber(first) ||
+                    getAttributeSignature(next) !== getAttributeSignature(first)) {
+                    break;
+                }
+                run.push(next);
+                nextIndex++;
+            }
+
+            if (run.length > 1 && run.some(note => targets.has(note))) {
+                restRuns.push(run);
+            }
+            index = nextIndex - 1;
+        }
+
+        for (const run of restRuns) {
+            let divisions;
+            try {
+                divisions = getDivisions(run[0]);
+            } catch (error) {
+                console.warn("Could not consolidate adjacent rests with invalid MusicXML divisions.", error);
+                continue;
+            }
+            const totalDuration = run.reduce(
+                (total, note) => total + Number(getChildText(note, "duration")),
+                0
+            );
+            if (!Number.isFinite(totalDuration) || totalDuration <= 0) continue;
+
+            let components;
+            try {
+                components = getRestComponents(totalDuration, divisions);
+            } catch (error) {
+                if (!error.message.startsWith("La durée compensatoire")) throw error;
+                console.warn("Could not notate the combined duration of adjacent rests.", error);
+                continue;
+            }
+            if (components.length >= run.length) continue;
+
+            const [first, ...removed] = run;
+            const reference = removed[removed.length - 1].nextSibling;
+            for (const child of Array.from(first.children)) {
+                if (restEngravingElements.has(getLocalName(child))) child.remove();
+            }
+            setDuration(first, components[0].duration, measure.ownerDocument);
+            setNoteTypeAndDots(
+                first,
+                components[0].type,
+                components[0].dotCount,
+                measure.ownerDocument
+            );
+            removed.forEach(note => note.remove());
+            for (const component of components.slice(1)) {
+                const rest = createCompensatingRest(first, component, measure.ownerDocument);
+                for (const attribute of Array.from(first.attributes)) {
+                    if (attribute.namespaceURI) {
+                        rest.setAttributeNS(
+                            attribute.namespaceURI,
+                            attribute.name,
+                            attribute.value
+                        );
+                    } else {
+                        rest.setAttribute(attribute.name, attribute.value);
+                    }
+                }
+                measure.insertBefore(rest, reference);
+            }
+        }
     }
 
     async function insertNoteAtNow(location, settings) {
@@ -1162,9 +1336,12 @@
         );
         if (!measureRepair.accepted) return false;
 
-        const candidate = getNearestRestSlot(location, settings, document);
+        let candidate = getNearestRestSlot(location, settings, document);
         if (!candidate) {
             throw new Error("Aucun silence assez long n’est disponible dans cette voix à proximité.");
+        }
+        if (measureRepair.targetVoiceCreated) {
+            candidate = positionGeneratedVoiceSlot(candidate, location, settings, document);
         }
 
         const rest = candidate.note;
@@ -1767,6 +1944,7 @@
         applySelectedNoteUpdate,
         applySelectedXmlComponentUpdate,
         getNearestRestSlot,
-        insertNoteAt
+        insertNoteAt,
+        coalesceAdjacentRests
     });
 })();
