@@ -457,7 +457,20 @@
         dragSelection = null;
     }
 
+    function suppressNextClick(pointerId) {
+        suppressedClickPointerId = pointerId;
+        window.clearTimeout(suppressClickTimer);
+        suppressClickTimer = window.setTimeout(() => {
+            suppressedClickPointerId = null;
+        }, 300);
+    }
+
     function handlePartitionPointer(event, container) {
+        if (window.TextDragActions?.isDraggingText()) {
+            if (dragSelection) cancelDragSelection();
+            return;
+        }
+
         if (window.TransposeActions?.isDraggingNote()) {
             if (dragSelection) cancelDragSelection();
             return;
@@ -500,11 +513,7 @@
 
         if (pointer.phase === "end") {
             if (dragSelection.moved) {
-                suppressedClickPointerId = dragSelection.pointerId;
-                window.clearTimeout(suppressClickTimer);
-                suppressClickTimer = window.setTimeout(() => {
-                    suppressedClickPointerId = null;
-                }, 300);
+                suppressNextClick(dragSelection.pointerId);
             }
             dragSelection = null;
         } else if (pointer.phase === "cancel") {
@@ -586,6 +595,7 @@
         getSelectedNotes,
         replaceSelectedNotes,
         cancelPointerSelection: cancelDragSelection,
+        suppressNextClick,
         refreshToolbarSelection: () => syncToolbarSelection(true)
     });
 })();
