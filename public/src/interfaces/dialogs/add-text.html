@@ -1,0 +1,261 @@
+<!doctype html>
+<!-- Viritura / add-text - MIT, Viritura contributors (2026) -->
+<html lang="fr" data-theme="light" class="overlay-document">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../assets/notation.css">
+  <link rel="stylesheet" href="../../assets/interface.css">
+  <link rel="stylesheet" href="../../assets/navigation.css">
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: transparent;
+    }
+
+    .text-dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      background: rgb(0 0 0 / 35%);
+      pointer-events: auto;
+    }
+
+    .text-dialog {
+      width: min(28rem, calc(100vw - 2rem));
+      max-height: calc(100vh - 2rem);
+      overflow: auto;
+      background: var(--surface, #fff);
+      color: var(--text, #222);
+      box-shadow: 0 1rem 3rem rgb(0 0 0 / 24%);
+    }
+
+    .text-dialog-header,
+    .text-dialog-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+    }
+
+    .text-dialog-header {
+      border-bottom: 1px solid var(--border, #d6d6d6);
+    }
+
+    .text-dialog-header h1 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .text-dialog-body {
+      display: grid;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+
+    .text-dialog-field {
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    .text-dialog-field label {
+      font-weight: 600;
+    }
+
+    .text-dialog-field input,
+    .text-dialog-field select {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 2.5rem;
+      padding: 0.45rem 0.6rem;
+      color: inherit;
+      background: var(--input, #fff);
+      border: 1px solid var(--border, #aaa);
+      border-radius: 0.35rem;
+      font: inherit;
+    }
+
+    .text-dialog-help {
+      margin: 0;
+      color: var(--text-muted, #666);
+      font-size: 0.9rem;
+    }
+
+    .text-dialog-footer {
+      justify-content: flex-end;
+      border-top: 1px solid var(--border, #d6d6d6);
+    }
+
+    .tempo-fields,
+    .text-fields {
+      display: contents;
+    }
+  </style>
+</head>
+<body>
+  <div class="text-dialog-backdrop" id="dialog-backdrop">
+    <section class="text-dialog _content_1m2em_39" role="dialog" aria-modal="true"
+      aria-labelledby="dialog-title">
+      <header class="text-dialog-header _header_1m2em_75">
+        <h1 id="dialog-title" class="_headerTitle_1m2em_178">Ajouter un texte</h1>
+        <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156 _iconShape_4hx0m_112"
+          type="button" aria-label="Fermer" data-action="cancel">×</button>
+      </header>
+      <form id="text-form">
+        <div class="text-dialog-body">
+          <div class="text-dialog-field">
+            <label for="text-type">Type de texte</label>
+            <select id="text-type" name="type">
+              <option value="words">Texte libre (words)</option>
+              <option value="rehearsal">Marque de répétition (rehearsal)</option>
+              <option value="metronome">Indication de tempo (metronome)</option>
+              <option value="other">Autre type de texte MusicXML</option>
+            </select>
+          </div>
+
+          <div class="text-dialog-field" id="other-type-field" hidden>
+            <label for="other-type">Élément MusicXML</label>
+            <select id="other-type" name="otherType">
+              <option value="other-direction">other-direction — texte libre</option>
+              <option value="other-dynamics">other-dynamics — dynamique personnalisée</option>
+              <option value="dynamics">dynamics — nuance standard</option>
+            </select>
+          </div>
+
+          <div class="text-dialog-field" id="text-field">
+            <label for="text-value">Texte</label>
+            <input id="text-value" name="text" type="text" autocomplete="off"
+              placeholder="Saisir le texte à ajouter">
+          </div>
+
+          <div id="tempo-fields" class="tempo-fields" hidden>
+            <div class="text-dialog-field">
+              <label for="beat-unit">Unité de note</label>
+              <select id="beat-unit" name="beatUnit">
+                <option value="whole">Ronde</option>
+                <option value="half">Blanche</option>
+                <option value="quarter" selected>Noire</option>
+                <option value="eighth">Croche</option>
+                <option value="16th">Double-croche</option>
+                <option value="32nd">Triple-croche</option>
+                <option value="64th">Quadruple-croche</option>
+                <option value="128th">Quintuple-croche</option>
+              </select>
+            </div>
+            <div class="text-dialog-field">
+              <label for="per-minute">Battements par minute</label>
+              <input id="per-minute" name="perMinute" type="number" min="1" max="1000"
+                step="1" value="120">
+            </div>
+          </div>
+
+          <div class="text-dialog-field" id="dynamic-field" hidden>
+            <label for="dynamic">Nuance</label>
+            <select id="dynamic" name="dynamic">
+              <option value="pppp">pppp</option>
+              <option value="ppp">ppp</option>
+              <option value="pp">pp</option>
+              <option value="p">p</option>
+              <option value="mp">mp</option>
+              <option value="mf">mf</option>
+              <option value="f">f</option>
+              <option value="ff">ff</option>
+              <option value="fff">fff</option>
+              <option value="ffff">ffff</option>
+              <option value="pf">pf</option>
+              <option value="sf">sf</option>
+              <option value="sfp">sfp</option>
+              <option value="sfpp">sfpp</option>
+              <option value="sfz">sfz</option>
+              <option value="sffz">sffz</option>
+              <option value="sffp">sffp</option>
+              <option value="fz">fz</option>
+              <option value="rf">rf</option>
+              <option value="rfz">rfz</option>
+            </select>
+          </div>
+
+          <p class="text-dialog-help">Après validation, cliquez sur la portée pour choisir l’emplacement.</p>
+        </div>
+        <footer class="text-dialog-footer">
+          <button class="_button_4hx0m_4 _defaultVariant_4hx0m_156" type="button"
+            data-action="cancel">Annuler</button>
+          <button class="_button_4hx0m_4 _primary_4hx0m_227" type="submit">
+            Choisir une position
+          </button>
+        </footer>
+      </form>
+    </section>
+  </div>
+  <script>
+    const form = document.getElementById("text-form");
+    const typeSelect = document.getElementById("text-type");
+    const otherTypeField = document.getElementById("other-type-field");
+    const otherTypeSelect = document.getElementById("other-type");
+    const textField = document.getElementById("text-field");
+    const textInput = document.getElementById("text-value");
+    const tempoFields = document.getElementById("tempo-fields");
+    const beatUnit = document.getElementById("beat-unit");
+    const perMinute = document.getElementById("per-minute");
+    const dynamicField = document.getElementById("dynamic-field");
+    const dynamicSelect = document.getElementById("dynamic");
+
+    function selectedType() {
+      return typeSelect.value === "other" ? otherTypeSelect.value : typeSelect.value;
+    }
+
+    function updateFields() {
+      const type = selectedType();
+      const usesText = ["words", "rehearsal", "other-direction", "other-dynamics"]
+        .includes(type);
+      otherTypeField.hidden = typeSelect.value !== "other";
+      textField.hidden = !usesText;
+      textInput.disabled = !usesText;
+      textInput.required = usesText;
+      tempoFields.hidden = type !== "metronome";
+      beatUnit.disabled = type !== "metronome";
+      perMinute.disabled = type !== "metronome";
+      dynamicField.hidden = type !== "dynamics";
+      dynamicSelect.disabled = type !== "dynamics";
+    }
+
+    function cancelDialog() {
+      window.parent.postMessage({
+        channel: "viritura-index-new",
+        type: "text-type-dialog-cancel"
+      }, "*");
+    }
+
+    typeSelect.addEventListener("change", updateFields);
+    otherTypeSelect.addEventListener("change", updateFields);
+    document.querySelectorAll("[data-action='cancel']").forEach(button => {
+      button.addEventListener("click", cancelDialog);
+    });
+    document.getElementById("dialog-backdrop").addEventListener("click", event => {
+      if (event.target === event.currentTarget) cancelDialog();
+    });
+    window.addEventListener("keydown", event => {
+      if (event.key === "Escape") cancelDialog();
+    });
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      window.parent.postMessage({
+        channel: "viritura-index-new",
+        type: "text-placement-request",
+        textType: selectedType(),
+        text: textInput.value,
+        beatUnit: beatUnit.value,
+        perMinute: Number(perMinute.value),
+        dynamic: dynamicSelect.value
+      }, "*");
+    });
+    updateFields();
+  </script>
+</body>
+</html>
