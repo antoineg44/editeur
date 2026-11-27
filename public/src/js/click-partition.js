@@ -253,6 +253,7 @@
                 !getAncestor(element, "measure") &&
                 normalizeText(element.textContent) === text
             );
+        if (!text) return candidates.length === 1 ? candidates[0] : null;
         const creators = candidates.filter(element =>
             element.localName === "creator"
         );
@@ -268,7 +269,6 @@
         const group = target.closest("g.vf-text");
         if (!group) return null;
         const text = normalizeText(group.textContent);
-        if (!text) return null;
         if (!measure) return getStandaloneTextSourceElement(text);
 
         const lyrics = Array.from(measure.getElementsByTagName("lyric"));
@@ -295,6 +295,17 @@
                     };
                 })
                 .sort((left, right) => left.distance - right.distance)[0]?.lyric || null;
+        }
+
+        if (!text) {
+            const candidates = Array.from(measure.getElementsByTagName("*"))
+                .filter(element =>
+                    element.children.length === 0 &&
+                    ["text", "words", "rehearsal", "other-dynamics"].includes(element.localName) &&
+                    !getAncestor(element, "lyric") &&
+                    !normalizeText(element.textContent)
+                );
+            return candidates.length === 1 ? candidates[0] : null;
         }
 
         const matchingText = Array.from(measure.getElementsByTagName("*"))
@@ -327,6 +338,7 @@
     function findClickedSourceElement(target, measure, staffNumber) {
         const textElement = getTextSourceElement(target, measure);
         if (textElement) return textElement;
+        if (target.closest("g.vf-text")) return null;
         if (!measure) return null;
 
         const graphicalElement = target.closest(
@@ -596,13 +608,74 @@
         return segments;
     }
 
+    function getGraphicalLyricForSourceXmlElement(sourceXmlLyric) {
+        if (sourceXmlLyric?.localName !== "lyric" || !scoreDisplay?.graphic?.measureList) {
+            return null;
+        }
+
+        const sourceNote = getAncestor(sourceXmlLyric, "note");
+        if (!sourceNote) return null;
+        const verse = sourceXmlLyric.getAttribute("number") || "1";
+
+        for (const measureStaves of scoreDisplay.graphic.measureList) {
+            for (const staff of measureStaves || []) {
+                for (const staffEntry of staff?.staffEntries || []) {
+                    const graphicalLyrics = staffEntry.lyricsEntries || [];
+                    for (const graphicalLyric of graphicalLyrics) {
+                        const voiceEntry = graphicalLyric.lyricsEntry?.parent;
+                        const getSourceNoteElement = note =>
+                            note?.SourceXmlElement || note?.sourceNote?.SourceXmlElement;
+                        if (!voiceEntry?.notes?.some(note =>
+                            getSourceNoteElement(note) === sourceNote
+                        )) {
+                            continue;
+                        }
+
+                        const matchesVerse = lyric =>
+                            (lyric.getAttribute("number") || "1") === verse;
+                        const sourceLyrics = voiceEntry.notes
+                            .map(getSourceNoteElement)
+                            .filter(Boolean)
+                            .flatMap(note => Array.from(note.children)
+                                .filter(child => child.localName === "lyric" &&
+                                    matchesVerse(child)));
+                        const matchingGraphicalLyrics = graphicalLyrics.filter(candidate => {
+                            const lyric = candidate.lyricsEntry;
+                            return lyric?.parent === voiceEntry &&
+                                String(lyric.verseNumber || "1") === verse;
+                        });
+                        const sourceIndex = sourceLyrics.indexOf(sourceXmlLyric);
+                        if (sourceIndex < 0 ||
+                            sourceLyrics.length !== matchingGraphicalLyrics.length) {
+                            continue;
+                        }
+
+                        const result = matchingGraphicalLyrics[sourceIndex];
+                        const svgElement = result.graphicalLabel?.SVGNode;
+                        if (svgElement) {
+                            sourceXmlByGraphicalElement.set(svgElement, sourceXmlLyric);
+                        }
+                        return result;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     function getGraphicalElementsForSourceXmlElements(sourceXmlElements) {
         if (!scoreDisplay?.graphic?.measureList) return [];
 
         const noteSources = new Map();
         const measureSources = [];
         const standaloneTextSources = [];
+        const lyricSources = [];
         for (const sourceElement of sourceXmlElements) {
+            if (sourceElement.localName === "lyric") {
+                lyricSources.push(sourceElement);
+                continue;
+            }
             const note = getAncestor(sourceElement, "note");
             if (note) {
                 noteSources.set(note, sourceElement);
@@ -635,6 +708,15 @@
                         }
                     }
                 }
+            }
+        }
+
+        for (const sourceElement of lyricSources) {
+            const graphicalLyric = getGraphicalLyricForSourceXmlElement(sourceElement);
+            const element = graphicalLyric?.graphicalLabel?.SVGNode;
+            if (element) {
+                graphicalElements.add(element);
+                sourceXmlByGraphicalElement.set(element, sourceElement);
             }
         }
 
@@ -730,6 +812,7 @@
         getSourceXmlElement: element =>
             sourceXmlByGraphicalElement.get(element) ||
             findClickedNote(scoreDisplay, element)?.sourceNote?.SourceXmlElement || null,
+        getGraphicalLyricForSourceXmlElement,
         getGraphicalElementsForSourceXmlElements,
         getElementsBetween: (container, start, end, staffRange) =>
             getElementsBetween(scoreDisplay, container, start, end, staffRange),
