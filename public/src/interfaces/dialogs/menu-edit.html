@@ -57,11 +57,14 @@
 </div>
 <div role="separator" aria-orientation="horizontal" class="_separator_oip4i_103">
 </div>
-<div role="menuitem" aria-disabled="true" data-disabled="" class="_menuItem_oip4i_60" tabindex="-1" data-orientation="vertical" data-radix-collection-item="" data-ui="Explode to Staves">
-<span>Explode to Staves</span>
+<div role="menuitem" aria-disabled="true" data-disabled="" class="_menuItem_oip4i_60" tabindex="-1" data-orientation="vertical" data-radix-collection-item="" data-ui="Ajouter des paroles">
+<span>Ajouter des paroles</span>
 </div>
-<div role="menuitem" aria-disabled="true" data-disabled="" class="_menuItem_oip4i_60" tabindex="-1" data-orientation="vertical" data-radix-collection-item="" data-ui="Reduce to Staff">
-<span>Reduce to Staff</span>
+<div role="menuitem" aria-disabled="true" data-disabled="" class="_menuItem_oip4i_60" tabindex="-1" data-orientation="vertical" data-radix-collection-item="" data-ui="Ajouter des accords">
+<span>Ajouter des accords</span>
+</div>
+<div role="menuitem" aria-disabled="true" data-disabled="" class="_menuItem_oip4i_60" tabindex="-1" data-orientation="vertical" data-radix-collection-item="" data-ui="Ajouter un texte">
+<span>Ajouter un texte</span>
 </div>
 <div role="menuitem" aria-disabled="true" data-disabled="" class="_menuItem_oip4i_60" tabindex="-1" data-orientation="vertical" data-radix-collection-item="" data-ui="Swap Staff Contents">
 <span>Swap Staff Contents</span>
@@ -80,6 +83,70 @@
 </div>
 </div>
 <script>
+  const addLyricsSelector = '[data-ui="Ajouter des paroles"]';
+  window.ButtonActionList.add(document, "pointerdown", "Trace add lyric menu pointer", event => {
+    const item = event.target.closest(addLyricsSelector);
+    console.warn("[lyrics:add] Pointer down on menu action.", {
+      disabled: item.getAttribute("aria-disabled") === "true"
+    });
+  }, event => event.target instanceof Element && Boolean(
+    event.target.closest(addLyricsSelector)
+  ));
+
+  window.ButtonActionList.add(document, "click", "Add lyrics to selected note", event => {
+    const item = event.target.closest(addLyricsSelector);
+    if (!item) return;
+    if (item.getAttribute("aria-disabled") === "true") {
+      console.warn("[lyrics:add] Menu item is marked disabled; forwarding for selection validation.");
+    }
+
+    console.log("[lyrics:add] Menu action clicked; sending request to the editor.");
+    window.parent.postMessage({
+      channel: "viritura-index-new",
+      type: "add-selected-lyric"
+    }, "*");
+  }, event => event.target instanceof Element && Boolean(
+    event.target.closest(addLyricsSelector)
+  ));
+
+  const addChordsSelector = '[data-ui="Ajouter des accords"]';
+  window.ButtonActionList.add(document, "pointerdown", "Trace add chord menu pointer", event => {
+    const item = event.target.closest(addChordsSelector);
+    console.warn("[chords:add] Pointer down on menu action.", {
+      disabled: item.getAttribute("aria-disabled") === "true"
+    });
+  }, event => event.target instanceof Element && Boolean(
+    event.target.closest(addChordsSelector)
+  ));
+
+  window.ButtonActionList.add(document, "click", "Add chord to selected note", event => {
+    const item = event.target.closest(addChordsSelector);
+    if (!item) return;
+    if (item.getAttribute("aria-disabled") === "true") {
+      console.warn("[chords:add] Menu item is marked disabled; forwarding for selection validation.");
+    }
+
+    console.log("[chords:add] Menu action clicked; sending request to the editor.");
+    window.parent.postMessage({
+      channel: "viritura-index-new",
+      type: "add-selected-chord"
+    }, "*");
+  }, event => event.target instanceof Element && Boolean(
+    event.target.closest(addChordsSelector)
+  ));
+
+  const addTextSelector = '[data-ui="Ajouter un texte"]';
+  window.ButtonActionList.add(document, "click", "Open add-text dialog", event => {
+    const item = event.target.closest(addTextSelector);
+    if (!item) return;
+    window.parent.postMessage({
+      channel: "viritura-index-new",
+      type: "add-selected-text"
+    }, "*");
+  }, event => event.target instanceof Element && Boolean(
+    event.target.closest(addTextSelector)
+  ));
+
   window.ButtonActionList.add(document, "click", "Dismiss edit menu", () => {
     window.parent.postMessage({
       channel: "viritura-index-new",
