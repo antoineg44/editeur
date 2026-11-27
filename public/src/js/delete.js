@@ -50,10 +50,106 @@
         return Array.from(groups.values());
     }
 
+    const textElementNames = new Set([
+        "text",
+        "words",
+        "rehearsal",
+        "other-dynamics",
+        "work-title",
+        "movement-title",
+        "creator",
+        "rights",
+        "credit-words",
+        "part-name",
+        "part-abbreviation",
+        "group-name",
+        "group-abbreviation",
+        "instrument-name",
+        "instrument-abbreviation"
+    ]);
+    const dynamicElementNames = new Set([
+        "p", "pp", "ppp", "pppp", "f", "ff", "fff", "ffff",
+        "mp", "mf", "pf", "sf", "sfp", "sfpp", "fp", "fz", "sfz",
+        "sffz", "sffp", "rf", "rfz", "other-dynamics"
+    ]);
+
+    function isMetronomeDirection(element) {
+        return getLocalName(element) === "direction" &&
+            Array.from(element.getElementsByTagName("metronome")).length > 0;
+    }
+
+    function isDeletableText(element) {
+        const name = getLocalName(element);
+        if (textElementNames.has(name)) return true;
+        return dynamicElementNames.has(name) &&
+            getLocalName(element.parentElement) === "dynamics";
+    }
+
+    function removeEmptyDirection(parent) {
+        const directionType = getLocalName(parent) === "direction-type"
+            ? parent
+            : getLocalName(parent?.parentElement) === "direction-type"
+                ? parent.parentElement
+                : null;
+        if (!directionType) return;
+
+        if (!directionType.children.length && !directionType.textContent.trim()) {
+            const direction = directionType.parentElement;
+            directionType.remove();
+            if (getLocalName(direction) === "direction" &&
+                !getDirectChild(direction, "direction-type") &&
+                !getDirectChild(direction, "sound")) {
+                direction.remove();
+            }
+        }
+    }
+
+    function removeSelectedText(element) {
+        if (getLocalName(element) === "direction" && isMetronomeDirection(element)) {
+            const directionTypes = Array.from(element.children)
+                .filter(child => getLocalName(child) === "direction-type");
+            for (const directionType of directionTypes) {
+                for (const metronome of Array.from(
+                    directionType.getElementsByTagName("metronome")
+                )) {
+                    metronome.remove();
+                }
+                removeEmptyDirection(directionType);
+            }
+            for (const sound of Array.from(element.children)
+                .filter(child => getLocalName(child) === "sound")) {
+                sound.removeAttribute("tempo");
+                if (!sound.attributes.length && !sound.children.length &&
+                    !sound.textContent.trim()) {
+                    sound.remove();
+                }
+            }
+            if (!getDirectChild(element, "direction-type") &&
+                !getDirectChild(element, "sound")) {
+                element.remove();
+            }
+            return;
+        }
+
+        let parent = element.parentElement;
+        if (getLocalName(parent) === "dynamics") {
+            const directionType = parent.parentElement;
+            element.remove();
+            if (!parent.children.length) {
+                parent.remove();
+                removeEmptyDirection(directionType);
+            }
+            return;
+        }
+
+        element.remove();
+        removeEmptyDirection(parent);
+    }
+
     function replaceNoteWithRest(note, xmlDocument) {
         const pitch = getDirectChild(note, "pitch") ||
             getDirectChild(note, "unpitched");
-        if (!pitch) return;
+        if (!pitch) return null;
 
         const rest = createXmlElement(xmlDocument, note, "rest");
         note.replaceChild(rest, pitch);
@@ -70,6 +166,7 @@
             }
             if (!notations.children.length) notations.remove();
         }
+        return note;
     }
 
     function isEditableTarget(target) {
@@ -78,8 +175,8 @@
     }
 
     function reportError(error) {
-        console.error("Could not delete the selected MusicXML notes.", error);
-        window.alert("Impossible de supprimer les notes sélectionnées.");
+        console.error("Could not delete the selected MusicXML elements.", error);
+        window.alert("Impossible de supprimer les éléments sélectionnés.");
     }
 
     function handleKeyDown(event) {
@@ -94,17 +191,33 @@
         if (!selectedElements.length) return;
 
         try {
-            const selectedNotes = Array.from(new Set(selectedElements
+            const hasSelectedTextGraphic = selectedElements.some(element =>
+                element instanceof Element && Boolean(element.closest("g.vf-text"))
+            );
+            const selectedSources = Array.from(new Set(selectedElements
                 .map(element => window.PartitionClick.getSourceXmlElement(element))
                 .filter(Boolean)));
-            const deletionGroups = createDeletionGroups(selectedNotes);
-            if (!deletionGroups.length) return;
+            const selectedNotes = selectedSources.filter(element =>
+                getLocalName(element) === "note"
+            );
+            const selectedTexts = selectedSources.filter(element =>
+                getLocalName(element) === "harmony" ||
+                getLocalName(element) === "lyric" ||
+                isDeletableText(element) ||
+                isMetronomeDirection(element)
+            );
+            if (hasSelectedTextGraphic && !selectedTexts.length) return;
+            const deletionGroups = hasSelectedTextGraphic || selectedTexts.length
+                ? []
+                : createDeletionGroups(selectedNotes);
+            if (!deletionGroups.length && !selectedTexts.length) return;
 
             const xmlDocument = window.PartitionClick.getMusicXmlDocument();
             if (!xmlDocument) throw new Error("No MusicXML document is currently loaded.");
 
             event.preventDefault();
             const selectedXmlNotes = new Set(selectedNotes);
+            const restsToConsolidate = new Map();
             for (const group of deletionGroups) {
                 const deletedNotes = group.filter(note => selectedXmlNotes.has(note));
                 if (!deletedNotes.length) continue;
@@ -121,13 +234,33 @@
                     continue;
                 }
 
-                replaceNoteWithRest(group[0], xmlDocument);
+                const rest = replaceNoteWithRest(group[0], xmlDocument);
+                if (rest) {
+                    const measure = rest.parentElement;
+                    if (!restsToConsolidate.has(measure)) {
+                        restsToConsolidate.set(measure, new Set());
+                    }
+                    restsToConsolidate.get(measure).add(rest);
+                }
                 for (const note of deletedNotes) {
                     if (note !== group[0]) note.remove();
                 }
             }
 
-            window.FileActions.updateMusicXml(xmlDocument, "Deleted selected notes").catch(reportError);
+            for (const [measure, rests] of restsToConsolidate) {
+                window.NoteEditActions.coalesceAdjacentRests(measure, Array.from(rests));
+            }
+
+            for (const element of selectedTexts) {
+                if (element.ownerDocument === xmlDocument && element.parentElement) {
+                    removeSelectedText(element);
+                }
+            }
+
+            window.FileActions.updateMusicXml(
+                xmlDocument,
+                "Deleted selected score elements"
+            ).catch(reportError);
         } catch (error) {
             reportError(error);
         }
