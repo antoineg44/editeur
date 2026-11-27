@@ -97,6 +97,28 @@
         return lyric;
     }
 
+    function getNextAvailableLyricVerse(note) {
+        const measure = note.parentElement;
+        const part = measure?.parentElement;
+        if (measure?.localName !== "measure" || part?.localName !== "part") {
+            throw new Error("Impossible de retrouver la partie de la note sélectionnée.");
+        }
+
+        const voice = directChildren(note, "voice")[0]?.textContent || "1";
+        const staff = directChildren(note, "staff")[0]?.textContent || "1";
+        const usedVerses = new Set(directChildren(part, "measure")
+            .flatMap(candidateMeasure => directChildren(candidateMeasure, "note"))
+            .filter(candidate => (
+                (directChildren(candidate, "voice")[0]?.textContent || "1") === voice &&
+                (directChildren(candidate, "staff")[0]?.textContent || "1") === staff
+            ))
+            .flatMap(candidate => directChildren(candidate, "lyric")
+                .map(lyric => lyric.getAttribute("number") || "1")));
+        let verse = 1;
+        while (usedVerses.has(String(verse))) verse++;
+        return String(verse);
+    }
+
     function setSyllabicLink(lyric, incoming, outgoing) {
         const current = directChildren(lyric, "syllabic")[0];
         const type = current?.textContent || "single";
@@ -115,16 +137,64 @@
         if (!current) lyric.insertBefore(syllabic, lyric.firstChild);
     }
 
+    function findLyricPositionAnchor(lyric, noteElement) {
+        const svg = noteElement.closest("svg");
+        const note = lyric.parentElement;
+        const part = note?.parentElement?.parentElement;
+        const voice = directChildren(note, "voice")[0]?.textContent || "1";
+        const staff = directChildren(note, "staff")[0]?.textContent || "1";
+        const verse = lyric.getAttribute("number") || "1";
+        const sourceDocument = window.PartitionClick.getMusicXmlDocument();
+        if (!svg || !part || !sourceDocument) return null;
+        const noteAnchor = noteElement.querySelector(".vf-notehead") || noteElement;
+        const noteRect = noteAnchor.getBoundingClientRect();
+        const noteCenterY = noteRect.top + noteRect.height / 2;
+        let nearestGroup = null;
+        let nearestDistance = Infinity;
+
+        for (const candidate of sourceDocument.getElementsByTagName("lyric")) {
+            if (candidate === lyric || (candidate.getAttribute("number") || "1") !== verse) {
+                continue;
+            }
+            const candidateNote = candidate.parentElement;
+            if (candidateNote?.parentElement?.parentElement !== part ||
+                (directChildren(candidateNote, "voice")[0]?.textContent || "1") !== voice ||
+                (directChildren(candidateNote, "staff")[0]?.textContent || "1") !== staff) {
+                continue;
+            }
+
+            const candidateGraphicalLyric =
+                window.PartitionClick.getGraphicalLyricForSourceXmlElement(candidate);
+            const group = candidateGraphicalLyric?.graphicalLabel?.SVGNode;
+            if (!group?.isConnected || group.closest("svg") !== svg) continue;
+
+            const distance = Math.abs(getLyricTextRect(group).top - noteCenterY);
+            if (distance < nearestDistance) {
+                nearestGroup = group;
+                nearestDistance = distance;
+            }
+        }
+        return nearestGroup;
+    }
+
     function findNextGraphicalLyric(lyric) {
         const result = window.PartitionClick.getGraphicalLyricForSourceXmlElement(lyric);
-        if (result) return result;
+        const hasText = directChildren(lyric, "text")
+            .some(text => text.textContent.trim().length > 0);
+        if (hasText && result?.graphicalLabel?.SVGNode?.isConnected) return result;
 
         const noteElement = window.PartitionClick
             .getGraphicalElementsForSourceXmlElements([lyric.parentElement])[0];
         if (!noteElement?.isConnected) {
+            if (result && hasText) return result;
             throw new Error("La note suivante ne peut pas être localisée sur la partition.");
         }
-        return { graphicalLabel: null, graphicalStaffEntry: null, noteElement };
+        return {
+            ...(result || { graphicalLabel: null, graphicalStaffEntry: null }),
+            graphicalLabel: hasText ? result?.graphicalLabel : null,
+            noteElement,
+            positionAnchor: findLyricPositionAnchor(lyric, noteElement)
+        };
     }
 
     function serializeMusicXml(xml) {
@@ -146,6 +216,30 @@
 
     function getElementAtPath(root, path) {
         return path.reduce((element, index) => element?.children[index] || null, root);
+    }
+
+    function getLyricTextRect(group) {
+        const textElements = Array.from(group.querySelectorAll("text"))
+            .filter(element => element.textContent.trim());
+        if (!textElements.length) return group.getBoundingClientRect();
+
+        const rects = textElements.map(element => element.getBoundingClientRect());
+        const left = Math.min(...rects.map(rect => rect.left));
+        const top = Math.min(...rects.map(rect => rect.top));
+        const right = Math.max(...rects.map(rect => rect.right));
+        const bottom = Math.max(...rects.map(rect => rect.bottom));
+        return { left, top, right, bottom, width: right - left, height: bottom - top };
+    }
+
+    function getScrollableAncestor(element) {
+        for (let ancestor = element?.parentElement; ancestor; ancestor = ancestor.parentElement) {
+            const overflowY = getComputedStyle(ancestor).overflowY;
+            if ((overflowY === "auto" || overflowY === "scroll") &&
+                ancestor.scrollHeight > ancestor.clientHeight) {
+                return ancestor;
+            }
+        }
+        return null;
     }
 
     function installStyles() {
@@ -172,12 +266,6 @@
                 outline: none;
             }
 
-            #lyric-inline-editor button {
-                padding: 2px 5px;
-                border-radius: 0;
-                font-size: 14px;
-            }
-
             #lyric-inline-editor .lyric-inline-editor-message {
                 color: #b42318;
                 font: 12px system-ui, sans-serif;
@@ -191,12 +279,22 @@
         let top;
         const group = state.group;
         const text = group?.isConnected ? group.querySelector("text") : null;
-        const textStyle = text && getComputedStyle(text);
-        const matrix = text?.getScreenCTM();
+        const positionAnchor = state.graphicalLyric?.positionAnchor?.isConnected
+            ? state.graphicalLyric.positionAnchor
+            : null;
+        const anchorText = positionAnchor?.querySelector("text");
+        const textStyle = (text || anchorText) && getComputedStyle(text || anchorText);
+        const matrix = (text || anchorText)?.getScreenCTM();
         if (group?.isConnected) {
-            const rect = group.getBoundingClientRect();
+            const rect = getLyricTextRect(group);
             left = rect.left;
             top = rect.top;
+        } else if (positionAnchor) {
+            const noteElement = state.graphicalLyric.noteElement;
+            const noteAnchor = noteElement.querySelector(".vf-notehead") || noteElement;
+            const noteRect = noteAnchor.getBoundingClientRect();
+            left = noteRect.left;
+            top = getLyricTextRect(positionAnchor).top;
         } else {
             const graphicalLyric = state.graphicalLyric;
             const label = graphicalLyric?.graphicalLabel;
@@ -233,6 +331,25 @@
         state.editor.style.left = `${left}px`;
         state.editor.style.top = `${top}px`;
         const editorRect = state.editor.getBoundingClientRect();
+        const scrollTarget = group?.isConnected
+            ? group
+            : positionAnchor || state.graphicalLyric?.noteElement;
+        const scrollableAncestor = getScrollableAncestor(scrollTarget);
+        if (scrollableAncestor) {
+            const overflowAbove = Math.max(0, -top);
+            const overflowBelow = Math.max(0, top + editorRect.height - window.innerHeight);
+            const scrollDelta = overflowAbove > 0
+                ? -Math.min(overflowAbove, scrollableAncestor.scrollTop)
+                : Math.min(
+                    overflowBelow,
+                    scrollableAncestor.scrollHeight - scrollableAncestor.clientHeight -
+                        scrollableAncestor.scrollTop
+                );
+            if (scrollDelta !== 0) {
+                scrollableAncestor.scrollTop += scrollDelta;
+                top -= scrollDelta;
+            }
+        }
         left = Math.max(0, Math.min(left, window.innerWidth - editorRect.width));
         top = Math.max(0, Math.min(top, window.innerHeight - editorRect.height));
         state.editor.style.left = `${left}px`;
@@ -246,6 +363,8 @@
         }
         window.removeEventListener("resize", state.reposition);
         window.removeEventListener("scroll", state.reposition, true);
+        document.removeEventListener("pointerdown", state.commitOnOutside, true);
+        window.removeEventListener("blur", state.commitOnWindowBlur);
         state.editor.remove();
         activeEditor = null;
     }
@@ -258,9 +377,28 @@
 
     function setEditorSaving(state, saving) {
         state.saving = saving;
-        state.save.disabled = saving;
-        state.cancel.disabled = saving;
         state.inputs.forEach(input => { input.disabled = saving; });
+    }
+
+    function commitOnOutsideClick(state, event) {
+        if (state.saving || state.editor.contains(event.target)) return;
+
+        const emptyInput = state.inputs.find(input => !input.value.trim());
+        const emptyPendingLyric = state.pendingNew &&
+            state.inputs.every(input => !input.value.trim());
+        if (emptyInput && !emptyPendingLyric) {
+            state.message.textContent = "La parole ne peut pas être vide.";
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            emptyInput.focus();
+            return;
+        }
+
+        void saveEditor(state);
+    }
+
+    function commitOnWindowBlur(state) {
+        if (activeEditor === state && !state.saving) void saveEditor(state);
     }
 
     async function cancelEditor(state) {
@@ -463,20 +601,22 @@
             const rendered = await window.FileActions.updateMusicXml(updatedDocument, null);
             if (!rendered) throw new Error("La partition n’a pas pu être actualisée.");
 
-            const graphicalLyric = findNextGraphicalLyric(nextLyric);
-            const group = graphicalLyric.graphicalLabel?.SVGNode;
-            const noteElement = graphicalLyric.noteElement ||
-                graphicalLyric.graphicalStaffEntry?.graphicalVoiceEntries
-                    ?.flatMap(entry => entry.notes)
-                    .map(entry => entry.getSVGGElement()).find(Boolean);
-            if (group) {
-                group.scrollIntoView({ block: "nearest", inline: "nearest" });
-            } else if (noteElement) {
-                noteElement?.scrollIntoView({ block: "nearest", inline: "nearest" });
+            const renderedDocument = window.PartitionClick.getMusicXmlDocument();
+            const renderedNextLyricPath = getElementPath(updatedDocument, nextLyric);
+            const renderedNextLyric = renderedDocument && renderedNextLyricPath
+                ? getElementAtPath(renderedDocument.documentElement, renderedNextLyricPath)
+                : null;
+            if (!renderedNextLyric) {
+                throw new Error("La parole suivante n’a pas pu être retrouvée après le rendu.");
             }
 
+            const graphicalLyric = findNextGraphicalLyric(renderedNextLyric);
+            const hasText = directChildren(renderedNextLyric, "text")
+                .some(text => text.textContent.trim().length > 0);
+            const group = hasText ? graphicalLyric.graphicalLabel?.SVGNode : null;
+
             closeEditor(state);
-            openEditor(group, nextLyric, updatedDocument, graphicalLyric, {
+            openEditor(group, renderedNextLyric, renderedDocument, graphicalLyric, {
                 pendingNew: nextIsNew,
                 pendingPreviousPath,
                 hasNavigatedChanges: true
@@ -517,15 +657,7 @@
 
         const message = document.createElement("span");
         message.className = "lyric-inline-editor-message";
-        const save = document.createElement("button");
-        save.type = "submit";
-        save.textContent = "✓";
-        save.setAttribute("aria-label", "Valider la parole");
-        const cancel = document.createElement("button");
-        cancel.type = "button";
-        cancel.textContent = "×";
-        cancel.setAttribute("aria-label", "Annuler la modification");
-        editor.append(message, save, cancel);
+        editor.append(message);
 
         const state = {
             group,
@@ -534,22 +666,30 @@
             editor,
             inputs,
             message,
-            save,
-            cancel,
             saving: false,
             previousVisibility: group?.style.visibility || "",
             graphicalLyric,
             pendingNew: Boolean(options.pendingNew),
             pendingPreviousPath: options.pendingPreviousPath || null,
             hasNavigatedChanges: Boolean(options.hasNavigatedChanges),
-            reposition: null
+            reposition: null,
+            commitOnOutside: null,
+            commitOnWindowBlur: null
         };
         state.reposition = () => positionEditor(state);
+        state.commitOnOutside = event => commitOnOutsideClick(state, event);
+        state.commitOnWindowBlur = () => commitOnWindowBlur(state);
         editor.addEventListener("submit", event => {
             event.preventDefault();
             void saveEditor(state);
         });
         editor.addEventListener("keydown", event => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                event.stopPropagation();
+                void saveEditor(state);
+                return;
+            }
             if (event.key === "Escape") {
                 event.preventDefault();
                 event.stopPropagation();
@@ -563,7 +703,6 @@
                 void navigateEditor(state, event.key);
             }
         });
-        cancel.addEventListener("click", () => { void cancelEditor(state); });
 
         activeEditor = state;
         document.body.appendChild(editor);
@@ -571,6 +710,8 @@
         if (group) group.style.visibility = "hidden";
         window.addEventListener("resize", state.reposition);
         window.addEventListener("scroll", state.reposition, true);
+        document.addEventListener("pointerdown", state.commitOnOutside, true);
+        window.addEventListener("blur", state.commitOnWindowBlur);
         inputs[0].focus();
         inputs[0].select();
     }
@@ -604,6 +745,73 @@
         }
     }
 
+    async function addLyricToSelectedNote() {
+        console.log("[lyrics:add] Starting lyric creation.", {
+            activeEditor: Boolean(activeEditor)
+        });
+        if (activeEditor) throw new Error("Terminez d’abord la modification de la parole en cours.");
+
+        const selectedNotes = window.SelectionActions.getSelectedNotes();
+        console.log("[lyrics:add] Current note selection.", {
+            selectedNotes: selectedNotes.length
+        });
+        if (selectedNotes.length !== 1) {
+            throw new Error("Sélectionnez une seule note pour ajouter une parole.");
+        }
+
+        const note = window.PartitionClick.getSourceXmlElement(selectedNotes[0]);
+        console.log("[lyrics:add] Selected MusicXML element.", {
+            element: note?.localName || null,
+            isRest: note?.localName === "note" && directChildren(note, "rest").length > 0
+        });
+        if (note?.localName !== "note" || directChildren(note, "rest").length) {
+            throw new Error("La sélection ne correspond pas à une note.");
+        }
+
+        const sourceDocument = window.PartitionClick.getMusicXmlDocument();
+        if (!sourceDocument || note.ownerDocument !== sourceDocument) {
+            throw new Error("Impossible de retrouver la note sélectionnée dans le MusicXML.");
+        }
+        const notePath = getElementPath(sourceDocument, note);
+        if (!notePath) throw new Error("Impossible de retrouver la note dans le MusicXML.");
+
+        const updatedDocument = sourceDocument.cloneNode(true);
+        const updatedNote = getElementAtPath(updatedDocument.documentElement, notePath);
+        if (!updatedNote) throw new Error("Impossible de copier la note sélectionnée.");
+
+        const verse = getNextAvailableLyricVerse(note);
+        console.log("[lyrics:add] Creating lyric verse.", {
+            verse,
+            voice: directChildren(note, "voice")[0]?.textContent || "1",
+            staff: directChildren(note, "staff")[0]?.textContent || "1"
+        });
+        const lyric = createXmlLyric(updatedNote, directChildren(updatedNote, "lyric")[0]);
+        if (verse !== "1") lyric.setAttribute("number", verse);
+        const lyricPath = getElementPath(updatedDocument, lyric);
+        if (!lyricPath) throw new Error("Impossible de créer la parole dans le MusicXML.");
+
+        const rendered = await window.FileActions.updateMusicXml(updatedDocument, null);
+        console.log("[lyrics:add] Score render completed.", { rendered });
+        if (!rendered) throw new Error("La partition n’a pas pu être actualisée.");
+
+        const renderedDocument = window.PartitionClick.getMusicXmlDocument();
+        const renderedLyric = renderedDocument
+            ? getElementAtPath(renderedDocument.documentElement, lyricPath)
+            : null;
+        if (!renderedLyric) {
+            throw new Error("La parole n’a pas pu être retrouvée après le rendu.");
+        }
+
+        const graphicalLyric = findNextGraphicalLyric(renderedLyric);
+        console.log("[lyrics:add] Opening inline editor.", {
+            verse,
+            graphicalLyricFound: Boolean(graphicalLyric)
+        });
+        openEditor(null, renderedLyric, renderedDocument, graphicalLyric, {
+            pendingNew: true
+        });
+    }
+
     function initialize(container) {
         if (isInitialized) return;
         if (!(container instanceof Element)) {
@@ -616,10 +824,10 @@
         scoreContainer.addEventListener("dblclick", handleDoubleClick);
         window.addEventListener("viritura:vertical-menu-change", event => {
             if (event.detail?.activity !== "write" && activeEditor) {
-                void cancelEditor(activeEditor);
+                void saveEditor(activeEditor);
             }
         });
     }
 
-    window.LyricEditActions = Object.freeze({ initialize });
+    window.LyricEditActions = Object.freeze({ initialize, addLyricToSelectedNote });
 })();
