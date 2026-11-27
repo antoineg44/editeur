@@ -11,15 +11,19 @@
     <script src="./assets/button-action-list.js"></script>
     <script src="../build/opensheetmusicdisplay.min.js"></script>
     <script src="./js/click-partition.js"></script>
+    <script src="./js/text-drag.js"></script>
     <script src="./js/selection.js"></script>
     <script src="./js/menu.js"></script>
     <script src="./js/play.js"></script>
     <script src="./js/history.js"></script>
     <script src="./js/file.js"></script>
+    <script src="./js/config-file.js"></script>
     <script src="./js/transpose.js"></script>
     <script src="./js/delete.js"></script>
     <script src="./js/note-edit.js"></script>
     <script src="./js/lyrics.js"></script>
+    <script src="./js/chord-edit.js"></script>
+    <script src="./js/text-insert.js"></script>
     <script src="./js/note-placement.js"></script>
     <script defer src="./assets/local-frame.js"></script>
 </head>
@@ -202,10 +206,17 @@
     <iframe id="voice-menu-frame" data-src="./interfaces/dialogs/voice.html" title="Voice options"
         style="position: fixed; inset: 0; z-index: 1400; width: 100vw; height: 100vh; border: 0; background: transparent;"
         hidden></iframe>
+    <iframe id="text-dialog-frame" data-src="./interfaces/dialogs/add-text.html" title="Ajouter un texte"
+        style="position: fixed; inset: 0; z-index: 1500; width: 100vw; height: 100vh; border: 0; background: transparent;"
+        hidden></iframe>
+    <div id="text-placement-status" role="status" aria-live="polite" aria-atomic="true"
+        style="position: fixed; left: 50%; bottom: 1.25rem; z-index: 1300; transform: translateX(-50%); padding: 0.7rem 1rem; border-radius: 0.5rem; background: #222; color: #fff; box-shadow: 0 0.3rem 1rem rgb(0 0 0 / 25%); pointer-events: none;"
+        hidden></div>
     <script>
         (() => {
             const horizontalMenuFrame = document.getElementById("horizontal-menu-frame");
             const editMenuFrame = document.getElementById("edit-menu-frame");
+            const textDialogFrame = document.getElementById("text-dialog-frame");
             const menuOverlays = {
                 edit: editMenuFrame,
                 file: document.getElementById("file-menu-frame"),
@@ -286,6 +297,66 @@
                 if (window.SelectionActions.getSelectedNotes().length === 0) return false;
                 window.NoteEditActions.applySelectedNoteUpdate(property, String(value));
                 return true;
+            }
+
+            function syncEditMenuActions() {
+                const lyricItem = editMenuFrame.contentDocument?.querySelector(
+                    '[data-ui="Ajouter des paroles"]'
+                );
+                const chordItem = editMenuFrame.contentDocument?.querySelector(
+                    '[data-ui="Ajouter des accords"]'
+                );
+                const textItem = editMenuFrame.contentDocument?.querySelector(
+                    '[data-ui="Ajouter un texte"]'
+                );
+                if (!lyricItem && !chordItem && !textItem) return;
+
+                const selectedNotes = window.SelectionActions.getSelectedNotes();
+                const sourceNote = selectedNotes.length === 1
+                    ? window.PartitionClick.getSourceXmlElement(selectedNotes[0])
+                    : null;
+                const isRest = sourceNote?.localName === "note" &&
+                    Array.from(sourceNote.children)
+                        .some(child => child.localName === "rest");
+                const enabled = sourceNote?.localName === "note" && !isRest;
+                const menuState = {
+                    selectedNotes: selectedNotes.length,
+                    sourceElement: sourceNote?.localName || null,
+                    isRest,
+                    enabled
+                };
+                const logState = enabled ? console.log : console.warn;
+                logState.call(console, "[edit-menu] Note actions state updated.", menuState);
+                for (const item of [lyricItem, chordItem].filter(Boolean)) {
+                    if (enabled) {
+                        item.removeAttribute("aria-disabled");
+                        item.removeAttribute("data-disabled");
+                    } else {
+                        item.setAttribute("aria-disabled", "true");
+                        item.setAttribute("data-disabled", "");
+                    }
+                }
+                if (textItem) {
+                    if (window.PartitionClick.getMusicXmlDocument()) {
+                        textItem.removeAttribute("aria-disabled");
+                        textItem.removeAttribute("data-disabled");
+                    } else {
+                        textItem.setAttribute("aria-disabled", "true");
+                        textItem.setAttribute("data-disabled", "");
+                    }
+                }
+            }
+
+            function openTextTypeDialog() {
+                if (!window.PartitionClick.getMusicXmlDocument()) {
+                    window.alert("Ouvrez d’abord un fichier MusicXML.");
+                    return;
+                }
+                menuOverlays.edit.hidden = true;
+                if (!textDialogFrame.hasAttribute("src")) {
+                    textDialogFrame.src = textDialogFrame.dataset.src;
+                }
+                textDialogFrame.hidden = false;
             }
 
             function getToolbarLocalPosition(source, clientX, clientY) {
@@ -374,7 +445,14 @@
                 },
                 openEditMenu: function openEditMenu() {
                     if (!menuOverlays.edit.hasAttribute("src")) {
+                        menuOverlays.edit.addEventListener(
+                            "load",
+                            syncEditMenuActions,
+                            { once: true }
+                        );
                         menuOverlays.edit.src = menuOverlays.edit.dataset.src;
+                    } else {
+                        syncEditMenuActions();
                     }
                     menuOverlays.file.hidden = true;
                     menuOverlays.edit.hidden = false;
@@ -535,6 +613,59 @@
                             success
                         }, "*");
                     });
+                },
+                convertSelectedTextToChord: function convertSelectedTextToChord() {
+                    window.ChordEditActions.convertSelectedTextToChord().then(() => {
+                        writeFrame.contentWindow.postMessage({
+                            channel: "viritura-index-new",
+                            type: "write-component-update-result",
+                            success: true
+                        }, "*");
+                    }).catch(error => {
+                        console.error("Could not convert selected text to a chord symbol.", error);
+                        writeFrame.contentWindow.postMessage({
+                            channel: "viritura-index-new",
+                            type: "write-component-update-result",
+                            success: false,
+                            error: error.message
+                        }, "*");
+                    });
+                },
+                addLyricToSelectedNote: function addLyricToSelectedNote() {
+                    menuOverlays.edit.hidden = true;
+                    console.log("[lyrics:add] Editor received the add-lyric request.");
+                    window.LyricEditActions.addLyricToSelectedNote().catch(error => {
+                        console.error("Could not add a lyric to the selected note.", error);
+                        window.alert(`Impossible d’ajouter une parole : ${error.message}`);
+                    });
+                },
+                addChordToSelectedNote: function addChordToSelectedNote() {
+                    menuOverlays.edit.hidden = true;
+                    window.ChordEditActions.addChordToSelectedNote().catch(error => {
+                        console.error("Could not add a chord to the selected note.", error);
+                        window.alert(`Impossible d’ajouter un accord : ${error.message}`);
+                    });
+                },
+                addText: function addText() {
+                    openTextTypeDialog();
+                },
+                cancelTextTypeDialog: function cancelTextTypeDialog() {
+                    textDialogFrame.hidden = true;
+                },
+                beginTextPlacement: function beginTextPlacement(event, message) {
+                    textDialogFrame.hidden = true;
+                    try {
+                        window.TextInsertActions.beginPlacement({
+                            type: message.textType,
+                            text: message.text,
+                            beatUnit: message.beatUnit,
+                            perMinute: message.perMinute,
+                            dynamic: message.dynamic
+                        });
+                    } catch (error) {
+                        console.error("Could not begin placing text on the score.", error);
+                        window.alert(`Impossible de préparer l’ajout du texte : ${error.message}`);
+                    }
                 },
                 closeGraceMenu: function closeGraceMenu() {
                     menuOverlays.grace.hidden = true;
@@ -749,6 +880,7 @@
                 { message: "toolbar-voice-highlight", types: { voice: "string" }, source: horizontalMenuFrame.contentWindow, handler: "setVoiceHighlight" },
                 { message: "toolbar-note-edit", types: { property: "string", value: "string" }, source: horizontalMenuFrame.contentWindow, handler: "editSelectedNote" },
                 { message: "write-component-update", types: { path: "string", value: "string", attribute: "string" }, source: writeFrame.contentWindow, handler: "editSelectedXmlComponent" },
+                { message: "write-convert-text-to-chord", source: writeFrame.contentWindow, handler: "convertSelectedTextToChord" },
                 { message: "toolbar-placement", types: { action: "string", duration: "string", dotCount: "number", rest: "boolean", graceType: "string", accidental: "string", voice: "string", clientX: "number", clientY: "number" }, source: horizontalMenuFrame.contentWindow, handler: "setToolbarPlacement" },
                 { message: "toolbar-placement-pointer", types: { clientX: "number", clientY: "number" }, source: horizontalMenuFrame.contentWindow, handler: "moveToolbarPlacementPointer" },
                 { message: "toolbar-placement-cancel", source: menuOverlays.dots.contentWindow, handler: "cancelToolbarPlacement" },
@@ -759,6 +891,11 @@
                 { message: "menu-open", data: { menu: "voice" }, source: horizontalMenuFrame.contentWindow, handler: "openVoiceMenu" },
                 { message: "menu-dismiss", data: { menu: "file" }, source: menuOverlays.file.contentWindow, handler: "closeFileMenu" },
                 { message: "menu-dismiss", data: { menu: "edit" }, source: menuOverlays.edit.contentWindow, handler: "closeEditMenu" },
+                { message: "add-selected-lyric", source: menuOverlays.edit.contentWindow, handler: "addLyricToSelectedNote" },
+                { message: "add-selected-chord", source: menuOverlays.edit.contentWindow, handler: "addChordToSelectedNote" },
+                { message: "add-selected-text", source: menuOverlays.edit.contentWindow, handler: "addText" },
+                { message: "text-type-dialog-cancel", source: textDialogFrame.contentWindow, handler: "cancelTextTypeDialog" },
+                { message: "text-placement-request", types: { textType: "string", text: "string", beatUnit: "string", perMinute: "number", dynamic: "string" }, source: textDialogFrame.contentWindow, handler: "beginTextPlacement" },
                 { message: "menu-dismiss", data: { menu: "view" }, source: menuOverlays.view.contentWindow, handler: "closeViewMenu" },
                 { message: "menu-dismiss", data: { menu: "help" }, source: menuOverlays.help.contentWindow, handler: "closeHelpMenu" },
                 { message: "menu-dismiss", data: { menu: "dots" }, source: menuOverlays.dots.contentWindow, handler: "closeDotsMenu" },
@@ -797,6 +934,7 @@
                 messageActionHandlers
             );
             window.MenuActions.initialize(menuFrame.contentWindow, horizontalMenuFrame.contentWindow);
+            window.TextDragActions.initialize();
             window.SelectionActions.initialize(
                 document.getElementById("musicxml-score"),
                 horizontalMenuFrame.contentWindow
@@ -819,8 +957,13 @@
                     }, "*");
                 }
             });
+            window.ConfigFileActions.initialize(setupFrame);
             window.LyricEditActions.initialize(
                 document.getElementById("musicxml-score")
+            );
+            window.TextInsertActions.initialize(
+                document.getElementById("musicxml-score"),
+                document.getElementById("text-placement-status")
             );
             window.TransposeActions.initialize();
             window.DeleteActions.initialize();
